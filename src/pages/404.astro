@@ -1,0 +1,14 @@
+---
+import { ArrowLeft } from '@lucide/astro';
+import SiteLayout from '../layouts/SiteLayout.astro';
+---
+
+<SiteLayout title="Page not found | Eugene Plexus" noindex>
+  <section class="container not-found">
+    <img src="/eugene-transparent.svg" alt="" width="140" height="140" />
+    <p class="eyebrow">404 / Page not found</p>
+    <h1>A little off the path.</h1>
+    <p>That page doesn't exist. The project is right this way.</p>
+    <a href="/" class="button button-primary"><ArrowLeft size={18} aria-hidden="true" /> Back to Eugene Plexus</a>
+  </section>
+</SiteLayout>

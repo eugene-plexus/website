@@ -1,0 +1,79 @@
+---
+import '@fontsource-variable/inter';
+import '@fontsource-variable/jetbrains-mono';
+import { ArrowUpRight, CodeXml } from '@lucide/astro';
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+  noindex?: boolean;
+}
+
+const {
+  title = 'Eugene Plexus | A self-hosted control plane for local LLM inference',
+  description = 'Discover models, manage runtimes, and route local and cloud inference through one OpenAI-compatible endpoint. Open source, self-hosted, and currently in development.',
+  noindex = false,
+} = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+---
+
+<!doctype html>
+<html lang="en" data-theme="modern">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#fafafb" />
+    {noindex && <meta name="robots" content="noindex" />}
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/svg+xml" href="/eugene-transparent.svg" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Eugene Plexus" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta name="twitter:card" content="summary" />
+    <title>{title}</title>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="wordmark" href="/" aria-label="Eugene Plexus home">
+          <img src="/eugene-transparent.svg" alt="" width="44" height="44" />
+          <span>Eugene Plexus</span>
+        </a>
+        <nav class="main-nav" aria-label="Main navigation">
+          <a href="/#platform">The platform</a>
+          <a href="/#workflow">The workflow</a>
+          <a href="/#open-source">Open source</a>
+        </nav>
+        <a class="header-github" href="https://github.com/eugene-plexus" aria-label="Eugene Plexus on GitHub" title="Eugene Plexus on GitHub">
+          <CodeXml size={19} aria-hidden="true" /><span>GitHub</span><ArrowUpRight size={15} aria-hidden="true" />
+        </a>
+      </div>
+    </header>
+    <main id="main"><slot /></main>
+    <footer class="site-footer">
+      <div class="container footer-main">
+        <div>
+          <a class="wordmark" href="/">
+            <img src="/eugene-transparent.svg" alt="" width="40" height="40" loading="lazy" />
+            <span>Eugene Plexus</span>
+          </a>
+          <p>Build something that's yours.</p>
+        </div>
+        <nav aria-label="Footer navigation">
+          <a href="https://github.com/eugene-plexus">GitHub <ArrowUpRight size={15} aria-hidden="true" /></a>
+          <a href="https://github.com/eugene-plexus/specs#readme">Documentation <ArrowUpRight size={15} aria-hidden="true" /></a>
+          <a href="https://github.com/eugene-plexus/website">Website source <ArrowUpRight size={15} aria-hidden="true" /></a>
+        </nav>
+      </div>
+      <div class="container footer-bottom">
+        <span>Open source. Apache 2.0. <a href="/licenses.txt">Asset licenses</a></span>
+        <span class="status"><span class="status-dot" aria-hidden="true"></span> In active development</span>
+      </div>
+    </footer>
+  </body>
+</html>
