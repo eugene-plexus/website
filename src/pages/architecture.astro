@@ -1,0 +1,701 @@
+---
+import { ArrowDown, ArrowRight, ArrowUpRight, Cloud, Cpu, Database, FolderOpen, Globe, HardDrive, KeyRound, Monitor, Radio, Server, ShieldCheck, Terminal } from '@lucide/astro';
+import SiteLayout from '../layouts/SiteLayout.astro';
+
+const title = 'Architecture | Eugene Plexus';
+const description = 'How the parts of Eugene Plexus fit together: the agent on each machine, the gateway your tools talk to, the drivers and engines behind it, the model library, and the control root that ties several machines into one install.';
+
+const components = [
+  {
+    id: 'agent', name: 'Agent', icon: Server, where: 'One per machine',
+    what: 'The process that runs on every machine. It starts and watches the other components and the inference engines, serves the web UI, and holds that machine’s settings.',
+    talks: 'Everything on its machine. Other machines’ agents, through the control root.', repo: 'agent',
+  },
+  {
+    id: 'gateway', name: 'Gateway', icon: Radio, where: 'One per install',
+    what: 'The single OpenAI-compatible endpoint your tools connect to. It decides which backend serves each request, balances replicas, fails over to the next choice, and keeps request metrics.',
+    talks: 'Your tools on one side; every inference driver on the other.', repo: 'gateway',
+  },
+  {
+    id: 'driver', name: 'Inference driver', icon: Cpu, where: 'One per backend',
+    what: 'A small adapter in front of one backend: a llama.cpp or vLLM runtime, an Ollama or LM Studio server, a cloud API, or a subscription CLI. It translates requests and reports what the backend can do.',
+    talks: 'The gateway above it; one backend below it.', repo: 'inference-driver',
+  },
+  {
+    id: 'library', name: 'Library', icon: Database, where: 'One per install',
+    what: 'Your model directories, read as they are. It scans GGUF and safetensors files, keeps a settings profile per model, searches the catalogue, downloads with resume, and says which quantization fits your hardware.',
+    talks: 'The disk, the model hub, and the agent that launches a model.', repo: 'library',
+  },
+  {
+    id: 'control', name: 'Control root', icon: ShieldCheck, where: 'One per install',
+    what: 'The trust root when an install spans more than one machine. It keeps the list of machines, issues the tokens a new machine joins with, and shows the whole install in one view.',
+    talks: 'Every machine’s agent. It spawns nothing itself.', repo: 'control',
+  },
+  {
+    id: 'ui', name: 'Web UI', icon: Monitor, where: 'Served by every agent',
+    what: 'The browser interface: library, discovery, the inference screen, configuration, nodes, metrics, and the playground. Static files the agent serves, so any machine in an install is a console for all of it.',
+    talks: 'Its own agent, which forwards to the right component wherever it runs.', repo: 'ui',
+  },
+];
+
+const journey = [
+  { step: '1', title: 'Your tool asks', text: 'An editor, agent harness, or the playground sends an ordinary OpenAI-style request with a bearer token to the gateway.' },
+  { step: '2', title: 'The gateway chooses', text: 'It looks up the model name, skips backends that are not ready, balances across replicas, and falls back to the next tier if one fails.' },
+  { step: '3', title: 'The driver translates', text: 'The inference driver for that backend turns the request into whatever the engine speaks and streams the answer back token by token.' },
+  { step: '4', title: 'The engine generates', text: 'llama.cpp, vLLM, Ollama, or a cloud provider does the actual work on the hardware it has.' },
+  { step: '5', title: 'The answer says where it went', text: 'Every response carries a small envelope: which driver and runtime served it, how many attempts, which tier, how long, and the context window that applied.' },
+];
+
+const glossary = [
+  { term: 'Install', text: 'One control plane: a control root, a gateway, a library, and every machine that has joined them. One passphrase.' },
+  { term: 'Node', text: 'A machine in an install. Each node runs one agent.' },
+  { term: 'Component', text: 'One of the four services: gateway, inference driver, library, control root. The agent starts them.' },
+  { term: 'Runtime', text: 'An inference engine the agent started and supervises, such as one llama.cpp process serving one model.' },
+  { term: 'Backend', text: 'Anything a driver can send requests to: a runtime, an external server like Ollama, a cloud API, or a subscription CLI.' },
+  { term: 'Replica', text: 'Two or more backends serving the same model. The gateway balances between them.' },
+];
+---
+
+<SiteLayout title={title} description={description}>
+  <section class="section arch-hero" aria-labelledby="arch-title">
+    <div class="container">
+      <p class="eyebrow"><span class="section-index">Architecture</span></p>
+      <h1 id="arch-title">How it fits together<span class="heading-period">.</span></h1>
+      <p class="arch-lead">Eugene Plexus is not an inference engine and not a chat app. It is the layer around them: it supervises the engines you already trust, keeps your model files where you put them, and gives every tool you use one address to talk to. This page walks through the pieces and how they connect.</p>
+    </div>
+  </section>
+
+  <section class="section arch-section arch-layers-section" id="layers" aria-labelledby="layers-title">
+    <div class="container">
+      <div class="section-heading">
+        <p class="eyebrow"><span class="section-index">01 /</span> The layers</p>
+        <h2 id="layers-title">Five layers, one address.</h2>
+        <p>Requests flow down, answers flow up. The three services on the right are not in the request path at all: they set things up, watch them, and keep the install together.</p>
+      </div>
+
+      <figure class="layers" aria-labelledby="layers-caption">
+        <div class="layers-stack">
+          <div class="layer layer-tools">
+            <div class="layer-label"><Terminal size={18} aria-hidden="true" /><span>Your tools</span></div>
+            <ul class="chips">
+              <li>Coding agents</li><li>Editors</li><li>The OpenAI SDK</li><li>The playground</li>
+            </ul>
+            <p class="layer-note">Anything that speaks the OpenAI API, pointed at one URL with one key.</p>
+          </div>
+          <div class="layer-arrow" aria-hidden="true"><ArrowDown size={18} /><span>OpenAI-compatible requests</span><ArrowDown size={18} /></div>
+          <div class="layer layer-gateway">
+            <div class="layer-label"><Radio size={18} aria-hidden="true" /><span>Gateway</span></div>
+            <ul class="chips">
+              <li>Routing</li><li>Replica balancing</li><li>Failover tiers</li><li>Idle unload &amp; wake</li><li>Metrics</li>
+            </ul>
+            <p class="layer-note">One per install. The only thing your tools need to know about.</p>
+          </div>
+          <div class="layer-arrow" aria-hidden="true"><ArrowDown size={18} /><span>one driver per backend</span><ArrowDown size={18} /></div>
+          <div class="layer layer-drivers">
+            <div class="layer-label"><Cpu size={18} aria-hidden="true" /><span>Inference drivers</span></div>
+            <ul class="chips">
+              <li>Driver</li><li>Driver</li><li>Driver</li><li>Driver</li>
+            </ul>
+            <p class="layer-note">A thin adapter in front of each backend. It translates and reports capabilities.</p>
+          </div>
+          <div class="layer-arrow" aria-hidden="true"><ArrowDown size={18} /><span>the backend&rsquo;s own API</span><ArrowDown size={18} /></div>
+          <div class="layer layer-engines">
+            <div class="layer-label"><Cloud size={18} aria-hidden="true" /><span>Engines and backends</span></div>
+            <ul class="chips">
+              <li class="chip-strong">llama.cpp</li><li class="chip-strong">vLLM</li><li>Ollama</li><li>LM Studio</li><li>Cloud APIs</li><li>Subscription CLIs</li>
+            </ul>
+            <p class="layer-note">Bold ones are runtimes Eugene Plexus starts and supervises. The rest it only talks to.</p>
+          </div>
+          <div class="layer-arrow" aria-hidden="true"><ArrowDown size={18} /><span>runs on</span><ArrowDown size={18} /></div>
+          <div class="layer layer-hardware">
+            <div class="layer-label"><HardDrive size={18} aria-hidden="true" /><span>Your hardware</span></div>
+            <ul class="chips">
+              <li>GPUs</li><li>RAM</li><li>Your model directories</li>
+            </ul>
+            <p class="layer-note">On one computer, or on several.</p>
+          </div>
+        </div>
+
+        <aside class="layers-rail" aria-label="Services beside the request path">
+          <div class="rail-card rail-agent">
+            <div class="layer-label"><Server size={18} aria-hidden="true" /><span>Agent</span></div>
+            <p>One per machine. Starts and watches everything on this box. Serves the web UI.</p>
+          </div>
+          <div class="rail-card rail-library">
+            <div class="layer-label"><Database size={18} aria-hidden="true" /><span>Library</span></div>
+            <p>Your models on disk, per-model settings, discovery, downloads, and fit guidance.</p>
+          </div>
+          <div class="rail-card rail-control">
+            <div class="layer-label"><ShieldCheck size={18} aria-hidden="true" /><span>Control root</span></div>
+            <p>Which machines belong to this install, and the keys they trust each other with.</p>
+          </div>
+        </aside>
+        <figcaption id="layers-caption">The request path runs down the left. The agent, library and control root on the right never touch a request. They prepare, supervise and connect.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="section arch-section" id="components" aria-labelledby="components-title">
+    <div class="container">
+      <div class="section-heading">
+        <p class="eyebrow"><span class="section-index">02 /</span> The components</p>
+        <h2 id="components-title">Six processes, each with one job.</h2>
+        <p>Every component is its own repository and its own process. They share contracts, not code: each one publishes an OpenAPI description and the others are generated from it.</p>
+      </div>
+      <div class="component-grid">
+        {components.map((c) => (
+          <article class="component-card" id={c.id}>
+            <div class="component-head">
+              <c.icon size={24} stroke-width={1.5} aria-hidden="true" />
+              <h3>{c.name}</h3>
+              <span class="where">{c.where}</span>
+            </div>
+            <p>{c.what}</p>
+            <p class="talks"><strong>Talks to:</strong> {c.talks}</p>
+            <a href={`https://github.com/eugene-plexus/${c.repo}`}>Source <ArrowUpRight size={14} aria-hidden="true" /></a>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section arch-section arch-journey-section" id="request" aria-labelledby="request-title">
+    <div class="container">
+      <div class="section-heading">
+        <p class="eyebrow"><span class="section-index">03 /</span> One request</p>
+        <h2 id="request-title">What happens when a tool asks a question.</h2>
+        <p>The whole point of the layering: your tool never has to know which machine, which engine, or which model file. It asks the gateway, and the answer says where it went.</p>
+      </div>
+      <ol class="journey">
+        {journey.map((j, i) => (
+          <li class="journey-step">
+            <span class="journey-number" aria-hidden="true">{j.step}</span>
+            <h3>{j.title}</h3>
+            <p>{j.text}</p>
+            {i < journey.length - 1 && <ArrowRight class="journey-arrow" size={20} aria-hidden="true" />}
+          </li>
+        ))}
+      </ol>
+      <p class="journey-rule"><strong>One rule worth knowing:</strong> failover happens before the first token. Once an answer has started streaming, the gateway will not splice a second model onto it. A cut-off answer is reported as cut off, never quietly completed by someone else.</p>
+    </div>
+  </section>
+
+  <section class="section arch-section" id="topologies" aria-labelledby="topologies-title">
+    <div class="container">
+      <div class="section-heading">
+        <p class="eyebrow"><span class="section-index">04 /</span> One computer, or several</p>
+        <h2 id="topologies-title">The same pieces, placed differently.</h2>
+        <p>There is one shape, not two products. On a single PC every component runs beside the engines. Across machines, the control plane moves to wherever is convenient and each GPU box keeps only what needs the hardware.</p>
+      </div>
+      <div class="topologies">
+        <figure class="topology">
+          <figcaption><Monitor size={18} aria-hidden="true" /> One computer</figcaption>
+          <div class="machine">
+            <div class="machine-title">Your PC</div>
+            <div class="box box-agent">Agent</div>
+            <div class="box-row">
+              <div class="box">Control root</div>
+              <div class="box">Gateway</div>
+              <div class="box">Library</div>
+            </div>
+            <div class="box-row">
+              <div class="box box-driver">Driver</div>
+              <div class="box box-driver">Driver</div>
+            </div>
+            <div class="box-row">
+              <div class="box box-engine">llama.cpp</div>
+              <div class="box box-engine">Ollama</div>
+            </div>
+            <div class="box box-disk"><FolderOpen size={15} aria-hidden="true" /> Your model folders</div>
+          </div>
+          <p class="topology-note">Everything on one box. The browser opens the agent&rsquo;s address and the gateway&rsquo;s port is the one your tools use.</p>
+        </figure>
+
+        <figure class="topology topology-multi">
+          <figcaption><Globe size={18} aria-hidden="true" /> Several machines</figcaption>
+          <div class="multi">
+            <div class="machine machine-plane">
+              <div class="machine-title">Control-plane host <span>a NAS container, a small server, or one of the PCs</span></div>
+              <div class="box box-agent">Agent</div>
+              <div class="box-row">
+                <div class="box">Control root</div>
+                <div class="box">Gateway</div>
+                <div class="box">Library</div>
+              </div>
+              <div class="box box-disk"><FolderOpen size={15} aria-hidden="true" /> Shared model folder</div>
+            </div>
+            <div class="multi-links" aria-hidden="true">
+              <span class="link-line"></span>
+              <span class="link-label">joined to one install &middot; one passphrase &middot; models mounted on each GPU box</span>
+              <span class="link-line"></span>
+            </div>
+            <div class="gpu-boxes">
+              <div class="machine machine-gpu">
+                <div class="machine-title">GPU machine A</div>
+                <div class="box box-agent">Agent</div>
+                <div class="box-row"><div class="box box-driver">Driver</div><div class="box box-driver">Driver</div></div>
+                <div class="box-row"><div class="box box-engine">vLLM</div><div class="box box-engine">llama.cpp</div></div>
+              </div>
+              <div class="machine machine-gpu">
+                <div class="machine-title">GPU machine B</div>
+                <div class="box box-agent">Agent</div>
+                <div class="box-row"><div class="box box-driver">Driver</div></div>
+                <div class="box-row"><div class="box box-engine">Ollama</div></div>
+              </div>
+            </div>
+          </div>
+          <p class="topology-note">Each machine runs an agent. Tools still talk to the one gateway; the browser can open any machine&rsquo;s agent and see the whole install.</p>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="section arch-section arch-principles-section" id="principles" aria-labelledby="principles-title">
+    <div class="container">
+      <div class="section-heading">
+        <p class="eyebrow"><span class="section-index">05 /</span> What stays where</p>
+        <h2 id="principles-title">Yours, on your disk, in plain sight.</h2>
+      </div>
+      <div class="principles">
+        <article class="principle">
+          <FolderOpen size={27} stroke-width={1.5} aria-hidden="true" />
+          <h3>Model files</h3>
+          <p>In the directories you point the library at, with plain names. Downloads land there too. No content-addressed cache, no hidden store. Remove Eugene Plexus and the files are still there.</p>
+          <span class="principle-note">Never copied, never renamed.</span>
+        </article>
+        <article class="principle">
+          <KeyRound size={27} stroke-width={1.5} aria-hidden="true" />
+          <h3>Secrets and trust</h3>
+          <p>One passphrase, set once, protects the install. Provider keys are sealed with it. Machines join with a one-time token and then trust each other by signature, not by being on the same network.</p>
+          <span class="principle-note">Real authentication, so a tailnet works.</span>
+        </article>
+        <article class="principle">
+          <Cpu size={27} stroke-width={1.5} aria-hidden="true" />
+          <h3>Engines</h3>
+          <p>llama.cpp is fetched, verified and kept in versioned directories by the agent. vLLM is one you install; the agent finds and drives it. Neither is forked or replaced.</p>
+          <span class="principle-note">Upstream, supervised.</span>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section arch-section arch-glossary-section" id="glossary" aria-labelledby="glossary-title">
+    <div class="container glossary-layout">
+      <div>
+        <p class="eyebrow"><span class="section-index">06 /</span> The words</p>
+        <h2 id="glossary-title">A short glossary.</h2>
+        <p class="glossary-intro">Six words that mean specific things here.</p>
+        <a class="text-link" href="https://github.com/eugene-plexus/specs/tree/main/docs/design">Read the design documents <ArrowUpRight size={17} aria-hidden="true" /></a>
+      </div>
+      <dl class="glossary">
+        {glossary.map((g) => (
+          <div class="glossary-row">
+            <dt>{g.term}</dt>
+            <dd>{g.text}</dd>
+          </div>
+        ))}
+      </dl>
+    </div>
+  </section>
+</SiteLayout>
+
+<style>
+  .arch-hero {
+    padding-block: 72px 32px;
+  }
+  .arch-hero h1 {
+    font-size: 44px;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-top: 18px;
+  }
+  .arch-lead {
+    color: var(--muted);
+    font-size: 17px;
+    max-width: 700px;
+    margin-top: 22px;
+  }
+  .arch-section {
+    padding-block: 72px;
+    border-top: 1px solid var(--border);
+  }
+  .arch-layers-section,
+  .arch-journey-section {
+    background: var(--panel-soft);
+  }
+
+  /* --- layers ------------------------------------------------------- */
+  .layers {
+    margin: 48px 0 0;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 260px;
+    gap: 28px;
+    align-items: start;
+  }
+  .layers-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .layer {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--accent-left);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+  }
+  .layer-gateway { border-left-color: var(--accent-right); }
+  .layer-engines { border-left-color: #2f9e6e; }
+  .layer-hardware { border-left-color: #8a8a93; }
+  .layer-label {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    font-weight: 600;
+    font-size: 15px;
+  }
+  .layer-label svg { color: var(--accent-left); }
+  .layer-gateway .layer-label svg { color: var(--accent-right); }
+  .layer-engines .layer-label svg { color: #2f9e6e; }
+  .layer-hardware .layer-label svg { color: #8a8a93; }
+  .chips {
+    list-style: none;
+    margin: 12px 0 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .chips li {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    padding: 4px 10px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--panel-soft);
+    color: var(--foreground);
+  }
+  .chips .chip-strong {
+    border-color: #2f9e6e;
+    font-weight: 600;
+  }
+  .layer-note {
+    color: var(--muted);
+    font-size: 13px;
+    margin-top: 10px;
+  }
+  .layer-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    padding: 2px 0;
+  }
+  .layers-rail {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    position: sticky;
+    top: 24px;
+  }
+  .rail-card {
+    background: var(--panel);
+    border: 1px dashed var(--border-hover);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+  }
+  .rail-card p {
+    color: var(--muted);
+    font-size: 13px;
+    margin-top: 8px;
+  }
+  .rail-control .layer-label svg { color: var(--accent-right); }
+  .layers figcaption {
+    grid-column: 1 / -1;
+    color: var(--muted);
+    font-size: 13px;
+    margin-top: 6px;
+  }
+
+  /* --- components --------------------------------------------------- */
+  .component-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px;
+    margin-top: 48px;
+  }
+  .component-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .component-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .component-head svg { color: var(--accent-left); }
+  .component-card:nth-child(2) .component-head svg,
+  .component-card:nth-child(5) .component-head svg { color: var(--accent-right); }
+  .component-head h3 {
+    font-size: 18px;
+  }
+  .where {
+    margin-left: auto;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--muted);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 2px 9px;
+    white-space: nowrap;
+  }
+  .component-card > p {
+    color: var(--muted);
+    font-size: 14px;
+  }
+  .component-card .talks {
+    color: var(--foreground);
+    font-size: 13px;
+  }
+  .component-card > a {
+    margin-top: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 13px;
+    font-weight: 500;
+    text-decoration: none;
+  }
+  .component-card > a:hover { text-decoration: underline; }
+
+  /* --- journey ------------------------------------------------------ */
+  .journey {
+    list-style: none;
+    margin: 48px 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 18px;
+  }
+  .journey-step {
+    position: relative;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px 18px;
+  }
+  .journey-number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 999px;
+    background: var(--accent-left);
+    color: var(--on-accent-left);
+    font-family: var(--font-mono);
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .journey-step:nth-child(4) .journey-number { background: #2f9e6e; }
+  .journey-step:nth-child(5) .journey-number { background: var(--accent-right); }
+  .journey-step h3 {
+    font-size: 15px;
+    margin-top: 14px;
+  }
+  .journey-step p {
+    color: var(--muted);
+    font-size: 13px;
+    margin-top: 8px;
+  }
+  /* Inside the card's box, not hanging over its edge: an element that
+     pokes outside its parent registers as overflow, and the test that
+     guards against horizontal scrolling reads it as such. */
+  .journey-arrow {
+    position: absolute;
+    right: 12px;
+    top: 24px;
+    color: var(--border-hover);
+  }
+  .journey-rule {
+    margin-top: 28px;
+    max-width: 760px;
+    font-size: 14px;
+    color: var(--muted);
+  }
+  .journey-rule strong { color: var(--foreground); }
+
+  /* --- topologies --------------------------------------------------- */
+  .topologies {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr);
+    gap: 28px;
+    margin-top: 48px;
+  }
+  .topology {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .topology figcaption {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    font-size: 15px;
+  }
+  .topology figcaption svg { color: var(--accent-left); }
+  .topology-multi figcaption svg { color: var(--accent-right); }
+  .machine {
+    background: var(--panel);
+    border: 1px solid var(--border-hover);
+    border-radius: var(--radius);
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .machine-title {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+  .machine-title span {
+    display: block;
+    font-weight: 400;
+    color: var(--muted);
+  }
+  .box {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--panel-soft);
+    padding: 7px 10px;
+    font-size: 13px;
+    text-align: center;
+    flex: 1;
+    min-width: 0;
+  }
+  .box-row {
+    display: flex;
+    gap: 8px;
+  }
+  .box-agent {
+    border-color: var(--accent-left);
+    border-style: dashed;
+    font-weight: 600;
+  }
+  .box-driver { background: var(--panel); }
+  .box-engine {
+    border-color: #2f9e6e;
+    font-family: var(--font-mono);
+    font-size: 12px;
+  }
+  .box-disk {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    border-style: dotted;
+    color: var(--muted);
+  }
+  .multi {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .multi-links {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    text-align: center;
+  }
+  .link-line {
+    flex: 1;
+    height: 0;
+    border-top: 1px dashed var(--border-hover);
+  }
+  .gpu-boxes {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+  .topology-note {
+    color: var(--muted);
+    font-size: 13px;
+  }
+
+  /* --- principles & glossary ---------------------------------------- */
+  .arch-principles-section .principles { margin-top: 44px; }
+  .arch-glossary-section { background: var(--panel-soft); }
+  .glossary-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr);
+    gap: 48px;
+    align-items: start;
+  }
+  .glossary-intro {
+    color: var(--muted);
+    font-size: 15px;
+    margin-top: 22px;
+  }
+  .glossary-layout .text-link { margin-top: 20px; }
+  .glossary {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+  }
+  .glossary-row {
+    display: grid;
+    grid-template-columns: 130px minmax(0, 1fr);
+    gap: 18px;
+    padding: 14px 0;
+    border-top: 1px solid var(--border);
+  }
+  .glossary-row:last-child { border-bottom: 1px solid var(--border); }
+  .glossary dt {
+    font-weight: 600;
+    font-size: 14px;
+  }
+  .glossary dd {
+    margin: 0;
+    color: var(--muted);
+    font-size: 14px;
+  }
+
+  @media (max-width: 1050px) {
+    .journey { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .journey-arrow { display: none; }
+    .component-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .topologies { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 760px) {
+    .arch-hero h1 { font-size: 34px; }
+    .arch-section { padding-block: 56px; }
+    .layers { grid-template-columns: 1fr; }
+    .layers-rail { position: static; }
+    .component-grid,
+    .journey,
+    .gpu-boxes { grid-template-columns: 1fr; }
+    .glossary-layout { grid-template-columns: 1fr; gap: 28px; }
+    .glossary-row { grid-template-columns: 1fr; gap: 4px; }
+    .where { margin-left: 0; }
+  }
+  @media (max-width: 390px) {
+    .box-row { flex-direction: column; }
+    .layer-arrow span { display: none; }
+  }
+</style>

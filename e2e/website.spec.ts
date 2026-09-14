@@ -99,3 +99,36 @@ test('core content and FAQs work without JavaScript', async ({ browser, baseURL 
     await expect(page.locator('details').first().locator('p')).toBeVisible();
     await context.close();
 });
+test('the architecture page explains the layers and stays inside the viewport', async ({ page }) => {
+    const failedRequests: string[] = [];
+    page.on('response', (response) => {
+        if (response.status() >= 400) failedRequests.push(`${response.status()} ${response.url()}`);
+    });
+    await page.goto('/architecture');
+    await page.evaluate(() => document.fonts.ready);
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText('How it fits together.');
+    await expect(page).toHaveTitle('Architecture | Eugene Plexus');
+    // The five layers of the diagram, top to bottom, and the three services beside it.
+    for (const label of ['Your tools', 'Gateway', 'Inference drivers', 'Engines and backends', 'Your hardware', 'Agent', 'Library', 'Control root']) {
+        await expect(page.locator('.layers').getByText(label, { exact: true }).first()).toBeVisible();
+    }
+    await expect(page.locator('.component-card')).toHaveCount(6);
+    await expect(page.locator('.journey-step')).toHaveCount(5);
+    await expect(page.locator('main')).not.toContainText(/training|tokenizer|checkpoints/i);
+    const layout = await page.evaluate(() => ({
+        pageWidth: document.documentElement.scrollWidth,
+        viewportWidth: document.documentElement.clientWidth,
+        overflowing: Array.from(document.querySelectorAll('main h1, main h2, main h3, main p, main a, main li, main dt, main dd, header a')).filter((element) => element.scrollWidth > element.clientWidth + 1).map((element) => element.textContent?.trim()),
+    }));
+    expect(layout.pageWidth).toBeLessThanOrEqual(layout.viewportWidth);
+    expect(layout.overflowing).toEqual([]);
+    const anchors = await page.locator('a[href^="#"]').evaluateAll((links) => links.map((link) => (link as HTMLAnchorElement).hash.slice(1)));
+    for (const anchor of anchors) {
+        await expect(page.locator(`[id="${anchor}"]`)).toHaveCount(1);
+    }
+    const accessibility = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa']).analyze();
+    expect(accessibility.violations).toEqual([]);
+    expect(failedRequests).toEqual([]);
+    await page.getByRole('link', { name: 'The platform' }).click();
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText('Eugene Plexus.');
+});

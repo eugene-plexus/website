@@ -1081,8 +1081,19 @@ p {
         height: 44px;
     }
 
+    /* Four links do not fit one row at 320px. Let them wrap, and take
+       the row height down so the strip below the hero stays above the
+       fold on the smallest phone the tests cover. */
     .main-nav {
-        gap: 25px;
+        flex-wrap: wrap;
+        column-gap: 18px;
+        row-gap: 0;
+        padding-block: 2px;
+    }
+
+    .main-nav a {
+        padding-block: 2px;
+        font-size: 11px;
     }
 
     .fact {
