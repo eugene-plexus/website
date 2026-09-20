@@ -3,10 +3,10 @@
 The public project website for **Eugene Plexus**, a self-hosted control plane for local LLM inference.
 
 - Repository: <https://github.com/eugene-plexus/website>
-- Intended production domain: <https://eugeneplexus.com>
+- Production domain: <https://eugeneplexus.com>
 - Stack: Astro, TypeScript, self-hosted Inter and JetBrains Mono, Lucide icons.
 - Hosting: GitHub Pages. The build produces static files in `dist/`; no server, database, or platform service is required to serve them.
-- Status: initial website, with no public platform release to advertise. Deployment is manual.
+- Status: development overview, refreshed against project records on 2026-09-19. No public platform release or release date. Deployment is manual.
 
 ## Development
 
@@ -26,27 +26,45 @@ npm test
 npm run preview
 ```
 
-`npm test` builds the production site first, then tests it with Chromium at 320, 390, 768, 1440, and 1920 pixels wide. Checks cover Modern theme colors, local asset loading, overflow, accessibility, keyboard navigation, FAQs, 404 recovery, license notices, and JavaScript-disabled use. Screenshots and failure traces are written to ignored `test-results/`.
+`npm test` builds the production site first, then tests it with Chromium at 320, 390, 768, 1440, and 1920 pixels wide. Checks cover current capability and release-status copy, evidence caveats, Modern theme colors, local asset loading, overflow, accessibility, keyboard navigation, FAQs, 404 recovery, license notices, and JavaScript-disabled use. Homepage and architecture screenshots and failure traces are written to ignored `test-results/`.
 
 Tests start their own preview on port 4322 and do not reuse existing servers. The test configuration prevents Astro's agent detection from detaching this process, so Playwright can stop it on completion. Keep that port free; do not stop another project's process to make room.
 
 ## Editing
 
-| File                                                           | Purpose                                                        |
-| -------------------------------------------------------------- | -------------------------------------------------------------- |
-| [src/pages/index.astro](src/pages/index.astro)                 | Homepage copy, workflow, FAQs, and source links                |
-| [src/layouts/SiteLayout.astro](src/layouts/SiteLayout.astro)   | Shared navigation, footer, fonts, metadata, canonical URLs     |
-| [src/styles/global.css](src/styles/global.css)                 | Modern theme tokens and responsive layout                      |
-| [public/eugene-transparent.svg](public/eugene-transparent.svg) | Owner-supplied logo, also used as the favicon                  |
-| [src/pages/404.astro](src/pages/404.astro)                     | GitHub Pages 404 page                                          |
-| [src/pages/licenses.txt.ts](src/pages/licenses.txt.ts)         | Build-time generation of bundled font and icon license notices |
-| [public/sitemap.xml](public/sitemap.xml)                       | Public page index; update when adding pages                    |
-| [astro.config.mjs](astro.config.mjs)                           | Static output and production origin                            |
-| [.github/workflows/pages.yml](.github/workflows/pages.yml)     | CI checks and manual deployment                                |
+| File                                                           | Purpose                                                                  |
+| -------------------------------------------------------------- | ------------------------------------------------------------------------ |
+| [src/pages/index.astro](src/pages/index.astro)                 | Homepage copy, workflow, FAQs, and source links                          |
+| [src/pages/architecture.astro](src/pages/architecture.astro)   | Layers, request flow, topologies, verification links, and current limits |
+| [src/layouts/SiteLayout.astro](src/layouts/SiteLayout.astro)   | Shared navigation, footer, fonts, metadata, canonical URLs               |
+| [src/styles/global.css](src/styles/global.css)                 | Modern theme tokens and responsive layout                                |
+| [public/eugene-transparent.svg](public/eugene-transparent.svg) | Owner-supplied logo, also used as the favicon                            |
+| [src/pages/404.astro](src/pages/404.astro)                     | GitHub Pages 404 page                                                    |
+| [src/pages/licenses.txt.ts](src/pages/licenses.txt.ts)         | Build-time generation of bundled font and icon license notices           |
+| [public/sitemap.xml](public/sitemap.xml)                       | Public page index; update when adding pages                              |
+| [astro.config.mjs](astro.config.mjs)                           | Static output and production origin                                      |
+| [.github/workflows/pages.yml](.github/workflows/pages.yml)     | CI checks and manual deployment                                          |
 
 The design follows the application's **light Modern theme**: near-white surfaces, blue and magenta accents, Inter, and 6px corners. Tokens are maintained here, not imported from the application repo. There is no theme chooser or dark variant.
 
-The current product definition is in [specs/README.md](https://github.com/eugene-plexus/specs#what-is-eugene-plexus), with UI capabilities in [ui/README.md](https://github.com/eugene-plexus/ui#readme). The training direction is retired; older workspace bootstrap documents may still describe it. Do not restore a training pipeline or promote planned features as available. Keep the pre-release notice until a public platform release actually exists.
+The [direction document](https://github.com/eugene-plexus/specs/blob/main/docs/design/local-inference-control-plane.md) defines the positioning; the [release roadmap](https://github.com/eugene-plexus/specs/blob/main/docs/design/release-roadmap.md) owns the work order. Older README and milestone summaries can lag behind completed work. Use dated implementation and acceptance records for current claims. The training direction is retired. Do not restore a training pipeline or promote planned features as available. Keep the pre-release notice until a public platform release actually exists.
+
+### Copy Evidence
+
+The 2026-09-19 refresh keeps the existing Modern design and updates the homepage, architecture and shared description metadata. The architecture page dates its snapshot and separates implemented features from validation gaps and remaining pre-release work.
+
+| Claim                                                               | Source and boundary                                                                                                                                                                                                                                                              |
+| ------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Engine setup, hardware-led recommendations, then tools and backends | [Adopted positioning](https://github.com/eugene-plexus/specs/blob/main/docs/design/local-inference-control-plane.md#2-the-differentiators); no uniqueness claim about competing products                                                                                         |
+| Two-screen setup, Download and run, tasks, issues and client keys   | [Hobbyist implementation records](https://github.com/eugene-plexus/specs/blob/main/docs/design/hobbyist-ux.md); later fixes are recorded in the roadmap                                                                                                                          |
+| Anthropic Messages alongside OpenAI-compatible APIs                 | [Gateway contract](https://github.com/eugene-plexus/specs/blob/main/openapi/gateway.yaml) and [Claude Code acceptance](https://github.com/eugene-plexus/specs/blob/main/docs/acceptance/anthropic-messages-run.md); real client and gateway, stub driver, not full vendor parity |
+| Optional node-local model copies                                    | [Design and live measurement, section 14.3](https://github.com/eugene-plexus/specs/blob/main/docs/design/node-local-model-copy.md); originals stay untouched, first copy has a cost, 21 s was a warm-cache start                                                                 |
+| Replica survival and wake timings                                   | [M6 run](https://github.com/eugene-plexus/specs/blob/main/docs/acceptance/m6-six-process-run.md); one GPU, 1.7B model, 172 ms completion after exclusion of a dead replica, not cascade latency                                                                                  |
+| Control-plane overhead                                              | [One-client run](https://github.com/eugene-plexus/specs/blob/main/docs/acceptance/one-client-run.md); Windows/Python 3.12 and a fixed-delay stub, not engine throughput                                                                                                          |
+| Timeouts and failover                                               | [Still-computing run](https://github.com/eugene-plexus/specs/blob/main/docs/acceptance/still-computing-run.md); computing deadlines do not cascade                                                                                                                               |
+| Unfinished trust split, profile defaults and usability work         | [Roadmap R7, R8 and R6](https://github.com/eugene-plexus/specs/blob/main/docs/design/release-roadmap.md); no release forecast                                                                                                                                                    |
+
+On 2026-09-20, the standalone numbers section was removed. The records above remain technical evidence, linked from Current boundaries, rather than public-facing benchmarks. Prominent metrics must answer a prospective user's question with a relevant baseline; internal improvements and isolated hardware timings are not enough. Site publication remains the manual Pages workflow; a website refresh is not a platform release.
 
 The website is independent of the running platform. It makes no API calls to an installation, loads its fonts and icons locally, and has no analytics or contact-form backend. A future server-side feature would require a separate service because GitHub Pages does not run application backends.
 

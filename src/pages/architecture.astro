@@ -8,12 +8,12 @@ const description = 'How the parts of Eugene Plexus fit together: the agent on e
 const components = [
   {
     id: 'agent', name: 'Agent', icon: Server, where: 'One per machine',
-    what: 'The process that runs on every machine. It starts and watches the other components and the inference engines, serves the web UI, and holds that machine’s settings.',
-    talks: 'Everything on its machine. Other machines’ agents, through the control root.', repo: 'agent',
+    what: 'The process on each machine. It installs and updates llama.cpp, supervises components and engines, checks memory before launch, serves the web UI, and optionally keeps local copies of the models this node runs.',
+    talks: 'Local components and engines, the control root for enrollment and discovery, and other agents for console requests.', repo: 'agent',
   },
   {
     id: 'gateway', name: 'Gateway', icon: Radio, where: 'One per install',
-    what: 'The single OpenAI-compatible endpoint your tools connect to. It decides which backend serves each request, balances replicas, fails over to the next choice, and keeps request metrics.',
+    what: 'One address serving OpenAI-compatible chat and embeddings plus Anthropic Messages. Both chat formats share routing, replica balancing, ordered failover, wake-on-demand, and retained request metrics.',
     talks: 'Your tools on one side; every inference driver on the other.', repo: 'gateway',
   },
   {
@@ -23,27 +23,27 @@ const components = [
   },
   {
     id: 'library', name: 'Library', icon: Database, where: 'One per install',
-    what: 'Your model directories, read as they are. It scans GGUF and safetensors files, keeps a settings profile per model, searches the catalogue, downloads with resume, and says which quantization fits your hardware.',
+    what: 'Your model folders, with GGUF and safetensors scanning, named launch profiles, catalogue search and resumable downloads. It suggests a starter model and estimates memory fit at a stated context length for the selected machine.',
     talks: 'The disk, the model hub, and the agent that launches a model.', repo: 'library',
   },
   {
-    id: 'control', name: 'Control root', icon: ShieldCheck, where: 'One per install',
-    what: 'The trust root when an install spans more than one machine. It keeps the list of machines, issues the tokens a new machine joins with, and shows the whole install in one view.',
+    id: 'control', name: 'Control root', icon: ShieldCheck, where: 'One active per install',
+    what: 'The trust root, on a single machine or across a homelab. It maintains the node registry and replicated control state, issues one-time join tokens, coordinates signed rekeying, and can have warm standbys.',
     talks: 'Every machine’s agent. It spawns nothing itself.', repo: 'control',
   },
   {
     id: 'ui', name: 'Web UI', icon: Monitor, where: 'Served by every agent',
-    what: 'The browser interface: library, discovery, the inference screen, configuration, nodes, metrics, and the playground. Static files the agent serves, so any machine in an install is a console for all of it.',
+    what: 'Home for setup and a first reply; a resource tree for the whole install. Includes model discovery, downloads and loading in a tasks tray, actionable issues, remote folder browsing, client keys, metrics, and a diagnostic playground. Static files, not a separate server.',
     talks: 'Its own agent, which forwards to the right component wherever it runs.', repo: 'ui',
   },
 ];
 
 const journey = [
-  { step: '1', title: 'Your tool asks', text: 'An editor, agent harness, or the playground sends an ordinary OpenAI-style request with a bearer token to the gateway.' },
-  { step: '2', title: 'The gateway chooses', text: 'It looks up the model name, skips backends that are not ready, balances across replicas, and falls back to the next tier if one fails.' },
-  { step: '3', title: 'The driver translates', text: 'The inference driver for that backend turns the request into whatever the engine speaks and streams the answer back token by token.' },
+  { step: '1', title: 'Your tool asks', text: 'An editor or coding client sends OpenAI-style chat or Anthropic Messages with a client key. The Messages route accepts a bearer token or x-api-key; OpenAI routes use bearer tokens.' },
+  { step: '2', title: 'The gateway chooses', text: 'It resolves the model, checks readiness, wakes a managed runtime if needed, and balances replicas. Eligible backend failures can move the request to the next configured tier.' },
+  { step: '3', title: 'The driver translates', text: 'One driver turns the request into its backend protocol and reports capabilities. Token streaming depends on that backend; Codex CLI returns whole messages rather than individual tokens.' },
   { step: '4', title: 'The engine generates', text: 'llama.cpp, vLLM, Ollama, or a cloud provider does the actual work on the hardware it has.' },
-  { step: '5', title: 'The answer says where it went', text: 'Every response carries a small envelope: which driver and runtime served it, how many attempts, which tier, how long, and the context window that applied.' },
+  { step: '5', title: 'The request is recorded', text: 'Metrics retain the serving backend, timing, tier, and failed attempts for both chat formats. OpenAI replies include routing metadata in the body or final stream frame; Anthropic keeps its own body format and uses headers.' },
 ];
 
 const glossary = [
@@ -61,7 +61,8 @@ const glossary = [
     <div class="container">
       <p class="eyebrow"><span class="section-index">Architecture</span></p>
       <h1 id="arch-title">How it fits together<span class="heading-period">.</span></h1>
-      <p class="arch-lead">Eugene Plexus is not an inference engine and not a chat app. It is the layer around them: it supervises the engines you already trust, keeps your model files where you put them, and gives every tool you use one address to talk to. This page walks through the pieces and how they connect.</p>
+      <p class="arch-lead">Eugene Plexus installs and manages engines, helps choose model settings for your hardware, and connects compatible tools to local and cloud backends. One machine or a homelab, the same layers do the work. It is not an inference engine or a chat app.</p>
+      <p class="arch-lead">Development snapshot: <time datetime="2026-09-19">September 19, 2026</time>. No public platform release. <a href="#status">Current boundaries</a>.</p>
     </div>
   </section>
 
@@ -70,7 +71,7 @@ const glossary = [
       <div class="section-heading">
         <p class="eyebrow"><span class="section-index">01 /</span> The layers</p>
         <h2 id="layers-title">Five layers, one address.</h2>
-        <p>Requests flow down, answers flow up. The three services on the right are not in the request path at all: they set things up, watch them, and keep the install together.</p>
+        <p>Inference flows through the gateway and a driver. Beside that path, the agent supervises engines, the library prepares models, and the control root maintains the install. Discovery, key checks and a model wake can still depend on those services.</p>
       </div>
 
       <figure class="layers" aria-labelledby="layers-caption">
@@ -78,11 +79,11 @@ const glossary = [
           <div class="layer layer-tools">
             <div class="layer-label"><Terminal size={18} aria-hidden="true" /><span>Your tools</span></div>
             <ul class="chips">
-              <li>Coding agents</li><li>Editors</li><li>The OpenAI SDK</li><li>The playground</li>
+              <li>Claude Code</li><li>OpenAI-compatible tools</li><li>Editors</li><li>The playground</li>
             </ul>
-            <p class="layer-note">Anything that speaks the OpenAI API, pointed at one URL with one key.</p>
+            <p class="layer-note">Supported chat, tool-call and embedding requests, with revocable client keys. <a href="#status">Compatibility has limits.</a></p>
           </div>
-          <div class="layer-arrow" aria-hidden="true"><ArrowDown size={18} /><span>OpenAI-compatible requests</span><ArrowDown size={18} /></div>
+          <div class="layer-arrow" aria-hidden="true"><ArrowDown size={18} /><span>OpenAI or Anthropic Messages</span><ArrowDown size={18} /></div>
           <div class="layer layer-gateway">
             <div class="layer-label"><Radio size={18} aria-hidden="true" /><span>Gateway</span></div>
             <ul class="chips">
@@ -102,9 +103,9 @@ const glossary = [
           <div class="layer layer-engines">
             <div class="layer-label"><Cloud size={18} aria-hidden="true" /><span>Engines and backends</span></div>
             <ul class="chips">
-              <li class="chip-strong">llama.cpp</li><li class="chip-strong">vLLM</li><li>Ollama</li><li>LM Studio</li><li>Cloud APIs</li><li>Subscription CLIs</li>
+              <li class="chip-strong">llama.cpp</li><li class="chip-strong">vLLM</li><li>Ollama</li><li>LM Studio</li><li>Cloud APIs</li><li>Claude Code CLI</li><li>Codex CLI</li>
             </ul>
-            <p class="layer-note">Bold ones are runtimes Eugene Plexus starts and supervises. The rest it only talks to.</p>
+            <p class="layer-note">llama.cpp is installed and supervised; vLLM is user-installed and supervised. External servers stay under your control. CLI backends invoke your installed tools using their existing login.</p>
           </div>
           <div class="layer-arrow" aria-hidden="true"><ArrowDown size={18} /><span>runs on</span><ArrowDown size={18} /></div>
           <div class="layer layer-hardware">
@@ -112,7 +113,7 @@ const glossary = [
             <ul class="chips">
               <li>GPUs</li><li>RAM</li><li>Your model directories</li>
             </ul>
-            <p class="layer-note">On one computer, or on several.</p>
+            <p class="layer-note">Local engines use your machines. Cloud providers run on their own hardware.</p>
           </div>
         </div>
 
@@ -130,7 +131,7 @@ const glossary = [
             <p>Which machines belong to this install, and the keys they trust each other with.</p>
           </div>
         </aside>
-        <figcaption id="layers-caption">The request path runs down the left. The agent, library and control root on the right never touch a request. They prepare, supervise and connect.</figcaption>
+        <figcaption id="layers-caption">Client inference goes directly to the gateway. The browser console uses the agent as a proxy; the control root does not relay model output.</figcaption>
       </figure>
     </div>
   </section>
@@ -139,8 +140,8 @@ const glossary = [
     <div class="container">
       <div class="section-heading">
         <p class="eyebrow"><span class="section-index">02 /</span> The components</p>
-        <h2 id="components-title">Six processes, each with one job.</h2>
-        <p>Every component is its own repository and its own process. They share contracts, not code: each one publishes an OpenAPI description and the others are generated from it.</p>
+        <h2 id="components-title">Six building blocks, distinct jobs.</h2>
+        <p>Each has its own repository. The four service kinds are gateway, inference driver, library and control root; the agent supervises them, and the UI is a static export it serves. Six consumers generate types from pinned OpenAPI 3.1 contracts in the specs repository. Components share schemas, not code.</p>
       </div>
       <div class="component-grid">
         {components.map((c) => (
@@ -177,6 +178,7 @@ const glossary = [
         ))}
       </ol>
       <p class="journey-rule"><strong>One rule worth knowing:</strong> failover happens before the first token. Once an answer has started streaming, the gateway will not splice a second model onto it. A cut-off answer is reported as cut off, never quietly completed by someone else.</p>
+      <p class="journey-rule"><strong>Not every failure is retryable:</strong> a deadline while a backend is still computing returns a timeout, not a second computation on another replica. An unreachable host can still fail over. Embeddings fail over only between replicas of the same model, never into a different vector space.</p>
     </div>
   </section>
 
@@ -244,7 +246,7 @@ const glossary = [
               </div>
             </div>
           </div>
-          <p class="topology-note">Each machine runs an agent. Tools still talk to the one gateway; the browser can open any machine&rsquo;s agent and see the whole install.</p>
+          <p class="topology-note">Each machine runs an agent. A Library folder records its mounts once; nodes can override the path and optionally keep a local copy. Tools use one gateway, and any agent&rsquo;s console can manage the enrolled nodes.</p>
         </figure>
       </div>
     </div>
@@ -261,13 +263,13 @@ const glossary = [
           <FolderOpen size={27} stroke-width={1.5} aria-hidden="true" />
           <h3>Model files</h3>
           <p>In the directories you point the library at, with plain names. Downloads land there too. No content-addressed cache, no hidden store. Remove Eugene Plexus and the files are still there.</p>
-          <span class="principle-note">Never copied, never renamed.</span>
+          <span class="principle-note">Originals stay yours; local copies are optional.</span>
         </article>
         <article class="principle">
           <KeyRound size={27} stroke-width={1.5} aria-hidden="true" />
           <h3>Secrets and trust</h3>
-          <p>One passphrase, set once, protects the install. Provider keys are sealed with it. Machines join with a one-time token and then trust each other by signature, not by being on the same network.</p>
-          <span class="principle-note">Real authentication, so a tailnet works.</span>
+          <p>Operator sessions administer the install; named client keys allow inference and can be revoked. Nodes enroll with one-time join tokens, then sign address announcements and verify signed rekeys. Components still share install signing material today.</p>
+          <span class="principle-note">Trusted hosts and a LAN or mesh VPN, not public exposure.</span>
         </article>
         <article class="principle">
           <Cpu size={27} stroke-width={1.5} aria-hidden="true" />
@@ -276,13 +278,52 @@ const glossary = [
           <span class="principle-note">Upstream, supervised.</span>
         </article>
       </div>
+      <p class="journey-rule"><strong>Optional local copies:</strong> a node copies only model files its own declared runtimes use, into a separate directory with a minimum-free-space setting. It manages those copies, not the source files in your Library folders. The first copy takes time; later starts can avoid reading the model over the network again.</p>
+    </div>
+  </section>
+
+  <section class="section arch-section" id="status" aria-labelledby="status-title">
+    <div class="container glossary-layout">
+      <div>
+        <p class="eyebrow"><span class="section-index">06 /</span> Current boundaries</p>
+        <h2 id="status-title">Built does not mean released.</h2>
+        <p class="glossary-intro">As of September 19, 2026. There is no public platform release and no release date. Installers and the development container image are available for development; neither is a production-readiness claim.</p>
+        <p class="glossary-intro">The <a href="https://github.com/eugene-plexus/specs/tree/main/docs/acceptance">acceptance records</a> document the test setups, observed behavior and limits of what has been verified.</p>
+        <a class="text-link" href="https://github.com/eugene-plexus/specs/blob/main/docs/design/release-roadmap.md">Follow the roadmap <ArrowUpRight size={17} aria-hidden="true" /></a>
+      </div>
+      <dl class="glossary">
+        <div class="glossary-row">
+          <dt>Client APIs</dt>
+          <dd>OpenAI-compatible chat, tool calling, streaming and embeddings; Anthropic Messages for text and tool calls. Both chat formats use the same routing and metrics. A <a href="https://github.com/eugene-plexus/specs/blob/main/docs/acceptance/anthropic-messages-run.md">real Claude Code tool loop</a> passed through the gateway with a stub driver, not a real model. This is not full vendor API parity.</dd>
+        </div>
+        <div class="glossary-row">
+          <dt>Messages limits</dt>
+          <dd>Image and document blocks, server-side tools and MCP servers are rejected. Anthropic <code>thinking</code>, <code>cache_control</code> and <code>top_k</code> settings are ignored; local thinking behavior follows the configured model settings. See the <a href="https://github.com/eugene-plexus/specs/blob/main/openapi/gateway.yaml">gateway contract</a> for the complete mapping.</dd>
+        </div>
+        <div class="glossary-row">
+          <dt>Engines and hosts</dt>
+          <dd>llama.cpp and user-installed vLLM have live acceptance records on NVIDIA hardware. Windows and Linux via WSL2 have been exercised. AMD and Intel detection fixes have tests, but not equivalent live-hardware coverage. macOS remains unverified on hardware; MLX is experimental on a separate branch, not main.</dd>
+        </div>
+        <div class="glossary-row">
+          <dt>Windows startup</dt>
+          <dd>The Windows installer now targets a real service, with explicit migration from older per-user installs. Elevated service and migration acceptance checks remain outstanding; do not treat the implementation as fully verified. See the <a href="https://github.com/eugene-plexus/specs/blob/main/docs/design/release-roadmap.md">verification work still on the roadmap</a>.</dd>
+        </div>
+        <div class="glossary-row">
+          <dt>Trust boundary</dt>
+          <dd>Login, revocable client keys, signed enrollment coordination and rate limiting are implemented. Separating token-signing authority from the components that only need to verify tokens is still pre-release work. Keep development installs on trusted machines and networks.</dd>
+        </div>
+        <div class="glossary-row">
+          <dt>Still to build</dt>
+          <dd>A profile benchmark button, gateway request defaults drawn from per-model profiles, and the remaining phone, accessibility and moderated usability work. Fit guidance estimates memory use; it does not measure how fast your chosen context will run.</dd>
+        </div>
+      </dl>
     </div>
   </section>
 
   <section class="section arch-section arch-glossary-section" id="glossary" aria-labelledby="glossary-title">
     <div class="container glossary-layout">
       <div>
-        <p class="eyebrow"><span class="section-index">06 /</span> The words</p>
+        <p class="eyebrow"><span class="section-index">07 /</span> The words</p>
         <h2 id="glossary-title">A short glossary.</h2>
         <p class="glossary-intro">Six words that mean specific things here.</p>
         <a class="text-link" href="https://github.com/eugene-plexus/specs/tree/main/docs/design">Read the design documents <ArrowUpRight size={17} aria-hidden="true" /></a>
@@ -306,7 +347,7 @@ const glossary = [
   .arch-hero h1 {
     font-size: 44px;
     line-height: 1.1;
-    letter-spacing: -0.02em;
+    letter-spacing: 0;
     margin-top: 18px;
   }
   .arch-lead {
@@ -675,6 +716,7 @@ const glossary = [
     color: var(--muted);
     font-size: 14px;
   }
+  .glossary code { overflow-wrap: anywhere; }
 
   @media (max-width: 1050px) {
     .journey { grid-template-columns: repeat(2, minmax(0, 1fr)); }

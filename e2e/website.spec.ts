@@ -1,6 +1,34 @@
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test } from '@playwright/test';
 
+test('the homepage describes current capabilities without claiming a release', async ({ page }) => {
+    await page.goto('/');
+    await expect(page.locator('.hero-statement')).toHaveText('A self-hosted control plane for local LLM inference.');
+    await expect(page.locator('.hero-description')).toHaveText(/^Run AI models on your hardware,/);
+    await expect(page.locator('.hero-description')).toContainText('OpenAI and Anthropic Messages APIs');
+    for (const selector of ['meta[name="description"]', 'meta[property="og:description"]']) {
+        await expect(page.locator(selector)).toHaveAttribute('content', /OpenAI and Anthropic Messages APIs.*No public release yet/);
+    }
+    await expect(page.locator('.principle h3')).toHaveText([
+        'Engine setup, handled', 'Settings start with your machine', 'Your files stay yours',
+    ]);
+    await expect(page.locator('#configure')).toContainText('two-screen setup');
+    await expect(page.locator('#runtimes')).toContainText('Download and run');
+    await expect(page.locator('#routing')).toContainText('revocable client keys');
+    await expect(page.locator('#open-source')).toContainText('no public platform release and no release date');
+    const engines = page.locator('details').filter({ hasText: 'Which inference engines does it support?' });
+    await engines.locator('summary').click();
+    await expect(engines).toContainText('user-installed vLLM');
+    await expect(engines).toContainText('separate branch, not on main');
+    const clients = page.locator('details').filter({ hasText: 'Can I use Claude Code and my other tools?' });
+    await clients.locator('summary').click();
+    await expect(clients).toContainText('stub backend');
+    await expect(clients.getByRole('link', { name: 'compatibility limits' })).toHaveAttribute('href', '/architecture#status');
+    await clients.getByRole('link', { name: 'compatibility limits' }).click();
+    await expect(page).toHaveURL(/\/architecture#status$/);
+    await expect(page.locator('#status-title')).toBeInViewport();
+});
+
 test('Modern theme, local assets, accessible content, and responsive layout', async ({ page }, testInfo) => {
     const failedRequests: string[] = [];
     const pageErrors: string[] = [];
@@ -99,7 +127,7 @@ test('core content and FAQs work without JavaScript', async ({ browser, baseURL 
     await expect(page.locator('details').first().locator('p')).toBeVisible();
     await context.close();
 });
-test('the architecture page explains the layers and stays inside the viewport', async ({ page }) => {
+test('the architecture page explains the layers and stays inside the viewport', async ({ page }, testInfo) => {
     const failedRequests: string[] = [];
     page.on('response', (response) => {
         if (response.status() >= 400) failedRequests.push(`${response.status()} ${response.url()}`);
@@ -114,6 +142,23 @@ test('the architecture page explains the layers and stays inside the viewport', 
     }
     await expect(page.locator('.component-card')).toHaveCount(6);
     await expect(page.locator('.journey-step')).toHaveCount(5);
+    await expect(page.locator('#components-title')).toHaveText('Six building blocks, distinct jobs.');
+    await expect(page.locator('#ui')).toContainText('Static files, not a separate server');
+    await expect(page.locator('#principles')).toContainText('Originals stay yours; local copies are optional');
+    await expect(page.locator('#principles')).not.toContainText('Never copied');
+    await expect(page.locator('#request')).toContainText('Embeddings fail over only between replicas of the same model');
+    await expect(page.locator('#request')).toContainText('not a second computation on another replica');
+    await expect(page.locator('#status')).toContainText('no public platform release and no release date');
+    await expect(page.locator('#status')).toContainText('stub driver, not a real model');
+    await expect(page.locator('#status')).toContainText('not full vendor API parity');
+    await expect(page.locator('#status')).toContainText('token-signing authority');
+    await expect(page.locator('#measurements')).toHaveCount(0);
+    await expect(page.locator('main')).not.toContainText(/3\.2 ms|172 ms|2\.5 s|21 s vs 266 s/);
+    await expect(page.locator('#status').getByRole('link', { name: 'acceptance records', exact: true }))
+        .toHaveAttribute('href', 'https://github.com/eugene-plexus/specs/tree/main/docs/acceptance');
+    await expect(page.locator('.arch-section .section-index')).toHaveText([
+        '01 /', '02 /', '03 /', '04 /', '05 /', '06 /', '07 /',
+    ]);
     await expect(page.locator('main')).not.toContainText(/training|tokenizer|checkpoints/i);
     const layout = await page.evaluate(() => ({
         pageWidth: document.documentElement.scrollWidth,
@@ -129,6 +174,9 @@ test('the architecture page explains the layers and stays inside the viewport', 
     const accessibility = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa']).analyze();
     expect(accessibility.violations).toEqual([]);
     expect(failedRequests).toEqual([]);
+    await page.getByRole('heading', { level: 1 }).click();
+    await page.screenshot({ path: testInfo.outputPath('architecture.png'), fullPage: true });
+    await page.locator('#status').screenshot({ path: testInfo.outputPath('boundaries.png') });
     await page.getByRole('link', { name: 'The platform' }).click();
     await expect(page.getByRole('heading', { level: 1 })).toHaveText('Eugene Plexus.');
 });

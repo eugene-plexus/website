@@ -5,28 +5,28 @@ import SiteLayout from '../layouts/SiteLayout.astro';
 const stages = [
   {
     id: 'discover', number: '01', name: 'Find your next model', short: 'Discover', icon: Database,
-    description: 'Search the catalogue, read model cards, and choose a quantization with hardware-aware guidance. Download with progress and resume, or use models already on your disk.',
-    output: 'Your own model library', repo: 'library',
+    description: 'Start with a model recommended for the machine you choose. See which versions fit its available memory, at a stated context length, before downloading. Search the catalogue or paste a Hugging Face link for more options.',
+    output: 'A starting point for your hardware', repo: 'library',
   },
   {
     id: 'configure', number: '02', name: 'Make the setup yours', short: 'Configure', icon: SlidersHorizontal,
-    description: 'Keep named launch profiles for each model. Configure your runtimes through a browser interface, with settings drawn from the components themselves.',
-    output: 'Per-model settings profiles', repo: 'library',
+    description: 'Choose a passphrase and a model folder in a two-screen setup. Existing files are scanned where they are. New launch profiles start with a context length estimated for the selected machine, with named profiles and expert overrides available.',
+    output: 'Suggested settings you can change', repo: 'ui',
   },
   {
-    id: 'runtimes', number: '03', name: 'Run engines you trust', short: 'Run', icon: Cpu,
-    description: 'Start, stop, and inspect llama.cpp and vLLM runtimes. Eugene Plexus supervises the processes, with idle unloading and wake-on-demand support.',
-    output: 'Managed inference runtimes', repo: 'agent',
+    id: 'runtimes', number: '03', name: 'From download to first reply', short: 'Run', icon: Cpu,
+    description: 'Download and run is one action. Install llama.cpp with your approval, launch the model, and try a reply on Home. The agent restarts crashed engines; the gateway can unload idle models and wake them on demand.',
+    output: 'Engine setup and launch together', repo: 'agent',
   },
   {
     id: 'routing', number: '04', name: 'One endpoint, more options', short: 'Route', icon: Radio,
-    description: 'Connect your tools to one OpenAI-compatible endpoint. Route across local runtimes and optional cloud providers, with replica balancing and priority-based failover.',
-    output: 'A single API for your tools', repo: 'gateway',
+    description: 'Connect OpenAI-compatible tools or Claude Code through the same gateway, using revocable client keys. Keep Ollama or LM Studio alongside managed engines, cloud APIs, and Claude Code or Codex CLI backends, with replica balancing and ordered failover.',
+    output: 'OpenAI and Anthropic Messages APIs', repo: 'gateway',
   },
   {
     id: 'observe', number: '05', name: 'See what actually happened', short: 'Observe', icon: Activity,
-    description: 'Try a model in the playground. Inspect request metrics, latency, throughput, and which backend served a request, including the attempts that failed.',
-    output: 'A clearer view of each request', repo: 'ui',
+    description: 'Track downloads and model loading in the tasks tray. See problems that need attention, inspect request metrics and failed attempts, or use the diagnostic playground to compare a direct gateway request with the browser proxy.',
+    output: 'Status, problems, and request history', repo: 'ui',
   },
 ];
 ---
@@ -37,8 +37,8 @@ const stages = [
       <p class="eyebrow hero-eyebrow"><span class="status-dot" aria-hidden="true"></span> Local-first. Open source. In development.</p>
       <img class="hero-logo" src="/eugene-transparent.svg" alt="Eugene, the glasses-wearing face surrounded by a network ring" width="152" height="152" fetchpriority="high" />
       <h1 id="hero-title">Eugene Plexus<span class="heading-period">.</span></h1>
-      <p class="hero-statement">Your models. Your hardware. <strong>One control plane.</strong></p>
-      <p class="hero-description">Find and run language models. Manage your engines and route requests through one OpenAI-compatible endpoint, all from your browser.</p>
+      <p class="hero-statement">A self-hosted control plane for <strong>local LLM inference.</strong></p>
+      <p class="hero-description">Run AI models on your hardware, manage engines, and connect your tools through OpenAI and Anthropic Messages APIs.</p>
       <div class="hero-actions">
         <a class="button button-primary" href="https://github.com/eugene-plexus"><CodeXml size={19} aria-hidden="true" /> Explore the project <ArrowUpRight size={17} aria-hidden="true" /></a>
         <a class="text-link" href="#workflow">See the workflow <ArrowDown size={17} aria-hidden="true" /></a>
@@ -65,26 +65,26 @@ const stages = [
       <div class="section-heading">
         <p class="eyebrow"><span class="section-index">01 /</span> The platform</p>
         <h2 id="platform-title">Your inference setup,<br />working together.</h2>
-        <p>The models are here. The engines are capable. Eugene Plexus brings the operations together: discover, configure, supervise, and route, without giving up control of your setup.</p>
+        <p>Start on one machine, with engines and model settings you can manage from a browser. Add the backends you already run, then more machines when you need them.</p>
       </div>
       <div class="principles">
         <article class="principle">
-          <HardDrive size={27} stroke-width={1.5} aria-hidden="true" />
-          <h3>Your files stay yours</h3>
-          <p>Point the library at your existing model directories. Downloads stay plainly named, on your disk. Remove Eugene Plexus and your model files are still right where you put them.</p>
-          <span class="principle-note">Your library, without the lock-in.</span>
+          <Layers size={27} stroke-width={1.5} aria-hidden="true" />
+          <h3>Engine setup, handled</h3>
+          <p>Install and update llama.cpp from the browser, and restart it after a crash. Run a vLLM installation you already have. Eugene Plexus wraps upstream engines instead of replacing them.</p>
+          <span class="principle-note">The operations layer, not another engine.</span>
         </article>
         <article class="principle">
           <SlidersHorizontal size={27} stroke-width={1.5} aria-hidden="true" />
-          <h3>A browser for the whole setup</h3>
-          <p>Manage runtimes, profiles, and configuration from one interface. Built-in authentication supports access over your tailnet, including headless machines.</p>
-          <span class="principle-note">Local hardware. Network-aware control.</span>
+          <h3>Settings start with your machine</h3>
+          <p>Get a suggested model version and a memory estimate before downloading. Start a launch profile at a context length estimated to fit the selected machine, and change it when you need to.</p>
+          <span class="principle-note">A fit estimate, not a speed guarantee.</span>
         </article>
         <article class="principle">
-          <Layers size={27} stroke-width={1.5} aria-hidden="true" />
-          <h3>Works with proven engines</h3>
-          <p>Eugene Plexus supervises llama.cpp and vLLM instead of replacing them. An OpenAI-compatible gateway gives your tools a consistent way to reach the backends you choose.</p>
-          <span class="principle-note">The operations layer, not another engine.</span>
+          <HardDrive size={27} stroke-width={1.5} aria-hidden="true" />
+          <h3>Your files stay yours</h3>
+          <p>Find and download models into your own folders as plainly named files, or scan the models already there. Remove Eugene Plexus and your original model files stay where you put them.</p>
+          <span class="principle-note">Your library, without the lock-in.</span>
         </article>
       </div>
     </div>
@@ -96,7 +96,7 @@ const stages = [
         <p class="eyebrow"><span class="section-index">02 /</span> The workflow</p>
         <h2 id="workflow-title">Your models.<br />Your engines.<br /><span class="accent-text">One control plane.</span></h2>
         <p>From a model on disk to a service your tools can use.</p>
-        <p>A model library, supervised runtimes, and a routing gateway bring the pieces together. Keep the engine choices in your hands.</p>
+        <p>Home brings setup, the first model, and the first reply together. The resource tree keeps the rest of the install within reach as it grows.</p>
         <a class="text-link" href="/architecture">Explore the architecture <ArrowRight size={17} aria-hidden="true" /></a>
       </div>
       <ol class="workflow-stages">
@@ -122,8 +122,8 @@ const stages = [
       <div>
         <p class="eyebrow"><span class="section-index">03 /</span> Built in the open</p>
         <h2 id="open-source-title">Early days.<br />An open invitation.</h2>
-        <p>Eugene Plexus is under active development. There isn't a public platform release to download yet, but the code and the work are out in the open.</p>
-        <p>Explore the repositories, follow development, or help shape what comes next.</p>
+        <p>Eugene Plexus is under active development. Installers and a development container image exist, but there is no public platform release and no release date.</p>
+        <p>Follow the <a href="https://github.com/eugene-plexus/specs/blob/main/docs/design/release-roadmap.md">current roadmap</a> and <a href="https://github.com/eugene-plexus/specs/tree/main/docs/acceptance">acceptance records</a> for what is built, what has been exercised, and what still needs work.</p>
         <a class="button button-primary" href="https://github.com/eugene-plexus">Find us on GitHub <ArrowUpRight size={18} aria-hidden="true" /></a>
       </div>
       <div class="project-facts">
@@ -144,15 +144,23 @@ const stages = [
       <div class="questions">
         <details>
           <summary>Is this a chatbot or an inference engine?<ChevronDown size={19} aria-hidden="true" /></summary>
-          <p>Neither. Eugene Plexus is the control plane around your inference setup. It supervises upstream engines, manages model files and settings, and routes requests. The playground is one way to use it, not the whole product.</p>
+          <p>Neither. Eugene Plexus is the control plane around your inference setup. It installs and supervises upstream engines, manages model files and launch settings, and routes requests. Home offers a first reply; the playground is a diagnostic client, not a replacement for your chat or coding app.</p>
         </details>
         <details>
           <summary>Can I download it yet?<ChevronDown size={19} aria-hidden="true" /></summary>
-          <p>There is no public platform release yet. Developers can explore the source and the current setup instructions in each repository. This is active development, not a finished installation experience.</p>
+          <p>There is no public platform release yet. Developers can explore the <a href="https://github.com/eugene-plexus/specs/blob/main/docs/design/release-roadmap.md">current roadmap</a> and <a href="https://github.com/eugene-plexus/specs/tree/main/docs/deployment">deployment guides</a>, including the installers and the development container image. These are development paths, not a released or production-ready distribution.</p>
         </details>
         <details>
           <summary>Which inference engines does it support?<ChevronDown size={19} aria-hidden="true" /></summary>
-          <p>The current integrations supervise llama.cpp and user-installed vLLM. MLX is planned, not available yet. Hardware support depends on the engine and model; consult the project documentation for verified configurations and current limitations.</p>
+          <p>The current integrations install and supervise llama.cpp and drive user-installed vLLM. An experimental MLX adapter exists on a separate branch, not on main. Existing OpenAI-compatible servers, including Ollama and LM Studio, can also be connected without Eugene Plexus managing their processes. Hardware verification remains uneven; see the <a href="/architecture#status">current boundaries</a>.</p>
+        </details>
+        <details>
+          <summary>Can I use Claude Code and my other tools?<ChevronDown size={19} aria-hidden="true" /></summary>
+          <p>The gateway serves OpenAI-compatible chat, tool calling and embeddings, plus Anthropic Messages for text and tool calls. Client keys can be named and revoked from the console. A real Claude Code tool loop has been exercised against the gateway with a stub backend; full Anthropic API parity is not claimed. See <a href="/architecture#status">compatibility limits</a>.</p>
+        </details>
+        <details>
+          <summary>Can I manage more than one machine?<ChevronDown size={19} aria-hidden="true" /></summary>
+          <p>Yes. Enroll nodes and manage them from one authenticated console, including remote settings and folder browsing. A Library folder can describe where other machines mount it. Each node can optionally keep a local copy of the models it runs, while leaving the original files alone. Use a trusted LAN or a mesh VPN such as Tailscale for access from other devices.</p>
         </details>
         <details>
           <summary>How can I get involved?<ChevronDown size={19} aria-hidden="true" /></summary>
