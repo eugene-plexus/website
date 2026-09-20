@@ -14,7 +14,7 @@ const components = [
   {
     id: 'gateway', name: 'Gateway', icon: Radio, where: 'One per install',
     what: 'One address serving OpenAI-compatible chat and embeddings plus Anthropic Messages. Both chat formats share routing, replica balancing, ordered failover, wake-on-demand, and retained request metrics.',
-    talks: 'Your tools on one side; every inference driver on the other.', repo: 'gateway',
+    talks: 'Your tools on one side; every inference driver on the other. Reads model defaults from the Library through its agent.', repo: 'gateway',
   },
   {
     id: 'driver', name: 'Inference driver', icon: Cpu, where: 'One per backend',
@@ -23,8 +23,8 @@ const components = [
   },
   {
     id: 'library', name: 'Library', icon: Database, where: 'One per install',
-    what: 'Your model folders, with GGUF and safetensors scanning, named launch profiles, catalogue search and resumable downloads. It suggests a starter model and estimates memory fit at a stated context length for the selected machine.',
-    talks: 'The disk, the model hub, and the agent that launches a model.', repo: 'library',
+    what: 'Your model folders, with GGUF and safetensors scanning, named profiles for launch and generation settings, catalogue search and resumable downloads. It suggests a starter model and estimates memory fit at a stated context length for the selected machine.',
+    talks: 'The disk, the model hub, agents launching models, and gateways reading model defaults.', repo: 'library',
   },
   {
     id: 'control', name: 'Control root', icon: ShieldCheck, where: 'One active per install',
@@ -40,7 +40,7 @@ const components = [
 
 const journey = [
   { step: '1', title: 'Your tool asks', text: 'An editor or coding client sends OpenAI-style chat or Anthropic Messages with a client key. The Messages route accepts a bearer token or x-api-key; OpenAI routes use bearer tokens.' },
-  { step: '2', title: 'The gateway chooses', text: 'It resolves the model, checks readiness, wakes a managed runtime if needed, and balances replicas. Eligible backend failures can move the request to the next configured tier.' },
+  { step: '2', title: 'The gateway chooses', text: 'It resolves the model, checks readiness, wakes it if needed, and balances replicas. Omitted generation settings come from that model’s default profile, then gateway settings. Eligible backend failures can move the request to the next configured tier.' },
   { step: '3', title: 'The driver translates', text: 'One driver turns the request into its backend protocol and reports capabilities. Token streaming depends on that backend; Codex CLI returns whole messages rather than individual tokens.' },
   { step: '4', title: 'The engine generates', text: 'llama.cpp, vLLM, Ollama, or a cloud provider does the actual work on the hardware it has.' },
   { step: '5', title: 'The request is recorded', text: 'Metrics retain the serving backend, timing, tier, and failed attempts for both chat formats. OpenAI replies include routing metadata in the body or final stream frame; Anthropic keeps its own body format and uses headers.' },
@@ -62,7 +62,7 @@ const glossary = [
       <p class="eyebrow"><span class="section-index">Architecture</span></p>
       <h1 id="arch-title">How it fits together<span class="heading-period">.</span></h1>
       <p class="arch-lead">Eugene Plexus installs and manages engines, helps choose model settings for your hardware, and connects compatible tools to local and cloud backends. One machine or a homelab, the same layers do the work. It is not an inference engine or a chat app.</p>
-      <p class="arch-lead">Development snapshot: <time datetime="2026-09-19">September 19, 2026</time>. No public platform release. <a href="#status">Current boundaries</a>.</p>
+      <p class="arch-lead">Development snapshot: <time datetime="2026-09-20">September 20, 2026</time>. No public platform release. <a href="#status">Current boundaries</a>.</p>
     </div>
   </section>
 
@@ -71,7 +71,7 @@ const glossary = [
       <div class="section-heading">
         <p class="eyebrow"><span class="section-index">01 /</span> The layers</p>
         <h2 id="layers-title">Five layers, one address.</h2>
-        <p>Inference flows through the gateway and a driver. Beside that path, the agent supervises engines, the library prepares models, and the control root maintains the install. Discovery, key checks and a model wake can still depend on those services.</p>
+        <p>Inference flows through the gateway and a driver. Beside that path, the agent supervises engines, the library prepares models, and the control root maintains the install. Discovery, key checks, model defaults and a model wake can still depend on those services.</p>
       </div>
 
       <figure class="layers" aria-labelledby="layers-caption">
@@ -268,7 +268,7 @@ const glossary = [
         <article class="principle">
           <KeyRound size={27} stroke-width={1.5} aria-hidden="true" />
           <h3>Secrets and trust</h3>
-          <p>Operator sessions administer the install; named client keys allow inference and can be revoked. Nodes enroll with one-time join tokens, then sign address announcements and verify signed rekeys. Components still share install signing material today.</p>
+          <p>Operator sessions administer the install; named client keys allow inference and can be revoked. Nodes enroll with one-time join tokens, then sign address announcements and verify signed rekeys. With Ed25519 signing, agents and control roots hold signing authority; gateways, libraries and drivers receive public verification keys.</p>
           <span class="principle-note">Trusted hosts and a LAN or mesh VPN, not public exposure.</span>
         </article>
         <article class="principle">
@@ -287,8 +287,9 @@ const glossary = [
       <div>
         <p class="eyebrow"><span class="section-index">06 /</span> Current boundaries</p>
         <h2 id="status-title">Built does not mean released.</h2>
-        <p class="glossary-intro">As of September 19, 2026. There is no public platform release and no release date. Installers and the development container image are available for development; neither is a production-readiness claim.</p>
+        <p class="glossary-intro">As of September 20, 2026. There is no public platform release and no release date. Installers and the development container image are available for development; neither is a production-readiness claim.</p>
         <p class="glossary-intro">The <a href="https://github.com/eugene-plexus/specs/tree/main/docs/acceptance">acceptance records</a> document the test setups, observed behavior and limits of what has been verified.</p>
+        <p class="glossary-intro">For timings, see the <a href="https://github.com/eugene-plexus/specs/blob/main/docs/acceptance/control-plane-measurements.md">control-plane measurement record</a>, with hardware, baselines and limits for each observation.</p>
         <a class="text-link" href="https://github.com/eugene-plexus/specs/blob/main/docs/design/release-roadmap.md">Follow the roadmap <ArrowUpRight size={17} aria-hidden="true" /></a>
       </div>
       <dl class="glossary">
@@ -306,15 +307,19 @@ const glossary = [
         </div>
         <div class="glossary-row">
           <dt>Windows startup</dt>
-          <dd>The Windows installer now targets a real service, with explicit migration from older per-user installs. Elevated service and migration acceptance checks remain outstanding; do not treat the implementation as fully verified. See the <a href="https://github.com/eugene-plexus/specs/blob/main/docs/design/release-roadmap.md">verification work still on the roadmap</a>.</dd>
+          <dd>The Windows installer runs a real service, with explicit migration from older per-user installs. Starting and stopping a LocalSystem service is exercised in Windows CI; reboot-before-sign-in verification remains outstanding. See the <a href="https://github.com/eugene-plexus/specs/blob/main/docs/design/release-roadmap.md">verification work still on the roadmap</a>.</dd>
         </div>
         <div class="glossary-row">
           <dt>Trust boundary</dt>
-          <dd>Login, revocable client keys, signed enrollment coordination and rate limiting are implemented. Separating token-signing authority from the components that only need to verify tokens is still pre-release work. Keep development installs on trusted machines and networks.</dd>
+          <dd>New installs use Ed25519 signing with public-only verification in gateway, Library and driver processes. Older installs retain legacy signing until explicitly rotated after all components are upgraded. <a href="https://github.com/eugene-plexus/specs/blob/main/docs/acceptance/r7-signing-run.md">Windows and Linux rotation checks</a> preserve enrollment and reject forged sessions. Trusted agents remain able to sign tokens.</dd>
+        </div>
+        <div class="glossary-row">
+          <dt>Model settings</dt>
+          <dd>The default profile supplies maximum output tokens, temperature and top-p when your app omits them. Explicit app settings win. Changes apply after cache refresh without restarting the model; bounded caching lets requests continue during Library outages. <a href="https://github.com/eugene-plexus/specs/blob/main/docs/acceptance/r8-profile-defaults-run.md">Both API formats and streaming are checked</a>. Launch settings still apply when a runtime is created.</dd>
         </div>
         <div class="glossary-row">
           <dt>Still to build</dt>
-          <dd>A profile benchmark button, gateway request defaults drawn from per-model profiles, and the remaining phone, accessibility and moderated usability work. Fit guidance estimates memory use; it does not measure how fast your chosen context will run.</dd>
+          <dd>A profile benchmark button and the remaining phone, accessibility and moderated usability work. Fit guidance estimates memory use; it does not measure how fast your chosen context will run.</dd>
         </div>
       </dl>
     </div>

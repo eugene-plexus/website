@@ -10,7 +10,7 @@ const stages = [
   },
   {
     id: 'configure', number: '02', name: 'Make the setup yours', short: 'Configure', icon: SlidersHorizontal,
-    description: 'Choose a passphrase and a model folder in a two-screen setup. Existing files are scanned where they are. New launch profiles start with a context length estimated for the selected machine, with named profiles and expert overrides available.',
+    description: 'Choose a passphrase and a model folder in a two-screen setup. Existing files are scanned where they are. Launch settings start at a context length estimated for your machine. Save per-model answer settings too; explicit settings from your app take precedence.',
     output: 'Suggested settings you can change', repo: 'ui',
   },
   {
@@ -38,7 +38,7 @@ const stages = [
       <img class="hero-logo" src="/eugene-transparent.svg" alt="Eugene, the glasses-wearing face surrounded by a network ring" width="152" height="152" fetchpriority="high" />
       <h1 id="hero-title">Eugene Plexus<span class="heading-period">.</span></h1>
       <p class="hero-statement">A self-hosted control plane for <strong>local LLM inference.</strong></p>
-      <p class="hero-description">Run AI models on your hardware, manage engines, and connect your tools through OpenAI and Anthropic Messages APIs.</p>
+      <p class="hero-description">Run AI models on your hardware, with engine setup handled. Connect your tools through OpenAI and Anthropic Messages APIs.</p>
       <div class="hero-actions">
         <a class="button button-primary" href="https://github.com/eugene-plexus"><CodeXml size={19} aria-hidden="true" /> Explore the project <ArrowUpRight size={17} aria-hidden="true" /></a>
         <a class="text-link" href="#workflow">See the workflow <ArrowDown size={17} aria-hidden="true" /></a>

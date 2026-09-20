@@ -6,7 +6,7 @@ The public project website for **Eugene Plexus**, a self-hosted control plane fo
 - Production domain: <https://eugeneplexus.com>
 - Stack: Astro, TypeScript, self-hosted Inter and JetBrains Mono, Lucide icons.
 - Hosting: GitHub Pages. The build produces static files in `dist/`; no server, database, or platform service is required to serve them.
-- Status: development overview, refreshed against project records on 2026-09-19. No public platform release or release date. Deployment is manual.
+- Status: development overview, refreshed through R8 on 2026-09-20. No public platform release or release date. Deployment is manual.
 
 ## Development
 
@@ -62,7 +62,10 @@ The 2026-09-19 refresh keeps the existing Modern design and updates the homepage
 | Replica survival and wake timings                                   | [M6 run](https://github.com/eugene-plexus/specs/blob/main/docs/acceptance/m6-six-process-run.md); one GPU, 1.7B model, 172 ms completion after exclusion of a dead replica, not cascade latency                                                                                  |
 | Control-plane overhead                                              | [One-client run](https://github.com/eugene-plexus/specs/blob/main/docs/acceptance/one-client-run.md); Windows/Python 3.12 and a fixed-delay stub, not engine throughput                                                                                                          |
 | Timeouts and failover                                               | [Still-computing run](https://github.com/eugene-plexus/specs/blob/main/docs/acceptance/still-computing-run.md); computing deadlines do not cascade                                                                                                                               |
-| Unfinished trust split, profile defaults and usability work         | [Roadmap R7, R8 and R6](https://github.com/eugene-plexus/specs/blob/main/docs/design/release-roadmap.md); no release forecast                                                                                                                                                    |
+| Public-key verification and legacy-to-Ed25519 rotation | [R7 acceptance](https://github.com/eugene-plexus/specs/blob/main/docs/acceptance/r7-signing-run.md); trusted agents still sign; existing installs migrate by explicit rotation after upgrading |
+| Model profile generation defaults | [R8 acceptance](https://github.com/eugene-plexus/specs/blob/main/docs/acceptance/r8-profile-defaults-run.md); caller settings win; cached profile reads; launch settings remain copy-at-launch |
+| Remaining benchmark and usability work | [Roadmap R6](https://github.com/eugene-plexus/specs/blob/main/docs/design/release-roadmap.md); no release forecast |
+| Timing evidence and its limits | [Control-plane measurement record](https://github.com/eugene-plexus/specs/blob/main/docs/acceptance/control-plane-measurements.md); historical observations, not current-version or competitor benchmarks |
 
 On 2026-09-20, the standalone numbers section was removed. The records above remain technical evidence, linked from Current boundaries, rather than public-facing benchmarks. Prominent metrics must answer a prospective user's question with a relevant baseline; internal improvements and isolated hardware timings are not enough. Site publication remains the manual Pages workflow; a website refresh is not a platform release.
 

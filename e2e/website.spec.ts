@@ -151,7 +151,9 @@ test('the architecture page explains the layers and stays inside the viewport', 
     await expect(page.locator('#status')).toContainText('no public platform release and no release date');
     await expect(page.locator('#status')).toContainText('stub driver, not a real model');
     await expect(page.locator('#status')).toContainText('not full vendor API parity');
-    await expect(page.locator('#status')).toContainText('token-signing authority');
+    await expect(page.locator('#status')).toContainText('public-only verification');
+    await expect(page.locator('#status')).toContainText('Older installs retain legacy signing until explicitly rotated');
+    await expect(page.locator('#status')).toContainText('Explicit app settings win');
     await expect(page.locator('#measurements')).toHaveCount(0);
     await expect(page.locator('main')).not.toContainText(/3\.2 ms|172 ms|2\.5 s|21 s vs 266 s/);
     await expect(page.locator('#status').getByRole('link', { name: 'acceptance records', exact: true }))
