@@ -28,7 +28,7 @@ npm run preview
 
 `npm test` builds the production site first, then tests it with Chromium at 320, 390, 768, 1440, and 1920 pixels wide. Checks cover current capability and release-status copy, evidence caveats, Modern theme colors, local asset loading, overflow, accessibility, keyboard navigation, FAQs, 404 recovery, license notices, and JavaScript-disabled use. Homepage and architecture screenshots and failure traces are written to ignored `test-results/`.
 
-Tests start their own preview on port 4322 and do not reuse existing servers. The test configuration prevents Astro's agent detection from detaching this process, so Playwright can stop it on completion. Keep that port free; do not stop another project's process to make room.
+Tests start their own preview on port 4322 and do not reuse existing servers. They ignore Astro's shared preview lock so a preview on a different port can keep running. The test configuration prevents Astro's agent detection from detaching this process, so Playwright can stop it on completion. Keep that port free; do not stop another project's process to make room.
 
 ## Editing
 
@@ -36,6 +36,8 @@ Tests start their own preview on port 4322 and do not reuse existing servers. Th
 | -------------------------------------------------------------- | ------------------------------------------------------------------------ |
 | [src/pages/index.astro](src/pages/index.astro)                 | Homepage copy, workflow, FAQs, and source links                          |
 | [src/pages/install.astro](src/pages/install.astro)             | Beginner alpha installation, first reply, updates, removal and help |
+| [src/pages/recovery.astro](src/pages/recovery.astro)           | Public backup and recovery guide, with alpha/development version guidance |
+| [src/content/recovery.md](src/content/recovery.md)             | Reviewed snapshot of the specs recovery procedure, rendered on the recovery page |
 | [src/data/alpha-release.json](src/data/alpha-release.json)     | Release manifest copied from the published distribution artifacts |
 | [src/pages/releases/[version]/[file].ts](src/pages/releases/[version]/[file].ts) | Generate versioned installers from immutable upstream blobs, rejecting hash mismatches |
 | [src/pages/architecture.astro](src/pages/architecture.astro)   | Layers, request flow, topologies, verification links, and current limits |
@@ -57,6 +59,15 @@ prerelease assets before deploying the site. A new release needs its own manifes
 and versioned paths; retain old manifests/routes when adding later versions so
 existing commands remain available. Engine/model downloads and Python dependencies
 are upstream-selected; only Eugene source revisions are fixed by this manifest.
+
+The recovery page includes the full procedure without a runtime dependency on
+GitHub or a working Eugene installation. `src/content/recovery.md` is a snapshot
+of specs `docs/recovery.md` at `aab0b6d9af0f656bb1cfafac952d45947db14bcf`, with
+its first heading supplied by the page and its helper link made absolute to that
+revision. Update the snapshot and the page's source revision together after
+reviewing future procedure changes. Keep the published-alpha caveat until a release
+actually includes the recovery guard. The new page does not change the installer
+manifest or release artifacts.
 
 The [direction document](https://github.com/eugene-plexus/specs/blob/main/docs/design/local-inference-control-plane.md) defines the positioning; the [release roadmap](https://github.com/eugene-plexus/specs/blob/main/docs/design/release-roadmap.md) owns the work order. Older README and milestone summaries can lag behind completed work. Use dated implementation and acceptance records for current claims. The training direction is retired. Do not restore a training pipeline or promote planned features as available. Keep the pre-release notice until a public platform release actually exists.
 

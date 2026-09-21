@@ -1,0 +1,61 @@
+---
+import SiteLayout from '../layouts/SiteLayout.astro';
+import { Content as RecoveryGuide } from '../content/recovery.md';
+import release from '../data/alpha-release.json';
+const revision = 'aab0b6d9af0f656bb1cfafac952d45947db14bcf';
+const source = `https://github.com/eugene-plexus/specs/blob/${revision}`;
+---
+
+<SiteLayout title="Backup and recovery | Eugene Plexus" description="Prepare a backup before updating Eugene Plexus and recover from a failed update. Includes published alpha precautions and the development build's manual recovery procedure.">
+  <article class="container recovery-page">
+    <header>
+      <p class="eyebrow">Keep your installation recoverable</p>
+      <h1>Backup and recovery</h1>
+      <p>Save this guide before updating. It is hosted separately from Eugene, so you can read it even when your installation will not start.</p>
+    </header>
+
+    <aside class="version-notice" aria-labelledby="version-title">
+      <h2 id="version-title">Start with your installed version</h2>
+      <p><strong>Published alpha ({release.version}):</strong> the encrypted checkpoint helper below requires a newer agent and will refuse this alpha. Before your first upgrade, stop the installation and its child processes, then keep a protected, complete copy of its installation and state, including Python and the virtual environment. Keep model files and any external engine environments separately. Restoring this older copy requires its original absolute paths.</p>
+      <p><strong>Newer development builds with recovery support:</strong> follow the checkpoint procedure below. After upgrading from the alpha, create and rehearse a checkpoint before relying on it for a later update.</p>
+      <p>The <a href="/install">public installation commands</a> still install {release.version}. This guide does not change their version. Installing older software over newer state is not a rollback.</p>
+    </aside>
+
+    <nav class="recovery-nav" aria-label="Recovery sections">
+      <a href="#what-the-checkpoint-contains">What is backed up</a>
+      <a href="#windows-worker">Windows</a>
+      <a href="#container-control-plane">NAS / Docker</a>
+      <a href="#recovery-limits-and-validation">Check the recovery</a>
+    </nav>
+
+    <div class="guide"><RecoveryGuide /></div>
+
+    <footer class="guide-source">
+      <p>This procedure was reviewed on September 21, 2026. <a href={`${source}/docs/recovery.md`}>View its source revision</a> and <a href={`${source}/docs/acceptance/a7-recovery-run.md`}>the Windows and container recovery checks</a>. These checks used isolated installations and real CPU inference; they do not establish recovery on every hardware or storage setup.</p>
+      <p>Need help? <a href="https://github.com/eugene-plexus/specs/issues/new">Report a problem</a> with your version, operating system, failed step and error text. Keep backup files, passphrases, API keys and private logs out of public reports.</p>
+    </footer>
+  </article>
+</SiteLayout>
+
+<style>
+  .recovery-page { max-width: 960px; padding-block: 4rem; }
+  h1 { font-size: clamp(2rem, 5vw, 3.5rem); line-height: 1.12; letter-spacing: -.04em; margin-block: 1rem 1.5rem; }
+  .recovery-page :global(h2) { font-size: clamp(1.5rem, 3vw, 2rem); line-height: 1.25; margin-block: 2.5rem 1.25rem; scroll-margin-top: 6rem; }
+  .recovery-page :global(p), .recovery-page :global(li) { line-height: 1.8; }
+  .recovery-page :global(p) { margin-block: 1rem; }
+  .recovery-page :global(a) { color: var(--accent-left); text-underline-offset: .2em; }
+  .version-notice { margin-block: 2rem; padding: 1rem 1.25rem; background: var(--panel-soft); border-left: 3px solid var(--accent-left); }
+  .version-notice h2 { margin-top: 0; }
+  .recovery-nav { display: flex; flex-wrap: wrap; gap: .75rem 1.25rem; margin-block: 2rem; }
+  .guide { border-top: 1px solid var(--border); padding-top: 1rem; }
+  .guide :global(code) { font-family: var(--font-mono); font-size: .875em; overflow-wrap: anywhere; }
+  .guide :global(pre) { padding: 1rem; border: 1px solid var(--border); border-radius: var(--radius); white-space: pre-wrap; overflow-wrap: anywhere; }
+  .guide :global(table) { width: 100%; border-collapse: collapse; table-layout: fixed; margin-block: 1.5rem; }
+  .guide :global(th), .guide :global(td) { padding: .75rem; text-align: left; vertical-align: top; border: 1px solid var(--border); overflow-wrap: anywhere; }
+  .guide :global(th) { background: var(--panel-soft); }
+  .guide-source { margin-top: 2.5rem; padding-top: 1rem; border-top: 1px solid var(--border); }
+  @media print {
+    .recovery-page { width: 100%; padding: 0; }
+    .guide :global(pre), .version-notice { break-inside: avoid; }
+  }
+</style>

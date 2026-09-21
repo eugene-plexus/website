@@ -23,7 +23,7 @@ export default defineConfig({
         { name: 'wide-desktop', use: { viewport: { width: 1920, height: 1080 } } },
     ],
     webServer: {
-        command: 'npm run preview -- --host 127.0.0.1 --port 4322',
+        command: 'npm run preview -- --host 127.0.0.1 --port 4322 --ignore-lock',
         env: { ASTRO_PREVIEW_BACKGROUND: '1' },
         url: 'http://127.0.0.1:4322',
         reuseExistingServer: false,

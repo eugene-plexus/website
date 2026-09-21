@@ -69,6 +69,7 @@ const notes = `https://github.com/eugene-plexus/specs/releases/tag/${release.ver
 
     <section id="update" aria-labelledby="update-title">
       <h2 id="update-title">Update or repair an install</h2>
+      <p><a href="/recovery">Read the backup and recovery guide before updating.</a> It covers precautions for this alpha and the checkpoint procedure for newer development builds.</p>
       <p>Running the same command again reinstalls this alpha's Eugene revisions and keeps the existing configuration and model files. The service restarts, so let active requests finish first.</p>
       <p>For a later alpha, use that release's instructions. These versioned commands stay on <strong>{release.version}</strong>; they do not silently follow development changes. Do not run an older alpha installer over a newer installation. Keep your passphrase and back up the install's configuration before changing versions.</p>
       <details>
@@ -88,6 +89,7 @@ const notes = `https://github.com/eugene-plexus/specs/releases/tag/${release.ver
 
     <section id="help" aria-labelledby="help-title">
       <h2 id="help-title">If something goes wrong</h2>
+      <p>If an update left Eugene unable to start, follow the <a href="/recovery">backup and recovery guide</a>.</p>
       <dl>
         <dt>The first message says the model is still loading</dt>
         <dd>In this alpha, Home can enable Send before loading has finished. Wait for loading to finish in Tasks, then send the message again. A “still coming up” response does not mean the model has crashed.</dd>
