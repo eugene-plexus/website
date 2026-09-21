@@ -6,7 +6,7 @@ The public project website for **Eugene Plexus**, a self-hosted control plane fo
 - Production domain: <https://eugeneplexus.com>
 - Stack: Astro, TypeScript, self-hosted Inter and JetBrains Mono, Lucide icons.
 - Hosting: GitHub Pages. The build produces static files in `dist/`; no server, database, or platform service is required to serve them.
-- Status: v0.1.0-alpha.1 for early testing, 2026-09-20. No stable release yet. Deployment is manual.
+- Status: v0.1.0-alpha.2 for early testing, 2026-09-21. No stable release yet. Deployment is manual.
 
 ## Development
 
@@ -62,12 +62,12 @@ are upstream-selected; only Eugene source revisions are fixed by this manifest.
 
 The recovery page includes the full procedure without a runtime dependency on
 GitHub or a working Eugene installation. `src/content/recovery.md` is a snapshot
-of specs `docs/recovery.md` at `aab0b6d9af0f656bb1cfafac952d45947db14bcf`, with
+of specs `docs/recovery.md` at `ba0e6f7273ccc7063045da64cfe860ec87d7316c`, with
 its first heading supplied by the page and its helper link made absolute to that
 revision. Update the snapshot and the page's source revision together after
-reviewing future procedure changes. Keep the published-alpha caveat until a release
-actually includes the recovery guard. The new page does not change the installer
-manifest or release artifacts.
+reviewing future procedure changes. Alpha.2 includes the recovery guard; retain
+the separate alpha.1 cold-copy instructions for its first upgrade.
+`src/data/archived-releases.json` preserves earlier manifests and installer URLs.
 
 The [direction document](https://github.com/eugene-plexus/specs/blob/main/docs/design/local-inference-control-plane.md) defines the positioning; the [release roadmap](https://github.com/eugene-plexus/specs/blob/main/docs/design/release-roadmap.md) owns the work order. Older README and milestone summaries can lag behind completed work. Use dated implementation and acceptance records for current claims. The training direction is retired. Do not restore a training pipeline or promote planned features as available. Keep the pre-release notice until a public platform release actually exists.
 
@@ -79,7 +79,7 @@ The 2026-09-19 refresh keeps the existing Modern design and updates the homepage
 | ------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Engine setup, hardware-led recommendations, then tools and backends | [Adopted positioning](https://github.com/eugene-plexus/specs/blob/main/docs/design/local-inference-control-plane.md#2-the-differentiators); no uniqueness claim about competing products                                                                                         |
 | Two-screen setup, Download and run, tasks, issues and client keys   | [Hobbyist implementation records](https://github.com/eugene-plexus/specs/blob/main/docs/design/hobbyist-ux.md); later fixes are recorded in the roadmap                                                                                                                          |
-| Anthropic Messages alongside OpenAI-compatible APIs                 | [Gateway contract](https://github.com/eugene-plexus/specs/blob/main/openapi/gateway.yaml) and [Claude Code acceptance](https://github.com/eugene-plexus/specs/blob/main/docs/acceptance/anthropic-messages-run.md); real client and gateway, stub driver, not full vendor parity |
+| Anthropic Messages alongside OpenAI-compatible APIs                 | [Gateway contract](https://github.com/eugene-plexus/specs/blob/main/openapi/gateway.yaml) and [application acceptance](https://github.com/eugene-plexus/specs/blob/ba0e6f7273ccc7063045da64cfe860ec87d7316c/docs/acceptance/a4-application-workflows.md); real clients and local models, not full vendor parity |
 | Optional node-local model copies                                    | [Design and live measurement, section 14.3](https://github.com/eugene-plexus/specs/blob/main/docs/design/node-local-model-copy.md); originals stay untouched, first copy has a cost, 21 s was a warm-cache start                                                                 |
 | Replica survival and wake timings                                   | [M6 run](https://github.com/eugene-plexus/specs/blob/main/docs/acceptance/m6-six-process-run.md); one GPU, 1.7B model, 172 ms completion after exclusion of a dead replica, not cascade latency                                                                                  |
 | Control-plane overhead                                              | [One-client run](https://github.com/eugene-plexus/specs/blob/main/docs/acceptance/one-client-run.md); Windows/Python 3.12 and a fixed-delay stub, not engine throughput                                                                                                          |

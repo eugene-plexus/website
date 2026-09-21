@@ -2,11 +2,11 @@
 import SiteLayout from '../layouts/SiteLayout.astro';
 import { Content as RecoveryGuide } from '../content/recovery.md';
 import release from '../data/alpha-release.json';
-const revision = 'aab0b6d9af0f656bb1cfafac952d45947db14bcf';
+const revision = 'ba0e6f7273ccc7063045da64cfe860ec87d7316c';
 const source = `https://github.com/eugene-plexus/specs/blob/${revision}`;
 ---
 
-<SiteLayout title="Backup and recovery | Eugene Plexus" description="Prepare a backup before updating Eugene Plexus and recover from a failed update. Includes published alpha precautions and the development build's manual recovery procedure.">
+<SiteLayout title="Backup and recovery | Eugene Plexus" description="Prepare a backup before updating Eugene Plexus and recover from a failed update. Includes alpha.1 upgrade precautions and alpha.2 encrypted checkpoints.">
   <article class="container recovery-page">
     <header>
       <p class="eyebrow">Keep your installation recoverable</p>
@@ -16,9 +16,9 @@ const source = `https://github.com/eugene-plexus/specs/blob/${revision}`;
 
     <aside class="version-notice" aria-labelledby="version-title">
       <h2 id="version-title">Start with your installed version</h2>
-      <p><strong>Published alpha ({release.version}):</strong> the encrypted checkpoint helper below requires a newer agent and will refuse this alpha. Before your first upgrade, stop the installation and its child processes, then keep a protected, complete copy of its installation and state, including Python and the virtual environment. Keep model files and any external engine environments separately. Restoring this older copy requires its original absolute paths.</p>
-      <p><strong>Newer development builds with recovery support:</strong> follow the checkpoint procedure below. After upgrading from the alpha, create and rehearse a checkpoint before relying on it for a later update.</p>
-      <p>The <a href="/install">public installation commands</a> still install {release.version}. This guide does not change their version. Installing older software over newer state is not a rollback.</p>
+      <p><strong>Upgrading from v0.1.0-alpha.1:</strong> the encrypted checkpoint helper below requires a newer agent and will refuse alpha.1. Before your first upgrade, stop the installation and its child processes, then keep a protected, complete copy of its installation and state, including Python and the virtual environment. Keep model files and any external engine environments separately. Restoring this older copy requires its original absolute paths.</p>
+      <p><strong>Published alpha ({release.version}) and A7-capable development builds:</strong> follow the checkpoint procedure below. After upgrading from alpha.1, create and rehearse a checkpoint before relying on it for a later update.</p>
+      <p>The <a href="/install">public installation commands</a> install {release.version}. Installing older software over newer state is not a rollback.</p>
     </aside>
 
     <nav class="recovery-nav" aria-label="Recovery sections">

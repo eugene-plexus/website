@@ -22,7 +22,7 @@ test('the homepage describes current capabilities with an explicit alpha boundar
     await expect(engines).toContainText('separate branch, not on main');
     const clients = page.locator('details').filter({ hasText: 'Can I use Claude Code and my other tools?' });
     await clients.locator('summary').click();
-    await expect(clients).toContainText('stub backend');
+    await expect(clients).toContainText('actual local models');
     await expect(clients.getByRole('link', { name: 'compatibility limits' })).toHaveAttribute('href', '/architecture#status');
     await clients.getByRole('link', { name: 'compatibility limits' }).click();
     await expect(page).toHaveURL(/\/architecture#status$/);
@@ -149,7 +149,7 @@ test('the architecture page explains the layers and stays inside the viewport', 
     await expect(page.locator('#request')).toContainText('Embeddings fail over only between replicas of the same model');
     await expect(page.locator('#request')).toContainText('not a second computation on another replica');
     await expect(page.locator('#status')).toContainText('There is no stable release yet');
-    await expect(page.locator('#status')).toContainText('stub driver, not a real model');
+    await expect(page.locator('#status')).toContainText('actual local models');
     await expect(page.locator('#status')).toContainText('not full vendor API parity');
     await expect(page.locator('#status')).toContainText('public-only verification');
     await expect(page.locator('#status')).toContainText('Older installs retain legacy signing until explicitly rotated');

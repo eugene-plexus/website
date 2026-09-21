@@ -62,7 +62,7 @@ const glossary = [
       <p class="eyebrow"><span class="section-index">Architecture</span></p>
       <h1 id="arch-title">How it fits together<span class="heading-period">.</span></h1>
       <p class="arch-lead">Eugene Plexus installs and manages engines, helps choose model settings for your hardware, and connects compatible tools to local and cloud backends. One machine or a homelab, the same layers do the work. It is not an inference engine or a chat app.</p>
-      <p class="arch-lead">Development snapshot: <time datetime="2026-09-20">September 20, 2026</time>. <a href="/install">First alpha available for testing</a>. <a href="#status">Current boundaries</a>.</p>
+      <p class="arch-lead">Alpha.2 snapshot: <time datetime="2026-09-21">September 21, 2026</time>. <a href="/install">Current alpha available for testing</a>. <a href="#status">Current boundaries</a>.</p>
     </div>
   </section>
 
@@ -287,7 +287,7 @@ const glossary = [
       <div>
         <p class="eyebrow"><span class="section-index">06 /</span> Current boundaries</p>
         <h2 id="status-title">An alpha, with limits to know.</h2>
-        <p class="glossary-intro">As of September 20, 2026. The first alpha is available for early testing. There is no stable release yet. Versioned installers and a matching container image are available; this is not a production-readiness claim. <a href="/install">Installation guide</a>.</p>
+        <p class="glossary-intro">As of September 21, 2026. Alpha.2 is available for early testing. There is no stable release yet. Versioned installers and a matching container image are available; this is not a production-readiness claim. <a href="/install">Installation guide</a>.</p>
         <p class="glossary-intro">The <a href="https://github.com/eugene-plexus/specs/tree/main/docs/acceptance">acceptance records</a> document the test setups, observed behavior and limits of what has been verified.</p>
         <p class="glossary-intro">For timings, see the <a href="https://github.com/eugene-plexus/specs/blob/main/docs/acceptance/control-plane-measurements.md">control-plane measurement record</a>, with hardware, baselines and limits for each observation.</p>
         <a class="text-link" href="https://github.com/eugene-plexus/specs/blob/main/docs/design/release-roadmap.md">Follow the roadmap <ArrowUpRight size={17} aria-hidden="true" /></a>
@@ -295,11 +295,11 @@ const glossary = [
       <dl class="glossary">
         <div class="glossary-row">
           <dt>Client APIs</dt>
-          <dd>OpenAI-compatible chat, tool calling, streaming and embeddings; Anthropic Messages for text and tool calls. Both chat formats use the same routing and metrics. A <a href="https://github.com/eugene-plexus/specs/blob/main/docs/acceptance/anthropic-messages-run.md">real Claude Code tool loop</a> passed through the gateway with a stub driver, not a real model. This is not full vendor API parity.</dd>
+          <dd>OpenAI-compatible chat, tool calling, streaming and embeddings; Anthropic Messages for text and tool calls. Both chat formats use the same routing and metrics. <a href="https://github.com/eugene-plexus/specs/blob/ba0e6f7273ccc7063045da64cfe860ec87d7316c/docs/application-workflows.md">Claude Code edit/check tasks and Open WebUI chat and images</a> passed with actual local models. This is not full vendor API parity.</dd>
         </div>
         <div class="glossary-row">
           <dt>Messages limits</dt>
-          <dd>Image and document blocks, server-side tools and MCP servers are rejected. Anthropic <code>thinking</code>, <code>cache_control</code> and <code>top_k</code> settings are ignored; local thinking behavior follows the configured model settings. See the <a href="https://github.com/eugene-plexus/specs/blob/main/openapi/gateway.yaml">gateway contract</a> for the complete mapping.</dd>
+          <dd>Anthropic image and document blocks, hosted tools, MCP servers and <code>top_k</code> are rejected. <code>thinking</code>, <code>context_management</code> and cache hints are accepted but not enforced; responses identify ignored controls. OpenAI chat separately supports bounded inline PNG/JPEG input on confirmed vision backends. See the <a href="https://github.com/eugene-plexus/specs/blob/main/openapi/gateway.yaml">gateway contract</a> for the complete mapping.</dd>
         </div>
         <div class="glossary-row">
           <dt>Engines and hosts</dt>
@@ -318,8 +318,8 @@ const glossary = [
           <dd>The default profile supplies maximum output tokens, temperature and top-p when your app omits them. Explicit app settings win. Changes apply after cache refresh without restarting the model; bounded caching lets requests continue during Library outages. <a href="https://github.com/eugene-plexus/specs/blob/main/docs/acceptance/r8-profile-defaults-run.md">Both API formats and streaming are checked</a>. Launch settings still apply when a runtime is created.</dd>
         </div>
         <div class="glossary-row">
-          <dt>Still to build</dt>
-          <dd>Phone, accessibility and moderated usability work remains. Saved llama.cpp profiles now have a Benchmark button to measure decode speed at increasing context depths on a selected machine. Fit guidance still estimates memory use; benchmark results describe that particular run.</dd>
+          <dt>Measured limits and remaining checks</dt>
+          <dd>Phone layouts and accessibility checks passed; moderated friend sessions and physical platform checks remain open. A finite CPU run with three Open WebUI chat workers and two Claude Code tasks passed its declared targets. This is not a five-user capacity guarantee. See the <a href="https://github.com/eugene-plexus/specs/blob/ba0e6f7273ccc7063045da64cfe860ec87d7316c/docs/support-matrix.md">support matrix</a> for measured, simulated and pending configurations.</dd>
         </div>
       </dl>
     </div>

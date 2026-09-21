@@ -123,7 +123,7 @@ const stages = [
       <div>
         <p class="eyebrow"><span class="section-index">03 /</span> Built in the open</p>
         <h2 id="open-source-title">Early days.<br />An open invitation.</h2>
-        <p>Eugene Plexus is under active development. The first alpha is available for early testing, with versioned installers and a matching container image. There is no stable release yet.</p>
+        <p>Eugene Plexus is under active development. The current alpha is available for early testing, with versioned installers and a matching container image. There is no stable release yet.</p>
         <p>Follow the <a href="https://github.com/eugene-plexus/specs/blob/main/docs/design/release-roadmap.md">current roadmap</a> and <a href="https://github.com/eugene-plexus/specs/tree/main/docs/acceptance">acceptance records</a> for what is built, what has been exercised, and what still needs work.</p>
         <a class="button button-primary" href="https://github.com/eugene-plexus">Find us on GitHub <ArrowUpRight size={18} aria-hidden="true" /></a>
       </div>
@@ -149,7 +149,7 @@ const stages = [
         </details>
         <details>
           <summary>Can I download it yet?<ChevronDown size={19} aria-hidden="true" /></summary>
-          <p>Yes. <a href="/install">Install {release.version}</a> to help test the first alpha. The guide covers setup, your first reply, updates and removal. This is an early testing release; see the <a href="/architecture#status">current boundaries</a> before relying on it.</p>
+          <p>Yes. <a href="/install">Install {release.version}</a> to help test the current alpha. The guide covers setup, your first reply, updates and removal. This is an early testing release; see the <a href="/architecture#status">current boundaries</a> before relying on it.</p>
         </details>
         <details>
           <summary>Which inference engines does it support?<ChevronDown size={19} aria-hidden="true" /></summary>
@@ -157,7 +157,7 @@ const stages = [
         </details>
         <details>
           <summary>Can I use Claude Code and my other tools?<ChevronDown size={19} aria-hidden="true" /></summary>
-          <p>The gateway serves OpenAI-compatible chat, tool calling and embeddings, plus Anthropic Messages for text and tool calls. Client keys can be named and revoked from the console. A real Claude Code tool loop has been exercised against the gateway with a stub backend; full Anthropic API parity is not claimed. See <a href="/architecture#status">compatibility limits</a>.</p>
+          <p>The gateway serves OpenAI-compatible chat, tool calling and embeddings, plus Anthropic Messages for text and tool calls. Client keys can be named and revoked from the console. Claude Code edit/check tasks and Open WebUI chat and images have been exercised with actual local models; full vendor API parity is not claimed. See <a href="/architecture#status">compatibility limits</a>.</p>
         </details>
         <details>
           <summary>Can I manage more than one machine?<ChevronDown size={19} aria-hidden="true" /></summary>

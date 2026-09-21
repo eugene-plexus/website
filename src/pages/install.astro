@@ -9,13 +9,14 @@ const uninstallWindows = `& ([scriptblock]::Create((irm ${base}/install.ps1))) -
 const uninstallPosix = `curl -fsSL ${base}/install.sh | sh -s -- --uninstall`;
 const notes = `https://github.com/eugene-plexus/specs/releases/tag/${release.version}`;
 ---
-<SiteLayout title="Install the alpha | Eugene Plexus" description="Install Eugene Plexus v0.1.0-alpha.1 on Windows or Linux, get your first model answering, and learn how to update or remove it. An early testing release.">
+<SiteLayout title="Install the alpha | Eugene Plexus" description={`Install Eugene Plexus ${release.version} on Windows or Linux, get your first model answering, and learn how to update or remove it. An early testing release.`}>
   <div class="container install-page">
     <header class="install-intro">
       <p class="eyebrow">Early testing · {release.version}</p>
       <h1>Get your first model answering.</h1>
       <p>Install Eugene Plexus on the computer that will run your models. Then open its console in your browser, choose a model, and try a reply.</p>
       <p class="alpha-notice"><strong>This is an alpha.</strong> It is ready for early testing, with rough edges still to find. There is no stable release yet. <a href={notes}>Release notes and known limits</a>.</p>
+      <p>This update adds scoped application keys, local-only routing, safer failover, encrypted recovery checkpoints and measured shared-load limits. See the <a href={`https://github.com/eugene-plexus/specs/blob/${release.specsCommit}/docs/support-matrix.md`}>tested configurations</a> and <a href={`https://github.com/eugene-plexus/specs/blob/${release.specsCommit}/docs/application-workflows.md`}>Open WebUI and Claude Code setup recipes</a>.</p>
     </header>
     <nav class="install-nav" aria-label="Installation sections">
       <a href="#before">Before you start</a><a href="#windows">Windows</a><a href="#linux">Linux</a><a href="#mac">Mac</a><a href="#first-reply">First reply</a><a href="#update">Update</a><a href="#remove">Remove</a><a href="#help">Get help</a>
@@ -69,7 +70,7 @@ const notes = `https://github.com/eugene-plexus/specs/releases/tag/${release.ver
 
     <section id="update" aria-labelledby="update-title">
       <h2 id="update-title">Update or repair an install</h2>
-      <p><a href="/recovery">Read the backup and recovery guide before updating.</a> It covers precautions for this alpha and the checkpoint procedure for newer development builds.</p>
+      <p><a href="/recovery">Read the backup and recovery guide before updating.</a> Alpha.1 needs a complete stopped-install copy for its first upgrade. Alpha.2 includes the encrypted checkpoint procedure; create and rehearse a checkpoint after upgrading.</p>
       <p>Running the same command again reinstalls this alpha's Eugene revisions and keeps the existing configuration and model files. The service restarts, so let active requests finish first.</p>
       <p>For a later alpha, use that release's instructions. These versioned commands stay on <strong>{release.version}</strong>; they do not silently follow development changes. Do not run an older alpha installer over a newer installation. Keep your passphrase and back up the install's configuration before changing versions.</p>
       <details>
@@ -92,7 +93,7 @@ const notes = `https://github.com/eugene-plexus/specs/releases/tag/${release.ver
       <p>If an update left Eugene unable to start, follow the <a href="/recovery">backup and recovery guide</a>.</p>
       <dl>
         <dt>The first message says the model is still loading</dt>
-        <dd>In this alpha, Home can enable Send before loading has finished. Wait for loading to finish in Tasks, then send the message again. A “still coming up” response does not mean the model has crashed.</dd>
+        <dd>Home waits for model readiness before enabling Send. If another client connects while the model is loading, wait for Tasks to show it is ready before sending again. A “still coming up” response does not mean the model has crashed.</dd>
         <dt>The page does not open</dt>
         <dd>Use the address printed by the installer, on the same computer. Read the final error and log location in the terminal. On Linux, check <code>systemctl --user status eugene-plexus-agent</code>; on Windows, look for <code>EugenePlexusAgent</code> in Services.</dd>
         <dt>The model will not start or is too slow</dt>
