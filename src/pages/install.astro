@@ -89,6 +89,8 @@ const notes = `https://github.com/eugene-plexus/specs/releases/tag/${release.ver
     <section id="help" aria-labelledby="help-title">
       <h2 id="help-title">If something goes wrong</h2>
       <dl>
+        <dt>The first message says the model is still loading</dt>
+        <dd>In this alpha, Home can enable Send before loading has finished. Wait for loading to finish in Tasks, then send the message again. A “still coming up” response does not mean the model has crashed.</dd>
         <dt>The page does not open</dt>
         <dd>Use the address printed by the installer, on the same computer. Read the final error and log location in the terminal. On Linux, check <code>systemctl --user status eugene-plexus-agent</code>; on Windows, look for <code>EugenePlexusAgent</code> in Services.</dd>
         <dt>The model will not start or is too slow</dt>
