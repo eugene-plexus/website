@@ -1,13 +1,13 @@
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test } from '@playwright/test';
 
-test('the homepage describes current capabilities without claiming a release', async ({ page }) => {
+test('the homepage describes current capabilities with an explicit alpha boundary', async ({ page }) => {
     await page.goto('/');
     await expect(page.locator('.hero-statement')).toHaveText('A self-hosted control plane for local LLM inference.');
     await expect(page.locator('.hero-description')).toHaveText(/^Run AI models on your hardware,/);
     await expect(page.locator('.hero-description')).toContainText('OpenAI and Anthropic Messages APIs');
     for (const selector of ['meta[name="description"]', 'meta[property="og:description"]']) {
-        await expect(page.locator(selector)).toHaveAttribute('content', /OpenAI and Anthropic Messages APIs.*No public release yet/);
+        await expect(page.locator(selector)).toHaveAttribute('content', /OpenAI and Anthropic Messages APIs.*Alpha available for testing/);
     }
     await expect(page.locator('.principle h3')).toHaveText([
         'Engine setup, handled', 'Settings start with your machine', 'Your files stay yours',
@@ -15,7 +15,7 @@ test('the homepage describes current capabilities without claiming a release', a
     await expect(page.locator('#configure')).toContainText('two-screen setup');
     await expect(page.locator('#runtimes')).toContainText('Download and run');
     await expect(page.locator('#routing')).toContainText('revocable client keys');
-    await expect(page.locator('#open-source')).toContainText('no public platform release and no release date');
+    await expect(page.locator('#open-source')).toContainText('There is no stable release yet');
     const engines = page.locator('details').filter({ hasText: 'Which inference engines does it support?' });
     await engines.locator('summary').click();
     await expect(engines).toContainText('user-installed vLLM');
@@ -43,7 +43,7 @@ test('Modern theme, local assets, accessible content, and responsive layout', as
     await expect(page.getByRole('heading', { level: 1 })).toHaveText('Eugene Plexus.');
     await expect(page).toHaveTitle('Eugene Plexus | A self-hosted control plane for local LLM inference');
     await expect(page.locator('main')).not.toContainText(/training|tokenizer|checkpoints/i);
-    await expect(page.locator('.release-note')).toContainText('No public platform release yet');
+    await expect(page.locator('.release-note')).toContainText('is available for early testing. No stable release yet.');
     await expect(page.locator('html')).toHaveAttribute('data-theme', 'modern');
     await expect(page.locator('html')).toHaveCSS('color-scheme', 'light');
     await expect(page.locator('.button').first()).toHaveCSS('border-radius', '6px');
@@ -148,7 +148,7 @@ test('the architecture page explains the layers and stays inside the viewport', 
     await expect(page.locator('#principles')).not.toContainText('Never copied');
     await expect(page.locator('#request')).toContainText('Embeddings fail over only between replicas of the same model');
     await expect(page.locator('#request')).toContainText('not a second computation on another replica');
-    await expect(page.locator('#status')).toContainText('no public platform release and no release date');
+    await expect(page.locator('#status')).toContainText('There is no stable release yet');
     await expect(page.locator('#status')).toContainText('stub driver, not a real model');
     await expect(page.locator('#status')).toContainText('not full vendor API parity');
     await expect(page.locator('#status')).toContainText('public-only verification');

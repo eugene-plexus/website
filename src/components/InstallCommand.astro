@@ -1,0 +1,35 @@
+---
+interface Props { id: string; command: string; label: string; }
+const { id, command, label } = Astro.props;
+---
+<div class="install-command">
+  <div class="command-heading">
+    <span>{label}</span>
+    <button type="button" data-copy-command={id} hidden aria-label={`Copy ${label.toLowerCase()}`}>Copy</button>
+  </div>
+  <pre tabindex="0" aria-label={label}><code id={id}>{command}</code></pre>
+  <span class="copy-status" role="status" aria-live="polite"></span>
+</div>
+<script>
+  for (const button of document.querySelectorAll<HTMLButtonElement>('[data-copy-command]')) {
+    button.hidden = false;
+    button.addEventListener('click', async () => {
+      const command = document.getElementById(button.dataset.copyCommand!);
+      const status = button.closest('.install-command')!.querySelector('.copy-status')!;
+      try {
+        await navigator.clipboard.writeText(command!.textContent!);
+        status.textContent = 'Copied.';
+      } catch {
+        status.textContent = 'Select the command above and copy it.';
+      }
+    });
+  }
+</script>
+<style>
+  .install-command { margin-block: 1rem; min-width: 0; }
+  .command-heading { display: flex; align-items: center; justify-content: space-between; gap: 1rem; font-size: .875rem; }
+  button { border: 1px solid var(--border); border-radius: 6px; background: var(--panel); color: var(--foreground); padding: .5rem .875rem; cursor: pointer; font: inherit; }
+  pre { margin-block: .5rem; padding: 1rem; background: var(--panel-soft); border: 1px solid var(--border); border-radius: 6px; white-space: pre-wrap; overflow-wrap: anywhere; font-size: .875rem; line-height: 1.7; }
+  code { font-family: 'JetBrains Mono Variable', monospace; }
+  .copy-status { display: block; min-height: 1.4em; font-size: .875rem; }
+</style>

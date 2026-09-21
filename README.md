@@ -6,7 +6,7 @@ The public project website for **Eugene Plexus**, a self-hosted control plane fo
 - Production domain: <https://eugeneplexus.com>
 - Stack: Astro, TypeScript, self-hosted Inter and JetBrains Mono, Lucide icons.
 - Hosting: GitHub Pages. The build produces static files in `dist/`; no server, database, or platform service is required to serve them.
-- Status: development overview, refreshed through R8 on 2026-09-20. No public platform release or release date. Deployment is manual.
+- Status: v0.1.0-alpha.1 for early testing, 2026-09-20. No stable release yet. Deployment is manual.
 
 ## Development
 
@@ -35,6 +35,9 @@ Tests start their own preview on port 4322 and do not reuse existing servers. Th
 | File                                                           | Purpose                                                                  |
 | -------------------------------------------------------------- | ------------------------------------------------------------------------ |
 | [src/pages/index.astro](src/pages/index.astro)                 | Homepage copy, workflow, FAQs, and source links                          |
+| [src/pages/install.astro](src/pages/install.astro)             | Beginner alpha installation, first reply, updates, removal and help |
+| [src/data/alpha-release.json](src/data/alpha-release.json)     | Release manifest copied from the published distribution artifacts |
+| [src/pages/releases/[version]/[file].ts](src/pages/releases/[version]/[file].ts) | Generate versioned installers from immutable upstream blobs, rejecting hash mismatches |
 | [src/pages/architecture.astro](src/pages/architecture.astro)   | Layers, request flow, topologies, verification links, and current limits |
 | [src/layouts/SiteLayout.astro](src/layouts/SiteLayout.astro)   | Shared navigation, footer, fonts, metadata, canonical URLs               |
 | [src/styles/global.css](src/styles/global.css)                 | Modern theme tokens and responsive layout                                |
@@ -46,6 +49,14 @@ Tests start their own preview on port 4322 and do not reuse existing servers. Th
 | [.github/workflows/pages.yml](.github/workflows/pages.yml)     | CI checks and manual deployment                                          |
 
 The design follows the application's **light Modern theme**: near-white surfaces, blue and magenta accents, Inter, and 6px corners. Tokens are maintained here, not imported from the application repo. There is no theme chooser or dark variant.
+
+The alpha's versioned installer URLs are generated at build time from the specs
+commit recorded in `alpha-release.json`, with size and SHA-256 verification.
+Never hand-edit or copy installers into `public/`. Publish and verify the GitHub
+prerelease assets before deploying the site. A new release needs its own manifest
+and versioned paths; retain old manifests/routes when adding later versions so
+existing commands remain available. Engine/model downloads and Python dependencies
+are upstream-selected; only Eugene source revisions are fixed by this manifest.
 
 The [direction document](https://github.com/eugene-plexus/specs/blob/main/docs/design/local-inference-control-plane.md) defines the positioning; the [release roadmap](https://github.com/eugene-plexus/specs/blob/main/docs/design/release-roadmap.md) owns the work order. Older README and milestone summaries can lag behind completed work. Use dated implementation and acceptance records for current claims. The training direction is retired. Do not restore a training pipeline or promote planned features as available. Keep the pre-release notice until a public platform release actually exists.
 

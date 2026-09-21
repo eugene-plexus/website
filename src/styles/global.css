@@ -1062,6 +1062,10 @@ p {
 }
 
 @media (max-width: 390px) {
+    .hero-inner {
+        padding-bottom: 18px;
+    }
+
     .hero h1 {
         font-size: 38px;
     }
