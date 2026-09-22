@@ -44,6 +44,32 @@ test('current and archived installers retain exact release bytes', async ({ requ
     }
 });
 
+test('Docker is a top-level option with a copyable pinned Compose setup', async ({ page, context }, testInfo) => {
+    await page.goto('/install');
+    await page.getByRole('navigation', { name: 'Installation sections' }).getByRole('link', { name: 'Docker / NAS', exact: true }).click();
+    await expect(page.locator('#docker-title')).toBeInViewport();
+    const configuration = await page.locator('#docker-compose').innerText();
+    expect(configuration).toContain(`image: ${release.container}`);
+    for (const mapping of ['8279:8079', '8280:8080', '8283:8083']) {
+        expect(configuration).toContain(`"${mapping}"`);
+    }
+    expect(configuration).toContain('plexus-data:/data');
+    expect(configuration).toContain('target: /models');
+    expect(configuration).toContain('create_host_path: false');
+    await context.grantPermissions(['clipboard-read', 'clipboard-write']);
+    await page.getByRole('button', { name: 'Copy docker compose configuration', exact: true }).click();
+    // Windows clipboard APIs translate line endings; YAML indentation must survive.
+    await expect.poll(async () => (await page.evaluate(() => navigator.clipboard.readText())).replace(/\r\n/g, '\n')).toBe(configuration);
+    await expect(page.locator('.docker-addresses')).toContainText('http://NAS-IP:8280/v1');
+    await expect(page.locator('.docker-addresses')).toContainText('http://NAS-IP:8283');
+    await expect(page.locator('#docker-join-windows')).toContainText(`/releases/${release.version}/install.ps1`);
+    await expect(page.locator('#docker-join-linux')).toContainText(`/releases/${release.version}/install.sh`);
+    await expect(page.locator('#docker')).toContainText('The container does not run GPU inference');
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)).toBe(true);
+    await page.locator('#docker-compose').scrollIntoViewIfNeeded();
+    await page.screenshot({ path: testInfo.outputPath('docker-compose.png') });
+});
+
 test('recovery distinguishes the first alpha upgrade from checkpoint-capable releases', async ({ browser, baseURL, page: scriptedPage }, testInfo) => {
     const context = await browser.newContext({ javaScriptEnabled: false, viewport: testInfo.project.use.viewport });
     try {
@@ -71,6 +97,11 @@ test('installation instructions remain usable without JavaScript', async ({ brow
         await page.goto(`${baseURL}/install`);
         await expect(page.locator('#windows-command')).toBeVisible();
         await expect(page.getByRole('button', { name: 'Copy windows install command' })).toBeHidden();
+        await page.getByRole('navigation', { name: 'Installation sections' }).getByRole('link', { name: 'Docker / NAS', exact: true }).click();
+        await expect(page.locator('#docker-title')).toBeInViewport();
+        await expect(page.locator('#docker-compose')).toBeVisible();
+        await expect(page.getByRole('button', { name: 'Copy docker compose configuration' })).toBeHidden();
+        await expect(page.locator('#docker-join-windows')).toBeVisible();
         await page.getByText('Already running a NAS or Docker control plane?', { exact: true }).click();
         await expect(page.locator('#update details')).toContainText(release.container);
         await expect(page.locator('#update details p')).toBeVisible();

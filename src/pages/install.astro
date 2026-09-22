@@ -8,28 +8,56 @@ const posix = `curl -fsSL ${base}/install.sh | sh`;
 const uninstallWindows = `& ([scriptblock]::Create((irm ${base}/install.ps1))) -Uninstall`;
 const uninstallPosix = `curl -fsSL ${base}/install.sh | sh -s -- --uninstall`;
 const notes = `https://github.com/eugene-plexus/specs/releases/tag/${release.version}`;
+const containerGuide = `https://github.com/eugene-plexus/specs/blob/${release.specsCommit}/docs/deployment/container.md`;
+const compose = `name: eugene-plexus
+
+services:
+  control-plane:
+    image: ${release.container}
+    hostname: eugene-plexus
+    init: true
+    restart: unless-stopped
+    stop_grace_period: 60s
+    ports:
+      - "8279:8079" # Browser console
+      - "8280:8080" # Application API
+      - "8283:8083" # Worker enrollment
+    volumes:
+      - plexus-data:/data
+      - type: bind
+        source: ./models
+        target: /models
+        bind:
+          create_host_path: false
+
+volumes:
+  plexus-data:
+`;
+const joinWindows = `& ([scriptblock]::Create((irm ${base}/install.ps1))) -Join 'http://NAS-IP:8283' -Token 'JOIN-TOKEN'`;
+const joinLinux = `curl -fsSL ${base}/install.sh | sh -s -- --join 'http://NAS-IP:8283' --token 'JOIN-TOKEN'`;
 ---
-<SiteLayout title="Install the alpha | Eugene Plexus" description={`Install Eugene Plexus ${release.version} on Windows or Linux, get your first model answering, and learn how to update or remove it. An early testing release.`}>
+<SiteLayout title="Install the alpha | Eugene Plexus" description={`Install Eugene Plexus ${release.version} on Windows, Linux, or Docker / NAS. Get your first model answering and learn how to update or remove it. An early testing release.`}>
   <div class="container install-page">
     <header class="install-intro">
       <p class="eyebrow">Early testing · {release.version}</p>
       <h1>Get your first model answering.</h1>
-      <p>Install Eugene Plexus on the computer that will run your models. Then open its console in your browser, choose a model, and try a reply.</p>
+      <p>Choose Windows or Linux to run models on that computer, or Docker / NAS to keep the console, gateway and model library on your server and connect a separate GPU computer.</p>
       <p class="alpha-notice"><strong>This is an alpha.</strong> It is ready for early testing, with rough edges still to find. There is no stable release yet. <a href={notes}>Release notes and known limits</a>.</p>
       <p>This update adds scoped application keys, local-only routing, safer failover, encrypted recovery checkpoints and measured shared-load limits. See the <a href={`https://github.com/eugene-plexus/specs/blob/${release.specsCommit}/docs/support-matrix.md`}>tested configurations</a> and <a href={`https://github.com/eugene-plexus/specs/blob/${release.specsCommit}/docs/application-workflows.md`}>Open WebUI and Claude Code setup recipes</a>.</p>
     </header>
     <nav class="install-nav" aria-label="Installation sections">
-      <a href="#before">Before you start</a><a href="#windows">Windows</a><a href="#linux">Linux</a><a href="#mac">Mac</a><a href="#first-reply">First reply</a><a href="#update">Update</a><a href="#remove">Remove</a><a href="#help">Get help</a>
+      <a href="#before">Before you start</a><a href="#windows">Windows</a><a href="#linux">Linux</a><a href="#docker">Docker / NAS</a><a href="#mac">Mac</a><a href="#first-reply">First reply</a><a href="#update">Update</a><a href="#remove">Remove</a><a href="#help">Get help</a>
     </nav>
 
     <section id="before" aria-labelledby="before-title">
       <h2 id="before-title">Before you start</h2>
       <ul>
         <li>A 64-bit Windows or Linux computer, internet access, and a browser. Windows x64 and Linux x64/WSL have been exercised; other hardware has less verification.</li>
-        <li>For a small first model, aim for 16 GB of RAM and at least 10 GB of free disk space. Larger models need more. A supported GPU helps; CPU inference is available but can be slow.</li>
+        <li>On the machine running models, aim for 16 GB of RAM and at least 10 GB of free disk space for a small first model. Larger models need more. A supported GPU helps; CPU inference is available but can be slow.</li>
         <li>On Windows, an administrator account or someone who can approve the service installation. On Linux, use your normal account, with <code>curl</code> and a systemd user session.</li>
+        <li>For Docker / NAS, use an Intel or AMD 64-bit Linux host with Docker Engine and Compose v2, plus a separate Windows or Linux machine to run models. The published container is Linux amd64; ARM NAS hardware is not covered.</li>
       </ul>
-      <p>You do not need to install Python, Node.js, Git, or llama.cpp yourself. The installer fetches Eugene and its Python environment. The console asks before installing the inference engine or downloading a model.</p>
+      <p>You do not need to install Python, Node.js, Git, or llama.cpp yourself. The native installers and container include Eugene's Python environment. The console asks before installing the inference engine or downloading a model.</p>
       <p>Start with a local model folder. The Windows service runs as the system, so your mapped network drives and saved file-server logins are not inherited. Network storage can be added later in Config → Agent → Storage.</p>
       <p>These commands download and run the installer for <strong>{release.version}</strong>. You can <a href={`${base}/install.ps1`}>read the Windows script</a> or <a href={`${base}/install.sh`}>read the Linux/Mac script</a> first. The <a href={notes}>release assets</a> include SHA-256 checksums and the component manifest.</p>
     </section>
@@ -50,6 +78,45 @@ const notes = `https://github.com/eugene-plexus/specs/releases/tag/${release.ver
       <p>The service normally starts when you sign in. For startup before sign-in, follow the installer's optional <code>loginctl enable-linger</code> instruction. WSL needs a working systemd user session for automatic startup; otherwise use the manual command it prints and keep that terminal open.</p>
     </section>
 
+    <section id="docker" aria-labelledby="docker-title">
+      <h2 id="docker-title">1. Install with Docker / NAS</h2>
+      <p>This runs the console, control root, gateway and model library on your NAS or Linux server. <strong>The container does not run GPU inference.</strong> Join a Windows or Linux worker below to run models.</p>
+      <p>Use this example for a <strong>new install</strong>. If Eugene already runs on your NAS, follow <a href="#update">Update</a> and keep its existing storage and ports.</p>
+
+      <h3>Prepare persistent storage</h3>
+      <p>Create a project folder on your server. Inside it, create a <code>models</code> folder for your model files and downloads. The container runs as UID/GID <code>10001:10001</code>; give that account read and write access to the models folder through your NAS permissions settings. On an ordinary Linux host, from the new project folder:</p>
+      <InstallCommand id="docker-models" command="mkdir models && sudo chown 10001:10001 models" label="Create an empty model folder on Linux" />
+      <p>For an existing model collection, change <code>source: ./models</code> below to its absolute host path and grant access to that folder. Keep your existing ownership and sharing setup. The <a href={`${containerGuide}#unraid-from-the-gui`}>Unraid guide</a> covers NAS-specific settings; if using its template, set the image to <code>{release.container}</code> before starting.</p>
+
+      <h3>Save and start the Compose project</h3>
+      <p>Save this as <code>compose.yaml</code> in the project folder, or paste it into your NAS's Compose editor with an absolute model-folder path. The <code>plexus-data</code> volume preserves configuration, enrollment, keys and logs; the model folder stays on your host.</p>
+      <InstallCommand id="docker-compose" command={compose} label="Docker Compose configuration" preserveLines />
+      <p>From that folder, run:</p>
+      <InstallCommand id="docker-start" command={'docker compose pull\ndocker compose up -d'} label="Docker startup commands" />
+      <p>These ports are reachable on the host's network interfaces. Keep them on a trusted LAN or VPN, and complete first-run setup immediately: the first person to open the console chooses the install's passphrase. No router port forwarding is needed.</p>
+
+      <h3>Open the console and set its address</h3>
+      <p>Replace <code>NAS-IP</code> with your server's LAN address. These addresses use the <strong>published host ports</strong> from the example:</p>
+      <dl class="docker-addresses">
+        <dt>Browser console</dt><dd><code>http://NAS-IP:8279/</code></dd>
+        <dt>Application API base URL</dt><dd><code>http://NAS-IP:8280/v1</code></dd>
+        <dt>Control root for worker enrollment</dt><dd><code>http://NAS-IP:8283</code></dd>
+      </dl>
+      <p>Open the console, choose and save your passphrase, and use <code>/models</code> as the model folder inside the container. In <strong>Config → Agent → Advertise address</strong> on the NAS node, set <code>http://NAS-IP:8279</code> so other nodes can reach it. If you change the left side of a port mapping, use that new port in the matching address above.</p>
+
+      <h3>Join the computer that will run models</h3>
+      <ol>
+        <li>In the NAS console, open <strong>Nodes → Add a node</strong>. Leave the optional node name blank, set <strong>Control root URL the other machine can reach</strong> to <code>http://NAS-IP:8283</code>, and choose <strong>Mint a join token</strong>.</li>
+        <li>Copy the token value after <code>--token</code> in the generated command. Replace <code>NAS-IP</code> and <code>JOIN-TOKEN</code> in the appropriate command below. Run it on the worker computer; these installers keep the worker on this alpha too. Tokens expire and work once, so mint a new one for each worker.</li>
+      </ol>
+      <InstallCommand id="docker-join-windows" command={joinWindows} label="Windows worker join command" />
+      <InstallCommand id="docker-join-linux" command={joinLinux} label="Linux worker join command" />
+      <p>On Windows, approve the administrator prompt. On Linux, run as your normal user. Check that Nodes reports the worker as reachable. The worker must reach the NAS ports above, and the NAS must reach the worker's agent, normally port <code>8079</code>.</p>
+      <p>Share the host model folder over SMB or NFS and make it readable on the worker. On that worker, set <strong>Config → Agent → Model directory mappings</strong>: map <code>/models</code> to the worker's path to the same files. Windows services need their own file-server login under <strong>Config → Agent → Storage</strong>; a mapped desktop drive is not enough.</p>
+      <p>In Library, select the worker as the launch target, choose or download a model, and start it there. When it is ready, try Playground using <strong>Through this agent</strong>. For a direct connection or another app, use <code>http://NAS-IP:8280/v1</code> and an application key from <strong>Use from apps</strong>. The container's internal port <code>8080</code> is not the published API port in this example.</p>
+      <p><strong>After a container restart:</strong> sign in to the NAS console to unlock the control root; if your browser is already signed in, sign out and back in. A healthy container can still be locked. See <a href={`${containerGuide}#unattended-unlock`}>unattended unlock</a> for optional startup with a mounted passphrase file.</p>
+    </section>
+
     <section id="mac" aria-labelledby="mac-title">
       <h2 id="mac-title">Mac testing</h2>
       <p>The installer also has a macOS path, but physical Mac verification remains outstanding for this alpha. If you want to help test it, run the Linux/Mac command in Terminal as your normal user. It installs a launchd agent for your login. The experimental MLX adapter is not included.</p>
@@ -58,6 +125,7 @@ const notes = `https://github.com/eugene-plexus/specs/releases/tag/${release.ver
 
     <section id="first-reply" aria-labelledby="reply-title">
       <h2 id="reply-title">2. Get your first reply</h2>
+      <p>For a Windows or Linux standalone install, continue below. For Docker / NAS, finish the worker and model-folder setup in the <a href="#docker">Docker instructions</a> first and launch models on that worker.</p>
       <ol>
         <li><strong>Choose a passphrase.</strong> Save it somewhere you can find again. It protects your install; there is no passphrase recovery.</li>
         <li><strong>Choose where models live.</strong> Accept the proposed folder to start fresh, or choose a folder containing models you already own.</li>
@@ -75,7 +143,7 @@ const notes = `https://github.com/eugene-plexus/specs/releases/tag/${release.ver
       <p>For a later alpha, use that release's instructions. These versioned commands stay on <strong>{release.version}</strong>; they do not silently follow development changes. Do not run an older alpha installer over a newer installation. Keep your passphrase and back up the install's configuration before changing versions.</p>
       <details>
         <summary>Already running a NAS or Docker control plane?</summary>
-        <p>The matching Linux amd64 image is <code>{release.container}</code>. Keep your existing volumes, port mappings and settings when changing the image tag. It runs the control-plane services; install Eugene on the GPU computer separately. See the <a href={`https://github.com/eugene-plexus/specs/blob/${release.specsCommit}/docs/deployment/container.md`}>container and enrollment guide</a> before creating a new multi-machine install.</p>
+        <p>The matching Linux amd64 image is <code>{release.container}</code>. Back up first, then change only the image tag in your existing Compose file or NAS container settings. Keep the same project name, hostname, volumes, model-folder mapping and published ports. For Compose, run <code>docker compose pull</code> then <code>docker compose up -d</code> from the existing project folder. Sign in again to unlock the control root after restart. For a new install, use <a href="#docker">Docker / NAS</a> above.</p>
       </details>
     </section>
 
@@ -86,6 +154,7 @@ const notes = `https://github.com/eugene-plexus/specs/releases/tag/${release.ver
       <p>On Linux or Mac, use your normal terminal account:</p>
       <InstallCommand id="posix-remove" command={uninstallPosix} label="Linux and Mac removal command" />
       <p>These commands remove startup registration and the application environment. They leave original model files alone, keep downloaded engines and managed model copies, and move configuration and logs to the backup folder shown in the output. They apply to the default locations above; custom installations need their original prefix.</p>
+      <p>For Docker, run <code>docker compose down</code> from the project folder to stop and remove the container while retaining the state volume and model files. Do not add <code>--volumes</code> if you want to keep the install's identity and configuration.</p>
     </section>
 
     <section id="help" aria-labelledby="help-title">
@@ -110,6 +179,7 @@ const notes = `https://github.com/eugene-plexus/specs/releases/tag/${release.ver
   .install-intro { max-width: 760px; }
   h1 { font-size: clamp(2rem, 5vw, 3.5rem); line-height: 1.12; letter-spacing: -.04em; margin-block: 1rem 1.5rem; }
   h2 { font-size: clamp(1.5rem, 3vw, 2rem); line-height: 1.25; margin-bottom: 1.25rem; }
+  h3 { font-size: 1.125rem; margin-top: 2rem; }
   p, li, dd { line-height: 1.8; }
   p { margin-block: 1rem; }
   a { color: var(--accent-left); text-underline-offset: .2em; }
