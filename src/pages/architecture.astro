@@ -287,10 +287,10 @@ const glossary = [
       <div>
         <p class="eyebrow"><span class="section-index">06 /</span> Current boundaries</p>
         <h2 id="status-title">An alpha, with limits to know.</h2>
-        <p class="glossary-intro">As of September 21, 2026. Alpha.2 is available for early testing. There is no stable release yet. Versioned installers and a matching container image are available; this is not a production-readiness claim. <a href="/install">Installation guide</a>.</p>
+        <p class="glossary-intro">As of September 22, 2026. Alpha.2 is available for early testing. There is no stable release yet. Versioned installers and a matching container image are available; this is not a production-readiness claim. <a href="/install">Installation guide</a>.</p>
         <p class="glossary-intro">The <a href="https://github.com/eugene-plexus/specs/tree/main/docs/acceptance">acceptance records</a> document the test setups, observed behavior and limits of what has been verified.</p>
         <p class="glossary-intro">For timings, see the <a href="https://github.com/eugene-plexus/specs/blob/main/docs/acceptance/control-plane-measurements.md">control-plane measurement record</a>, with hardware, baselines and limits for each observation.</p>
-        <a class="text-link" href="https://github.com/eugene-plexus/specs/blob/main/docs/design/release-roadmap.md">Follow the roadmap <ArrowUpRight size={17} aria-hidden="true" /></a>
+        <a class="text-link" href="https://github.com/eugene-plexus/specs/blob/main/docs/design/adoption-roadmap.md">Follow the roadmap <ArrowUpRight size={17} aria-hidden="true" /></a>
       </div>
       <dl class="glossary">
         <div class="glossary-row">
@@ -303,15 +303,15 @@ const glossary = [
         </div>
         <div class="glossary-row">
           <dt>Engines and hosts</dt>
-          <dd>llama.cpp and user-installed vLLM have live acceptance records on NVIDIA hardware. Windows and Linux via WSL2 have been exercised. AMD and Intel detection fixes have tests, but not equivalent live-hardware coverage. macOS remains unverified on hardware; MLX is experimental on a separate branch, not main.</dd>
+          <dd>llama.cpp and user-installed vLLM have live acceptance records on NVIDIA hardware. Windows and Linux via WSL2 have been exercised. AMD and Intel detection fixes have tests, but not equivalent live-hardware coverage. macOS remains unverified on hardware. Development builds after alpha.2 add two experimental engines, neither in alpha.2: MLX, checked only against simulated backends while physical Apple silicon checks are pending, and Kev decision models behind a typed-decision endpoint, run live only on a CPU under WSL. See the <a href="https://github.com/eugene-plexus/specs/blob/main/docs/support-matrix.md">current support matrix</a>.</dd>
         </div>
         <div class="glossary-row">
           <dt>Windows startup</dt>
-          <dd>The Windows installer runs a real service, with explicit migration from older per-user installs. Starting and stopping a LocalSystem service is exercised in Windows CI; reboot-before-sign-in verification remains outstanding. See the <a href="https://github.com/eugene-plexus/specs/blob/main/docs/design/release-roadmap.md">verification work still on the roadmap</a>.</dd>
+          <dd>The Windows installer runs a real service, with explicit migration from older per-user installs. Starting and stopping a LocalSystem service is exercised in Windows CI; reboot-before-sign-in verification remains outstanding. See the <a href="https://github.com/eugene-plexus/specs/blob/main/docs/design/adoption-roadmap.md#carried-verification-and-incoming-user-evidence">verification work still on the roadmap</a>.</dd>
         </div>
         <div class="glossary-row">
           <dt>Trust boundary</dt>
-          <dd>New installs use Ed25519 signing with public-only verification in gateway, Library and driver processes. Older installs retain legacy signing until explicitly rotated after all components are upgraded. <a href="https://github.com/eugene-plexus/specs/blob/main/docs/acceptance/r7-signing-run.md">Windows and Linux rotation checks</a> preserve enrollment and reject forged sessions. Trusted agents remain able to sign tokens.</dd>
+          <dd>New installs use Ed25519 signing with public-only verification in gateway, Library and driver processes. Older installs retain legacy signing until explicitly rotated after all components are upgraded. <a href="https://github.com/eugene-plexus/specs/blob/main/docs/acceptance/r7-signing-run.md">Windows and Linux rotation checks</a> preserve enrollment and reject forged sessions. Trusted agents remain able to sign tokens. Development builds after alpha.2 also require a passphrase of at least 12 characters for a new install, and refuse browser requests addressed to an unrecognized public host name, which blocks DNS-rebinding pages; a name used through a reverse proxy is added under Allowed host names. See the <a href="https://github.com/eugene-plexus/specs/blob/main/docs/acceptance/prerelease-polish-run.md">record</a>.</dd>
         </div>
         <div class="glossary-row">
           <dt>Model settings</dt>

@@ -19,7 +19,9 @@ test('the homepage describes current capabilities with an explicit alpha boundar
     const engines = page.locator('details').filter({ hasText: 'Which inference engines does it support?' });
     await engines.locator('summary').click();
     await expect(engines).toContainText('user-installed vLLM');
-    await expect(engines).toContainText('separate branch, not on main');
+    await expect(engines).toContainText('neither is in alpha.2');
+    await expect(engines).not.toContainText('separate branch');
+    await expect(page.getByRole('link', { name: 'current roadmap' })).toHaveAttribute('href', /adoption-roadmap\.md$/);
     const clients = page.locator('details').filter({ hasText: 'Can I use Claude Code and my other tools?' });
     await clients.locator('summary').click();
     await expect(clients).toContainText('actual local models');
