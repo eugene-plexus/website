@@ -3,9 +3,10 @@ import { expect, test } from '@playwright/test';
 
 test('the homepage describes current capabilities with an explicit alpha boundary', async ({ page }) => {
     await page.goto('/');
-    await expect(page.locator('.hero-statement')).toHaveText('A self-hosted control plane for local LLM inference.');
-    await expect(page.locator('.hero-description')).toHaveText(/^Run AI models on your hardware,/);
-    await expect(page.locator('.hero-description')).toContainText('OpenAI and Anthropic Messages APIs');
+    await expect(page.locator('.hero-statement')).toHaveText('Run AI models on your own computer.');
+    await expect(page.locator('.hero-description')).toHaveText(/^Private and free\./);
+    await expect(page.locator('.hero-technical')).toContainText('self-hosted control plane for local LLM inference');
+    await expect(page.locator('.hero-technical')).toContainText('OpenAI and Anthropic Messages APIs');
     for (const selector of ['meta[name="description"]', 'meta[property="og:description"]']) {
         await expect(page.locator(selector)).toHaveAttribute('content', /OpenAI and Anthropic Messages APIs.*Alpha available for testing/);
     }
@@ -94,9 +95,9 @@ test('navigation and FAQs work with a keyboard', async ({ page }) => {
     await expect(page.getByRole('link', { name: 'Skip to content' })).toBeFocused();
     await page.keyboard.press('Enter');
     await expect(page).toHaveURL(/#main$/);
-    await page.getByRole('link', { name: 'See the workflow' }).click();
-    await expect(page).toHaveURL(/#workflow$/);
-    await expect(page.locator('#workflow-title')).toBeInViewport();
+    await page.getByRole('link', { name: 'See what it can do' }).click();
+    await expect(page).toHaveURL(/#uses$/);
+    await expect(page.locator('#uses-title')).toBeInViewport();
     const anchors = await page.locator('a[href^="#"], a[href^="/#"]').evaluateAll((links) => links.map((link) => (link as HTMLAnchorElement).hash.slice(1)));
     for (const anchor of anchors) {
         await expect(page.locator(`[id="${anchor}"]`)).toHaveCount(1);
@@ -125,8 +126,9 @@ test('core content and FAQs work without JavaScript', async ({ browser, baseURL 
     const page = await context.newPage();
     await page.goto(baseURL!);
     await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
-    await page.getByText('Is this a chatbot or an inference engine?', { exact: true }).click();
-    await expect(page.locator('details').first().locator('p')).toBeVisible();
+    const chatbot = page.locator('details').filter({ hasText: 'Is this a chatbot or an inference engine?' });
+    await chatbot.getByText('Is this a chatbot or an inference engine?', { exact: true }).click();
+    await expect(chatbot.locator('p')).toBeVisible();
     await context.close();
 });
 test('the architecture page explains the layers and stays inside the viewport', async ({ page }, testInfo) => {
@@ -181,6 +183,27 @@ test('the architecture page explains the layers and stays inside the viewport', 
     await page.getByRole('heading', { level: 1 }).click();
     await page.screenshot({ path: testInfo.outputPath('architecture.png'), fullPage: true });
     await page.locator('#status').screenshot({ path: testInfo.outputPath('boundaries.png') });
-    await page.getByRole('link', { name: 'The platform' }).click();
+    await page.getByRole('link', { name: 'What it does' }).click();
     await expect(page.getByRole('heading', { level: 1 })).toHaveText('Eugene Plexus.');
+});
+
+test('a casual visitor sees what it does, what it looks like and what it needs', async ({ page }) => {
+    await page.goto('/');
+    await expect(page.locator('#uses .use h3')).toHaveText([
+        'Chat privately on your PC', 'Use it from your phone', 'Power your coding tools', 'Keep what you already run',
+    ]);
+    const shots = page.locator('#see figure img');
+    await expect(shots).toHaveCount(3);
+    for (const image of await shots.all()) {
+        await image.scrollIntoViewIfNeeded();
+        await expect(image).toHaveAttribute('alt', /\S{10,}/);
+        expect(await image.evaluate((img: HTMLImageElement) => img.complete && img.naturalWidth > 0)).toBe(true);
+    }
+    await expect(page.locator('#requirements dt')).toHaveText(['Computer', 'Memory', 'Disk space', 'Graphics card']);
+    await expect(page.locator('#requirements').getByRole('link', { name: 'Everything you need' })).toHaveAttribute('href', '/install#before');
+    for (const question of ['Is it free?', 'Does anything I type leave my computer?', 'How is this different from Ollama, LM Studio or ChatGPT?', 'Do I need to use the command line?']) {
+        await expect(page.locator('#questions summary').filter({ hasText: question })).toHaveCount(1);
+    }
+    await expect(page.locator('.ask').getByRole('link', { name: 'Ask it on GitHub' })).toHaveAttribute('href', /issues\/new\?title=Question/);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)).toBe(true);
 });

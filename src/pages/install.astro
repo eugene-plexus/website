@@ -35,38 +35,73 @@ volumes:
 `;
 const joinWindows = `& ([scriptblock]::Create((irm ${base}/install.ps1))) -Join 'http://NAS-IP:8283' -Token 'JOIN-TOKEN'`;
 const joinLinux = `curl -fsSL ${base}/install.sh | sh -s -- --join 'http://NAS-IP:8283' --token 'JOIN-TOKEN'`;
+const askUrl = 'https://github.com/eugene-plexus/specs/issues/new?title=Question%3A%20';
+// "Pick your computer": link names stay exactly the section names, and the
+// note beside each says who it is for. A script marks the visitor's own
+// system; without JavaScript these are plain links to the same sections.
+const choices = [
+  { id: 'windows', os: 'windows', name: 'Windows', note: 'Most home PCs. One command in PowerShell.' },
+  { id: 'linux', os: 'linux', name: 'Linux', note: 'Including WSL on Windows. One command in a terminal.' },
+  { id: 'docker', os: 'docker', name: 'Docker / NAS', note: 'A home server, with a separate computer running the models.' },
+  { id: 'mac', os: 'mac', name: 'Mac', note: 'Still being tested. Not yet checked on a real Mac.' },
+];
 ---
 <SiteLayout title="Install the alpha | Eugene Plexus" description={`Install Eugene Plexus ${release.version} on Windows, Linux, or Docker / NAS. Get your first model answering and learn how to update or remove it. An early testing release.`}>
   <div class="container install-page">
     <header class="install-intro">
       <p class="eyebrow">Early testing · {release.version}</p>
       <h1>Get your first model answering.</h1>
-      <p>Choose Windows or Linux to run models on that computer, or Docker / NAS to keep the console, gateway and model library on your server and connect a separate GPU computer.</p>
+      <p data-plain>Pick the computer you will run it on. Installing is one command you paste. Everything after that happens in your web browser.</p>
       <p class="alpha-notice"><strong>This is an alpha.</strong> It is ready for early testing, with rough edges still to find. There is no stable release yet. <a href={notes}>Release notes and known limits</a>.</p>
-      <p>This update adds scoped application keys, local-only routing, safer failover, encrypted recovery checkpoints and measured shared-load limits. See the <a href={`https://github.com/eugene-plexus/specs/blob/${release.specsCommit}/docs/support-matrix.md`}>tested configurations</a> and <a href={`https://github.com/eugene-plexus/specs/blob/${release.specsCommit}/docs/application-workflows.md`}>Open WebUI and Claude Code setup recipes</a>.</p>
     </header>
     <nav class="install-nav" aria-label="Installation sections">
-      <a href="#before">Before you start</a><a href="#windows">Windows</a><a href="#linux">Linux</a><a href="#docker">Docker / NAS</a><a href="#mac">Mac</a><a href="#first-reply">First reply</a><a href="#update">Update</a><a href="#remove">Remove</a><a href="#help">Get help</a>
+      <p class="chooser-label">Pick your computer</p>
+      <ul class="chooser" role="list" data-plain>
+        {choices.map((choice) => (
+          <li class="choice" data-os={choice.os}>
+            <a href={`#${choice.id}`}>{choice.name}</a>
+            <span class="choice-note">{choice.note}</span>
+            <span class="choice-detected" hidden>This device</span>
+          </li>
+        ))}
+      </ul>
+      <p class="section-links"><a href="#before">Before you start</a><a href="#first-reply">First reply</a><a href="#update">Update</a><a href="#remove">Remove</a><a href="#help">Get help</a></p>
     </nav>
 
     <section id="before" aria-labelledby="before-title">
       <h2 id="before-title">Before you start</h2>
-      <ul>
-        <li>A 64-bit Windows or Linux computer, internet access, and a browser. Windows x64 and Linux x64/WSL have been exercised; other hardware has less verification.</li>
-        <li>On the machine running models, aim for 16 GB of RAM and at least 10 GB of free disk space for a small first model. Larger models need more. A supported GPU helps; CPU inference is available but can be slow.</li>
-        <li>On Windows, an administrator account or someone who can approve the service installation. On Linux, use your normal account, with <code>curl</code> and a systemd user session.</li>
-        <li>For Docker / NAS, use an Intel or AMD 64-bit Linux host with Docker Engine and Compose v2, plus a separate Windows or Linux machine to run models. The published container is Linux amd64; ARM NAS hardware is not covered.</li>
+      <ul data-plain>
+        <li>A 64-bit Windows or Linux computer, with internet access and a web browser.</li>
+        <li>16 GB of memory (RAM) and 10 GB of free disk space for a small first model. Bigger models need more.</li>
+        <li>A graphics card helps a lot. Without one, models run on the processor, more slowly.</li>
+        <li>On Windows, permission to approve an administrator prompt. On Linux, your normal account.</li>
       </ul>
-      <p>You do not need to install Python, Node.js, Git, or llama.cpp yourself. The native installers and container include Eugene's Python environment. The console asks before installing the inference engine or downloading a model.</p>
-      <p>Start with a local model folder. The Windows service runs as the system, so your mapped network drives and saved file-server logins are not inherited. Network storage can be added later in Config → Agent → Storage.</p>
-      <p>These commands download and run the installer for <strong>{release.version}</strong>. You can <a href={`${base}/install.ps1`}>read the Windows script</a> or <a href={`${base}/install.sh`}>read the Linux/Mac script</a> first. The <a href={notes}>release assets</a> include SHA-256 checksums and the component manifest.</p>
+      <p data-plain>You do not need to install Python, Node.js, Git or llama.cpp yourself. Eugene asks before it installs anything else or downloads a model.</p>
+      <details>
+        <summary>More detail before you install</summary>
+        <ul>
+          <li>Windows x64 and Linux x64/WSL have been exercised; other hardware has less verification. See the <a href={`https://github.com/eugene-plexus/specs/blob/${release.specsCommit}/docs/support-matrix.md`}>tested configurations</a>.</li>
+          <li>Linux needs <code>curl</code> and a systemd user session.</li>
+          <li>For Docker / NAS, use an Intel or AMD 64-bit Linux host with Docker Engine and Compose v2, plus a separate Windows or Linux machine to run models. The published container is Linux amd64; ARM NAS hardware is not covered.</li>
+          <li>Start with a local model folder. The Windows service runs as the system, so your mapped network drives and saved file-server logins are not inherited. Network storage can be added later in Config → Agent → Storage.</li>
+          <li>These commands download and run the installer for <strong>{release.version}</strong>. You can <a href={`${base}/install.ps1`}>read the Windows script</a> or <a href={`${base}/install.sh`}>read the Linux/Mac script</a> first. The <a href={notes}>release assets</a> include SHA-256 checksums and the component manifest.</li>
+        </ul>
+      </details>
     </section>
 
     <section id="windows" aria-labelledby="windows-title">
       <h2 id="windows-title">1. Install on Windows</h2>
       <p>Open <strong>PowerShell</strong> from the Start menu. Paste this command, press Enter, and approve the administrator prompt when it appears.</p>
       <InstallCommand id="windows-command" command={windows} label="Windows install command" />
-      <p>The default install lives in <code>C:\ProgramData\EugenePlexus</code>. It registers a Windows service and starts it. When the installer says <code>done.</code>, open <a href="http://127.0.0.1:8079/">http://127.0.0.1:8079/</a> on that computer.</p>
+      <h3>What you will see</h3>
+      <ol class="expect" data-plain>
+        <li>Windows asks whether to allow the app to make changes. Choose <strong>Yes</strong>.</li>
+        <li>The window may sit quietly for a few minutes while Eugene installs in the background.</li>
+        <li>It finishes with a line ending in <code>done.</code> and the path to a log file.</li>
+        <li>Open <a href="http://127.0.0.1:8079/">http://127.0.0.1:8079/</a> on this computer. You should see <strong>Choose a passphrase</strong>.</li>
+      </ol>
+      <p class="expect-help" data-plain>Nothing opens, or you see a red error? Check <a href="#help">If something goes wrong</a>.</p>
+      <p>The default install lives in <code>C:\ProgramData\EugenePlexus</code> and runs as a Windows service, so it starts with the computer. If PowerShell was already running as administrator, the last line says <code>Eugene Plexus is running</code> instead.</p>
       <p>If you already have an older per-user installation, the installer will explain the migration before making changes. Read that message and keep your passphrase available; this first-time guide does not automatically migrate an existing setup.</p>
     </section>
 
@@ -74,7 +109,14 @@ const joinLinux = `curl -fsSL ${base}/install.sh | sh -s -- --join 'http://NAS-I
       <h2 id="linux-title">1. Install on Linux</h2>
       <p>Open a terminal as your normal user. Paste this command and press Enter. Do not run it with <code>sudo</code>.</p>
       <InstallCommand id="linux-command" command={posix} label="Linux install command" />
-      <p>Eugene installs under <code>~/.local/share/eugene-plexus</code> and starts a systemd user service. Open <a href="http://127.0.0.1:8079/">http://127.0.0.1:8079/</a>. If the installer prints a different address or a manual start command, follow its output.</p>
+      <h3>What you will see</h3>
+      <ol class="expect" data-plain>
+        <li>Lines starting with <code>==&gt;</code> scroll past while Eugene installs. This can take a few minutes.</li>
+        <li>It finishes with <code>Eugene Plexus is running</code> and an address.</li>
+        <li>Open <a href="http://127.0.0.1:8079/">http://127.0.0.1:8079/</a>. You should see <strong>Choose a passphrase</strong>.</li>
+      </ol>
+      <p class="expect-help" data-plain>If it prints a different address or a command to start Eugene yourself, follow what it prints.</p>
+      <p>Eugene installs under <code>~/.local/share/eugene-plexus</code> and starts a systemd user service.</p>
       <p>The service normally starts when you sign in. For startup before sign-in, follow the installer's optional <code>loginctl enable-linger</code> instruction. WSL needs a working systemd user session for automatic startup; otherwise use the manual command it prints and keep that terminal open.</p>
     </section>
 
@@ -132,7 +174,7 @@ const joinLinux = `curl -fsSL ${base}/install.sh | sh -s -- --join 'http://NAS-I
         <li><strong>On Home, choose Download and run.</strong> Eugene proposes a model for this machine. Check the download size and approve the engine installation when asked. If a model is already on disk, choose Run.</li>
         <li><strong>Wait for the model to be ready, then send a message.</strong> Downloads and loading appear in Tasks. The first download can be several gigabytes.</li>
       </ol>
-      <p>To connect another app, use <strong>Use from apps</strong> on Home. Make a client key, then copy the address, model name and key into your app. Keep the key private.</p>
+      <p>To connect another app, use <strong>Use from apps</strong> on Home. Make a client key, then copy the address, model name and key into your app. Keep the key private. There are <a href={`https://github.com/eugene-plexus/specs/blob/${release.specsCommit}/docs/application-workflows.md`}>step-by-step recipes for Open WebUI and Claude Code</a>.</p>
       <p>To try your phone, use Home's <strong>Reach</strong> switch and the address it shows. Keep both devices on a trusted LAN or VPN; <code>127.0.0.1</code> always means the device you are currently using. Finish setup before enabling access from other devices.</p>
     </section>
 
@@ -170,10 +212,30 @@ const joinLinux = `curl -fsSL ${base}/install.sh | sh -s -- --join 'http://NAS-I
         <dt>A network folder is missing</dt>
         <dd>Begin with a local folder. A Windows service needs its own file-server login under Config → Agent → Storage; a drive letter mapped in your desktop session may not exist for it.</dd>
       </dl>
+      <p data-plain>Not sure what went wrong, or just have a question? <a href={askUrl}>Ask it on GitHub</a>. You need a free GitHub account.</p>
       <p><a href="https://github.com/eugene-plexus/specs/issues/new">Report a problem on GitHub</a>. Include <strong>{release.version}</strong>, your OS, GPU and RAM, what you were trying to do, and the error text. Remove passphrases, API keys, private paths and prompts from shared logs or screenshots.</p>
     </section>
   </div>
 </SiteLayout>
+<script>
+  // Mark the visitor's own system among the choices, so the first thing to
+  // click is the right one. Phones and tablets are left unmarked: someone
+  // reading on a phone is installing on another computer.
+  const agent = navigator.userAgent;
+  const hint = (navigator as Navigator & { userAgentData?: { platform?: string } }).userAgentData?.platform ?? navigator.platform ?? '';
+  const platform = hint.toLowerCase();
+  let os: string | null = null;
+  if (!/android|iphone|ipad|ipod|mobile/i.test(agent)) {
+    if (platform.includes('win') || /windows/i.test(agent)) os = 'windows';
+    else if (platform.includes('mac') || /macintosh/i.test(agent)) os = 'mac';
+    else if (platform.includes('linux') || /linux|x11/i.test(agent)) os = 'linux';
+  }
+  const choice = os ? document.querySelector<HTMLElement>(`.choice[data-os="${os}"]`) : null;
+  if (choice) {
+    choice.dataset.detected = 'true';
+    choice.querySelector<HTMLElement>('.choice-detected')?.removeAttribute('hidden');
+  }
+</script>
 <style>
   .install-page { max-width: 960px; padding-block: 4rem; }
   .install-intro { max-width: 760px; }
@@ -185,7 +247,24 @@ const joinLinux = `curl -fsSL ${base}/install.sh | sh -s -- --join 'http://NAS-I
   a { color: var(--accent-left); text-underline-offset: .2em; }
   section a, .alpha-notice a { text-decoration: underline; }
   .alpha-notice { padding: 1rem 1.25rem; background: var(--panel-soft); border-left: 3px solid var(--accent-left); }
-  .install-nav { display: flex; flex-wrap: wrap; gap: .75rem 1.25rem; margin-block: 2rem; }
+  .install-nav { margin-block: 2rem; }
+  .chooser-label { font-weight: 650; margin-block: 0 .75rem; }
+  .chooser { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .75rem; }
+  .chooser li + li { margin-top: 0; }
+  .choice { position: relative; display: flex; flex-direction: column; gap: .35rem; padding: 1rem 1.1rem; background: var(--panel); border: 1px solid var(--border); border-radius: 8px; }
+  .choice:hover { border-color: var(--border-hover); }
+  .choice:focus-within { outline: 2px solid var(--accent-left); outline-offset: 2px; }
+  .choice a { color: var(--foreground); font-size: 1.05rem; font-weight: 650; text-decoration: none; }
+  .choice a:focus-visible { outline: none; }
+  /* The whole card is the link's target, not only its name. */
+  .choice a::after { content: ""; position: absolute; inset: 0; border-radius: inherit; }
+  .choice-note { color: var(--muted); font-size: .875rem; line-height: 1.5; }
+  .choice-detected { align-self: flex-start; padding: .1rem .55rem; color: var(--on-accent-left); background: var(--accent-left); border-radius: 999px; font-size: .75rem; font-weight: 600; }
+  .choice[data-detected="true"] { border-color: var(--accent-left); box-shadow: inset 0 0 0 1px var(--accent-left); }
+  .section-links { display: flex; flex-wrap: wrap; gap: .5rem 1.25rem; margin-block: 1.25rem 0; font-size: .9375rem; }
+  .expect-help { color: var(--muted); }
+  @media (max-width: 760px) { .chooser { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 400px) { .chooser { grid-template-columns: minmax(0, 1fr); } }
   section { border-top: 1px solid var(--border); padding-block: 2.5rem; scroll-margin-top: 6rem; }
   ul, ol { padding-left: 1.5rem; }
   li + li { margin-top: .75rem; }

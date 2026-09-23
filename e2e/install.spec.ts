@@ -109,3 +109,42 @@ test('installation instructions remain usable without JavaScript', async ({ brow
         await context.close();
     }
 });
+
+test('the chooser marks the visitor\'s own computer, and leaves a phone unmarked', async ({ browser, baseURL }, testInfo) => {
+    const agents = {
+        windows: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0 Safari/537.36',
+        phone: 'Mozilla/5.0 (Linux; Android 15; Pixel 9) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0 Mobile Safari/537.36',
+    };
+    for (const [name, userAgent] of Object.entries(agents)) {
+        const context = await browser.newContext({ userAgent, viewport: testInfo.project.use.viewport });
+        try {
+            const page = await context.newPage();
+            await page.goto(`${baseURL}/install`);
+            const detected = page.locator('.choice[data-detected="true"]');
+            if (name === 'windows') {
+                await expect(detected).toHaveAttribute('data-os', 'windows');
+                await expect(detected.locator('.choice-detected')).toBeVisible();
+            } else {
+                await expect(detected).toHaveCount(0);
+            }
+            // The whole card follows its link, not only the name in it.
+            await page.locator('.choice[data-os="linux"]').click();
+            await expect(page).toHaveURL(/#linux$/);
+            await expect(page.locator('#linux-title')).toBeInViewport();
+        } finally {
+            await context.close();
+        }
+    }
+});
+
+test('each install path says what you will see, and where help is', async ({ page }) => {
+    await page.goto('/install');
+    await expect(page.locator('#windows .expect li')).toHaveCount(4);
+    await expect(page.locator('#windows .expect')).toContainText('Choose a passphrase');
+    await expect(page.locator('#windows .expect')).toContainText('done.');
+    await expect(page.locator('#linux .expect')).toContainText('Eugene Plexus is running');
+    await expect(page.locator('#windows .expect-help').getByRole('link', { name: 'If something goes wrong' })).toHaveAttribute('href', '#help');
+    await expect(page.locator('#help').getByRole('link', { name: 'Ask it on GitHub' })).toHaveAttribute('href', /issues\/new\?title=Question/);
+    await expect(page.locator('#before details')).not.toHaveAttribute('open');
+    await expect(page.locator('#before details')).toContainText('SHA-256 checksums');
+});

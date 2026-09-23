@@ -12,7 +12,7 @@ interface Props {
 
 const {
   title = 'Eugene Plexus | A self-hosted control plane for local LLM inference',
-  description = 'Install engines, find models that fit, and connect local and cloud backends through OpenAI and Anthropic Messages APIs. Self-hosted and open source. Alpha available for testing.',
+  description = 'Run AI models on your own computer, privately and for free. Eugene Plexus installs the engine, suggests models that fit, and connects your apps through OpenAI and Anthropic Messages APIs. Self-hosted and open source. Alpha available for testing.',
   noindex = false,
 } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site);
@@ -45,11 +45,11 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
           <span>Eugene Plexus</span>
         </a>
         <nav class="main-nav" aria-label="Main navigation">
-          <a href="/#platform">The platform</a>
-          <a href="/#workflow">The workflow</a>
-          <a href="/architecture">Architecture</a>
+          <a href="/#uses">What it does</a>
+          <a href="/#see">See it</a>
           <a href="/install">Install</a>
-          <a href="/#open-source">Open source</a>
+          <a href="/#questions">Questions</a>
+          <a href="/architecture">Architecture</a>
         </nav>
         <a class="header-github" href="https://github.com/eugene-plexus" aria-label="Eugene Plexus on GitHub" title="Eugene Plexus on GitHub">
           <CodeXml size={19} aria-hidden="true" /><span>GitHub</span><ArrowUpRight size={15} aria-hidden="true" />
