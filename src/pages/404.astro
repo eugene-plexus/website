@@ -1,11 +1,12 @@
 ---
 import { ArrowLeft } from '@lucide/astro';
+import Face from '../components/Face.astro';
 import SiteLayout from '../layouts/SiteLayout.astro';
 ---
 
 <SiteLayout title="Page not found | Eugene Plexus" noindex>
   <section class="container not-found">
-    <img src="/eugene-transparent.svg" alt="" width="140" height="140" />
+    <Face size={140} />
     <p class="eyebrow">404 / Page not found</p>
     <h1>A little off the path.</h1>
     <p>That page doesn't exist. The project is right this way.</p>

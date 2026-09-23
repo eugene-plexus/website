@@ -1,4 +1,5 @@
 ---
+import Face from '../components/Face.astro';
 import SiteLayout from '../layouts/SiteLayout.astro';
 import { Content as RecoveryGuide } from '../content/recovery.md';
 import release from '../data/alpha-release.json';
@@ -32,12 +33,13 @@ const source = `https://github.com/eugene-plexus/specs/blob/${revision}`;
 
     <footer class="guide-source">
       <p>This procedure was reviewed on September 21, 2026. <a href={`${source}/docs/recovery.md`}>View its source revision</a> and <a href={`${source}/docs/acceptance/a7-recovery-run.md`}>the Windows and container recovery checks</a>. These checks used isolated installations and real CPU inference; they do not establish recovery on every hardware or storage setup.</p>
-      <p>Need help? <a href="https://github.com/eugene-plexus/specs/issues/new">Report a problem</a> with your version, operating system, failed step and error text. Keep backup files, passphrases, API keys and private logs out of public reports.</p>
+      <p class="with-face"><Face size={36} /><span>Need help? <a href="https://github.com/eugene-plexus/specs/issues/new">Report a problem</a> with your version, operating system, failed step and error text. Keep backup files, passphrases, API keys and private logs out of public reports.</span></p>
     </footer>
   </article>
 </SiteLayout>
 
 <style>
+  .with-face { display: flex; align-items: center; gap: .75rem; }
   .recovery-page { max-width: 960px; padding-block: 4rem; }
   h1 { font-size: clamp(2rem, 5vw, 3.5rem); line-height: 1.12; letter-spacing: -.04em; margin-block: 1rem 1.5rem; }
   .recovery-page :global(h2) { font-size: clamp(1.5rem, 3vw, 2rem); line-height: 1.25; margin-block: 2.5rem 1.25rem; scroll-margin-top: 6rem; }

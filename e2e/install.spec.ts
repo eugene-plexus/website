@@ -145,6 +145,10 @@ test('each install path says what you will see, and where help is', async ({ pag
     await expect(page.locator('#linux .expect')).toContainText('Eugene Plexus is running');
     await expect(page.locator('#windows .expect-help').getByRole('link', { name: 'If something goes wrong' })).toHaveAttribute('href', '#help');
     await expect(page.locator('#help').getByRole('link', { name: 'Ask it on GitHub' })).toHaveAttribute('href', /issues\/new\?title=Question/);
+    await expect(page.locator('#help-title img.face')).toHaveCount(1);
+    await expect(page.locator('#help-title')).toHaveText('If something goes wrong');
+    await expect(page.locator('#first-reply')).toContainText('On the Home page, choose Download and run.');
+    await expect(page.locator('#first-reply')).toContainText('Use it from your apps');
     await expect(page.locator('#before details')).not.toHaveAttribute('open');
     await expect(page.locator('#before details')).toContainText('SHA-256 checksums');
 });

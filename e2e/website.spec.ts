@@ -189,6 +189,17 @@ test('the architecture page explains the layers and stays inside the viewport', 
 
 test('a casual visitor sees what it does, what it looks like and what it needs', async ({ page }) => {
     await page.goto('/');
+    // "Reach on Home" reads as a feature's name to someone who has never
+    // seen the console, where Home is a page; casual copy names the feature.
+    for (const section of ['#uses', '#see']) {
+        expect(await page.locator(section).innerText()).not.toMatch(/\bon Home\b/);
+    }
+    await expect(page.locator('#uses')).toContainText('Turn on Reach, then open the address it shows.');
+    await expect(page.locator('link[rel="icon"]')).toHaveAttribute('href', '/eugene-face.svg');
+    const face = page.locator('.ask img.face');
+    await face.scrollIntoViewIfNeeded();
+    expect(await face.evaluate((img: HTMLImageElement) => img.complete && img.naturalWidth > 0)).toBe(true);
+    await expect(face).toHaveAttribute('alt', '');
     await expect(page.locator('#uses .use h3')).toHaveText([
         'Chat privately on your PC', 'Use it from your phone', 'Power your coding tools', 'Keep what you already run',
     ]);

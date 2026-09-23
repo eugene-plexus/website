@@ -543,6 +543,9 @@ p {
 }
 
 .ask {
+    display: flex;
+    align-items: center;
+    gap: 14px;
     color: var(--muted);
     font-size: 14px;
     padding-top: 22px;

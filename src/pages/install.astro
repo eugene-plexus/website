@@ -1,5 +1,6 @@
 ---
 import SiteLayout from '../layouts/SiteLayout.astro';
+import Face from '../components/Face.astro';
 import InstallCommand from '../components/InstallCommand.astro';
 import release from '../data/alpha-release.json';
 const base = `https://eugeneplexus.com/releases/${release.version}`;
@@ -100,7 +101,7 @@ const choices = [
         <li>It finishes with a line ending in <code>done.</code> and the path to a log file.</li>
         <li>Open <a href="http://127.0.0.1:8079/">http://127.0.0.1:8079/</a> on this computer. You should see <strong>Choose a passphrase</strong>.</li>
       </ol>
-      <p class="expect-help" data-plain>Nothing opens, or you see a red error? Check <a href="#help">If something goes wrong</a>.</p>
+      <p class="expect-help" data-plain><Face size={28} /><span>Nothing opens, or you see a red error? Check <a href="#help">If something goes wrong</a>.</span></p>
       <p>The default install lives in <code>C:\ProgramData\EugenePlexus</code> and runs as a Windows service, so it starts with the computer. If PowerShell was already running as administrator, the last line says <code>Eugene Plexus is running</code> instead.</p>
       <p>If you already have an older per-user installation, the installer will explain the migration before making changes. Read that message and keep your passphrase available; this first-time guide does not automatically migrate an existing setup.</p>
     </section>
@@ -115,7 +116,7 @@ const choices = [
         <li>It finishes with <code>Eugene Plexus is running</code> and an address.</li>
         <li>Open <a href="http://127.0.0.1:8079/">http://127.0.0.1:8079/</a>. You should see <strong>Choose a passphrase</strong>.</li>
       </ol>
-      <p class="expect-help" data-plain>If it prints a different address or a command to start Eugene yourself, follow what it prints.</p>
+      <p class="expect-help" data-plain><Face size={28} /><span>If it prints a different address or a command to start Eugene yourself, follow what it prints.</span></p>
       <p>Eugene installs under <code>~/.local/share/eugene-plexus</code> and starts a systemd user service.</p>
       <p>The service normally starts when you sign in. For startup before sign-in, follow the installer's optional <code>loginctl enable-linger</code> instruction. WSL needs a working systemd user session for automatic startup; otherwise use the manual command it prints and keep that terminal open.</p>
     </section>
@@ -155,7 +156,7 @@ const choices = [
       <InstallCommand id="docker-join-linux" command={joinLinux} label="Linux worker join command" />
       <p>On Windows, approve the administrator prompt. On Linux, run as your normal user. Check that Nodes reports the worker as reachable. The worker must reach the NAS ports above, and the NAS must reach the worker's agent, normally port <code>8079</code>.</p>
       <p>Share the host model folder over SMB or NFS and make it readable on the worker. On that worker, set <strong>Config → Agent → Model directory mappings</strong>: map <code>/models</code> to the worker's path to the same files. Windows services need their own file-server login under <strong>Config → Agent → Storage</strong>; a mapped desktop drive is not enough.</p>
-      <p>In Library, select the worker as the launch target, choose or download a model, and start it there. When it is ready, try Playground using <strong>Through this agent</strong>. For a direct connection or another app, use <code>http://NAS-IP:8280/v1</code> and an application key from <strong>Use from apps</strong>. The container's internal port <code>8080</code> is not the published API port in this example.</p>
+      <p>In Library, select the worker as the launch target, choose or download a model, and start it there. When it is ready, try Playground using <strong>Through this agent</strong>. For a direct connection or another app, use <code>http://NAS-IP:8280/v1</code> and an application key from <strong>Use it from your apps</strong> on the Home page. The container's internal port <code>8080</code> is not the published API port in this example.</p>
       <p><strong>After a container restart:</strong> sign in to the NAS console to unlock the control root; if your browser is already signed in, sign out and back in. A healthy container can still be locked. See <a href={`${containerGuide}#unattended-unlock`}>unattended unlock</a> for optional startup with a mounted passphrase file.</p>
     </section>
 
@@ -171,11 +172,11 @@ const choices = [
       <ol>
         <li><strong>Choose a passphrase.</strong> Save it somewhere you can find again. It protects your install; there is no passphrase recovery.</li>
         <li><strong>Choose where models live.</strong> Accept the proposed folder to start fresh, or choose a folder containing models you already own.</li>
-        <li><strong>On Home, choose Download and run.</strong> Eugene proposes a model for this machine. Check the download size and approve the engine installation when asked. If a model is already on disk, choose Run.</li>
+        <li><strong>On the Home page, choose Download and run.</strong> Eugene proposes a model for this machine. Check the download size and approve the engine installation when asked. If a model is already on disk, choose Run.</li>
         <li><strong>Wait for the model to be ready, then send a message.</strong> Downloads and loading appear in Tasks. The first download can be several gigabytes.</li>
       </ol>
-      <p>To connect another app, use <strong>Use from apps</strong> on Home. Make a client key, then copy the address, model name and key into your app. Keep the key private. There are <a href={`https://github.com/eugene-plexus/specs/blob/${release.specsCommit}/docs/application-workflows.md`}>step-by-step recipes for Open WebUI and Claude Code</a>.</p>
-      <p>To try your phone, use Home's <strong>Reach</strong> switch and the address it shows. Keep both devices on a trusted LAN or VPN; <code>127.0.0.1</code> always means the device you are currently using. Finish setup before enabling access from other devices.</p>
+      <p>To connect another app, use <strong>Use it from your apps</strong> on the Home page. Make a client key, then copy the address, model name and key into your app. Keep the key private. There are <a href={`https://github.com/eugene-plexus/specs/blob/${release.specsCommit}/docs/application-workflows.md`}>step-by-step recipes for Open WebUI and Claude Code</a>.</p>
+      <p>To try your phone, turn on the switch in <strong>Reach it from other devices</strong> on the Home page, and use the address it shows. Keep both devices on a trusted LAN or VPN; <code>127.0.0.1</code> always means the device you are currently using. Finish setup before enabling access from other devices.</p>
     </section>
 
     <section id="update" aria-labelledby="update-title">
@@ -200,15 +201,15 @@ const choices = [
     </section>
 
     <section id="help" aria-labelledby="help-title">
-      <h2 id="help-title">If something goes wrong</h2>
+      <h2 id="help-title" class="with-face"><Face size={44} />If something goes wrong</h2>
       <p>If an update left Eugene unable to start, follow the <a href="/recovery">backup and recovery guide</a>.</p>
       <dl>
         <dt>The first message says the model is still loading</dt>
-        <dd>Home waits for model readiness before enabling Send. If another client connects while the model is loading, wait for Tasks to show it is ready before sending again. A “still coming up” response does not mean the model has crashed.</dd>
+        <dd>The Home page waits for model readiness before enabling Send. If another client connects while the model is loading, wait for Tasks to show it is ready before sending again. A “still coming up” response does not mean the model has crashed.</dd>
         <dt>The page does not open</dt>
         <dd>Use the address printed by the installer, on the same computer. Read the final error and log location in the terminal. On Linux, check <code>systemctl --user status eugene-plexus-agent</code>; on Windows, look for <code>EugenePlexusAgent</code> in Services.</dd>
         <dt>The model will not start or is too slow</dt>
-        <dd>Read the problem shown on Home and open Tasks for details. Try a smaller model or a shorter context. A memory-fit estimate is not a speed guarantee.</dd>
+        <dd>Read the problem shown on the Home page and open Tasks for details. Try a smaller model or a shorter context. A memory-fit estimate is not a speed guarantee.</dd>
         <dt>A network folder is missing</dt>
         <dd>Begin with a local folder. A Windows service needs its own file-server login under Config → Agent → Storage; a drive letter mapped in your desktop session may not exist for it.</dd>
       </dl>
@@ -262,7 +263,8 @@ const choices = [
   .choice-detected { align-self: flex-start; padding: .1rem .55rem; color: var(--on-accent-left); background: var(--accent-left); border-radius: 999px; font-size: .75rem; font-weight: 600; }
   .choice[data-detected="true"] { border-color: var(--accent-left); box-shadow: inset 0 0 0 1px var(--accent-left); }
   .section-links { display: flex; flex-wrap: wrap; gap: .5rem 1.25rem; margin-block: 1.25rem 0; font-size: .9375rem; }
-  .expect-help { color: var(--muted); }
+  .expect-help { display: flex; align-items: center; gap: .75rem; color: var(--muted); }
+  .with-face { display: flex; align-items: center; gap: .75rem; }
   @media (max-width: 760px) { .chooser { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
   @media (max-width: 400px) { .chooser { grid-template-columns: minmax(0, 1fr); } }
   section { border-top: 1px solid var(--border); padding-block: 2.5rem; scroll-margin-top: 6rem; }
