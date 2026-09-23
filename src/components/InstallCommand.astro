@@ -28,9 +28,9 @@ const { id, command, label, preserveLines = false } = Astro.props;
 <style>
   .install-command { margin-block: 1rem; min-width: 0; }
   .command-heading { display: flex; align-items: center; justify-content: space-between; gap: 1rem; font-size: .875rem; }
-  button { border: 1px solid var(--border); border-radius: 6px; background: var(--panel); color: var(--foreground); padding: .5rem .875rem; cursor: pointer; font: inherit; }
-  pre { margin-block: .5rem; padding: 1rem; background: var(--panel-soft); border: 1px solid var(--border); border-radius: 6px; white-space: pre-wrap; overflow-wrap: anywhere; font-size: .875rem; line-height: 1.7; }
+  button { border: 1px solid var(--border); border-radius: var(--radius); background: var(--panel); color: var(--foreground); padding: .5rem .875rem; cursor: pointer; font: inherit; }
+  pre { margin-block: .5rem; padding: 1rem; background: var(--panel-soft); border: 1px solid var(--border); border-radius: var(--radius); white-space: pre-wrap; overflow-wrap: anywhere; font-size: .875rem; line-height: 1.7; }
   .preserve-lines pre { white-space: pre; overflow-wrap: normal; overflow-x: auto; }
-  code { font-family: 'JetBrains Mono Variable', monospace; }
+  code { font-family: var(--font-mono); }
   .copy-status { display: block; min-height: 1.4em; font-size: .875rem; }
 </style>

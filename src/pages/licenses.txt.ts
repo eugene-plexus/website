@@ -4,8 +4,8 @@ import { resolve } from 'node:path';
 import process from 'node:process';
 
 const assets = [
-    ['Inter', 'node_modules/@fontsource-variable/inter/LICENSE'],
-    ['JetBrains Mono', 'node_modules/@fontsource-variable/jetbrains-mono/LICENSE'],
+    ['IBM Plex Sans', 'node_modules/@fontsource-variable/ibm-plex-sans/LICENSE'],
+    ['IBM Plex Mono', 'node_modules/@fontsource/ibm-plex-mono/LICENSE'],
     ['Lucide icons', 'node_modules/@lucide/astro/LICENSE'],
 ] as const;
 

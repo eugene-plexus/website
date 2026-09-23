@@ -1,21 +1,29 @@
-:root {
-    color-scheme: light;
-    --background: #fafafb;
-    --foreground: #0d0d10;
-    --panel: #ffffff;
-    --panel-soft: #f3f3f5;
-    --panel-hover: #e7e7eb;
-    --border: #e3e3e8;
-    --border-hover: #8a8a93;
-    --accent-left: #2a55e6;
-    --accent-right: #cf3a85;
-    --on-accent-left: #ffffff;
-    --on-accent-right: #ffffff;
-    --muted: #6a6a73;
-    --radius: 6px;
-    --font-ui: 'Inter Variable', sans-serif;
-    --font-body: 'Inter Variable', sans-serif;
-    --font-mono: 'JetBrains Mono Variable', monospace;
+/* Plexus, the console's default theme, by value: ui/src/app/globals.css
+   `:root, [data-theme="plexus"]`. Change one and the other together.
+   Ice blue is the only action colour; apricot carries the right-hand
+   roles and nothing else; nothing glows. */
+:root,
+[data-theme="plexus"] {
+    color-scheme: dark;
+    --background: #141619;
+    --foreground: #e6e8ea;
+    --panel: #1b1e22;
+    --panel-soft: #23272c;
+    --panel-hover: #2b3037;
+    --border: #3a4048;
+    --border-hover: #5c646e;
+    --accent-left: #7fb0cf;
+    --accent-right: #cf9a72;
+    --on-accent-left: #0c1216;
+    --on-accent-right: #1a1009;
+    --muted: #b3b9bf;
+    /* The architecture page's two layer roles beyond left and right. */
+    --accent-engine: #7fb094;
+    --accent-hardware: #b8bec4;
+    --radius: 4px;
+    --font-ui: 'IBM Plex Sans Variable', system-ui, -apple-system, sans-serif;
+    --font-body: 'IBM Plex Sans Variable', system-ui, -apple-system, sans-serif;
+    --font-mono: 'IBM Plex Mono', ui-monospace, 'Cascadia Mono', 'Consolas', monospace;
     font-family: var(--font-body);
     color: var(--foreground);
     background: var(--background);
@@ -37,6 +45,7 @@ html {
 
 body {
     margin: 0;
+    background: var(--background);
 }
 
 img {
@@ -476,20 +485,21 @@ p {
     grid-area: phone;
 }
 
+/* The screenshots are the console in the same theme, so the frame, not a
+   shadow, is what separates them from the section around them. */
 .shot img {
     display: block;
     width: 100%;
     height: auto;
-    background: #1b1d22;
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    box-shadow: 0 12px 32px rgba(13, 13, 16, 0.12);
+    background: var(--background);
+    border: 1px solid var(--border-hover);
+    border-radius: var(--radius);
 }
 
 .shot-phone img {
     max-width: 300px;
     margin-inline: auto;
-    border: 6px solid var(--foreground);
+    border: 6px solid var(--border);
     border-radius: 24px;
 }
 

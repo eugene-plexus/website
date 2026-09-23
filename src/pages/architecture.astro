@@ -391,8 +391,8 @@ const glossary = [
     padding: 16px 18px;
   }
   .layer-gateway { border-left-color: var(--accent-right); }
-  .layer-engines { border-left-color: #2f9e6e; }
-  .layer-hardware { border-left-color: #8a8a93; }
+  .layer-engines { border-left-color: var(--accent-engine); }
+  .layer-hardware { border-left-color: var(--accent-hardware); }
   .layer-label {
     display: flex;
     align-items: center;
@@ -402,8 +402,8 @@ const glossary = [
   }
   .layer-label svg { color: var(--accent-left); }
   .layer-gateway .layer-label svg { color: var(--accent-right); }
-  .layer-engines .layer-label svg { color: #2f9e6e; }
-  .layer-hardware .layer-label svg { color: #8a8a93; }
+  .layer-engines .layer-label svg { color: var(--accent-engine); }
+  .layer-hardware .layer-label svg { color: var(--accent-hardware); }
   .chips {
     list-style: none;
     margin: 12px 0 0;
@@ -422,7 +422,7 @@ const glossary = [
     color: var(--foreground);
   }
   .chips .chip-strong {
-    border-color: #2f9e6e;
+    border-color: var(--accent-engine);
     font-weight: 600;
   }
   .layer-note {
@@ -552,8 +552,8 @@ const glossary = [
     font-size: 13px;
     font-weight: 600;
   }
-  .journey-step:nth-child(4) .journey-number { background: #2f9e6e; }
-  .journey-step:nth-child(5) .journey-number { background: var(--accent-right); }
+  .journey-step:nth-child(4) .journey-number { background: var(--accent-engine); }
+  .journey-step:nth-child(5) .journey-number { background: var(--accent-right); color: var(--on-accent-right); }
   .journey-step h3 {
     font-size: 15px;
     margin-top: 14px;
@@ -643,7 +643,7 @@ const glossary = [
   }
   .box-driver { background: var(--panel); }
   .box-engine {
-    border-color: #2f9e6e;
+    border-color: var(--accent-engine);
     font-family: var(--font-mono);
     font-size: 12px;
   }

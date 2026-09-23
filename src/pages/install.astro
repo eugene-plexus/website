@@ -240,7 +240,7 @@ const choices = [
 <style>
   .install-page { max-width: 960px; padding-block: 4rem; }
   .install-intro { max-width: 760px; }
-  h1 { font-size: clamp(2rem, 5vw, 3.5rem); line-height: 1.12; letter-spacing: -.04em; margin-block: 1rem 1.5rem; }
+  h1 { font-size: clamp(2rem, 5vw, 3.5rem); line-height: 1.12; letter-spacing: -.015em; margin-block: 1rem 1.5rem; }
   h2 { font-size: clamp(1.5rem, 3vw, 2rem); line-height: 1.25; margin-bottom: 1.25rem; }
   h3 { font-size: 1.125rem; margin-top: 2rem; }
   p, li, dd { line-height: 1.8; }
@@ -252,7 +252,7 @@ const choices = [
   .chooser-label { font-weight: 650; margin-block: 0 .75rem; }
   .chooser { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .75rem; }
   .chooser li + li { margin-top: 0; }
-  .choice { position: relative; display: flex; flex-direction: column; gap: .35rem; padding: 1rem 1.1rem; background: var(--panel); border: 1px solid var(--border); border-radius: 8px; }
+  .choice { position: relative; display: flex; flex-direction: column; gap: .35rem; padding: 1rem 1.1rem; background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius); }
   .choice:hover { border-color: var(--border-hover); }
   .choice:focus-within { outline: 2px solid var(--accent-left); outline-offset: 2px; }
   .choice a { color: var(--foreground); font-size: 1.05rem; font-weight: 650; text-decoration: none; }
@@ -270,9 +270,9 @@ const choices = [
   section { border-top: 1px solid var(--border); padding-block: 2.5rem; scroll-margin-top: 6rem; }
   ul, ol { padding-left: 1.5rem; }
   li + li { margin-top: .75rem; }
-  code { font-family: 'JetBrains Mono Variable', monospace; font-size: .875em; overflow-wrap: anywhere; }
+  code { font-family: var(--font-mono); font-size: .875em; overflow-wrap: anywhere; }
   dt { font-weight: 650; margin-top: 1.5rem; }
   dd { margin: .5rem 0 0; }
-  details { padding: 1rem; background: var(--panel-soft); border-radius: 6px; }
+  details { padding: 1rem; background: var(--panel-soft); border-radius: var(--radius); }
   summary { cursor: pointer; font-weight: 600; }
 </style>

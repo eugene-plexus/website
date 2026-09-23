@@ -1,6 +1,8 @@
 ---
-import '@fontsource-variable/inter';
-import '@fontsource-variable/jetbrains-mono';
+import '@fontsource-variable/ibm-plex-sans';
+import '@fontsource/ibm-plex-mono/400.css';
+import '@fontsource/ibm-plex-mono/500.css';
+import '@fontsource/ibm-plex-mono/600.css';
 import { ArrowUpRight, CodeXml } from '@lucide/astro';
 import '../styles/global.css';
 
@@ -19,12 +21,12 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
 ---
 
 <!doctype html>
-<html lang="en" data-theme="modern">
+<html lang="en" data-theme="plexus">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
-    <meta name="theme-color" content="#fafafb" />
+    <meta name="theme-color" content="#141619" />
     {noindex && <meta name="robots" content="noindex" />}
     <link rel="canonical" href={canonical} />
     <link rel="icon" type="image/svg+xml" href="/eugene-face.svg" />

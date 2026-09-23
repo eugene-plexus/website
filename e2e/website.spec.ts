@@ -32,7 +32,18 @@ test('the homepage describes current capabilities with an explicit alpha boundar
     await expect(page.locator('#status-title')).toBeInViewport();
 });
 
-test('Modern theme, local assets, accessible content, and responsive layout', async ({ page }, testInfo) => {
+// The console's own default theme, by value: ui/src/app/globals.css
+// `:root, [data-theme="plexus"]`. A visitor who installs sees the same
+// ground, the same ice blue for every action and the same type.
+const PLEXUS = {
+    '--background': 'rgb(20, 22, 25)', '--foreground': 'rgb(230, 232, 234)', '--panel': 'rgb(27, 30, 34)',
+    '--panel-soft': 'rgb(35, 39, 44)', '--panel-hover': 'rgb(43, 48, 55)', '--border': 'rgb(58, 64, 72)',
+    '--border-hover': 'rgb(92, 100, 110)', '--accent-left': 'rgb(127, 176, 207)', '--accent-right': 'rgb(207, 154, 114)',
+    '--on-accent-left': 'rgb(12, 18, 22)', '--on-accent-right': 'rgb(26, 16, 9)', '--muted': 'rgb(179, 185, 191)',
+    '--accent-engine': 'rgb(127, 176, 148)', '--accent-hardware': 'rgb(184, 190, 196)',
+};
+
+test('Plexus theme, local assets, accessible content, and responsive layout', async ({ page }, testInfo) => {
     const failedRequests: string[] = [];
     const pageErrors: string[] = [];
     page.on('requestfailed', (request) => failedRequests.push(request.url()));
@@ -40,32 +51,49 @@ test('Modern theme, local assets, accessible content, and responsive layout', as
     page.on('response', (response) => {
         if (response.status() >= 400) failedRequests.push(`${response.status()} ${response.url()}`);
     });
-    await page.emulateMedia({ colorScheme: 'dark' });
+    // Dark whatever the visitor's system asks for: the console does not
+    // follow the OS by default either.
+    await page.emulateMedia({ colorScheme: 'light' });
     await page.goto('/');
     await page.evaluate(() => document.fonts.ready);
     await expect(page.getByRole('heading', { level: 1 })).toHaveText('Eugene Plexus.');
     await expect(page).toHaveTitle('Eugene Plexus | A self-hosted control plane for local LLM inference');
     await expect(page.locator('main')).not.toContainText(/training|tokenizer|checkpoints/i);
     await expect(page.locator('.release-note')).toContainText('is available for early testing. No stable release yet.');
-    await expect(page.locator('html')).toHaveAttribute('data-theme', 'modern');
-    await expect(page.locator('html')).toHaveCSS('color-scheme', 'light');
-    await expect(page.locator('.button').first()).toHaveCSS('border-radius', '6px');
-    const theme = await page.evaluate(() => {
+    await expect(page.locator('html')).toHaveAttribute('data-theme', 'plexus');
+    await expect(page.locator('html')).toHaveCSS('color-scheme', 'dark');
+    await expect(page.locator('meta[name="theme-color"]')).toHaveAttribute('content', '#141619');
+    await expect(page.locator('body')).toHaveCSS('background-color', PLEXUS['--background']);
+    await expect(page.locator('.button').first()).toHaveCSS('border-radius', '4px');
+    const theme = await page.evaluate((tokens) => {
         const styles = getComputedStyle(document.documentElement);
         const probe = document.createElement('span');
-        return Object.fromEntries(['--background', '--foreground', '--panel', '--panel-soft', '--accent-left', '--accent-right', '--muted'].map((token) => {
+        return Object.fromEntries(tokens.map((token) => {
             probe.style.color = styles.getPropertyValue(token).trim();
             return [token, probe.style.color];
         }));
-    });
-    expect(theme).toEqual({
-        '--background': 'rgb(250, 250, 251)', '--foreground': 'rgb(13, 13, 16)', '--panel': 'rgb(255, 255, 255)',
-        '--panel-soft': 'rgb(243, 243, 245)', '--accent-left': 'rgb(42, 85, 230)', '--accent-right': 'rgb(207, 58, 133)', '--muted': 'rgb(106, 106, 115)',
-    });
+    }, Object.keys(PLEXUS));
+    expect(theme).toEqual(PLEXUS);
+    // Nothing glows: no shadow anywhere on the page.
+    expect(await page.evaluate(() => Array.from(document.querySelectorAll('body *'))
+        .filter((element) => getComputedStyle(element).boxShadow !== 'none').map((element) => element.className))).toEqual([]);
     const logo = page.locator('.hero-logo');
     await expect(logo).toBeVisible();
     expect(await logo.evaluate((image: HTMLImageElement) => image.complete && image.naturalWidth > 0)).toBe(true);
-    expect(await page.evaluate(() => document.fonts.check('16px "Inter Variable"'))).toBe(true);
+    // document.fonts.check() answers true for a family no @font-face
+    // declares, so it cannot tell a loaded font from a missing one. Ask
+    // which faces actually loaded, and what the page is set in.
+    const fonts = await page.evaluate(async () => {
+        await document.fonts.load('600 16px "IBM Plex Mono"');
+        return {
+            loaded: [...new Set(Array.from(document.fonts).filter((face) => face.status === 'loaded').map((face) => face.family.replace(/"/g, '')))].sort(),
+            body: getComputedStyle(document.body).fontFamily,
+            code: getComputedStyle(document.querySelector('.stage-number')!).fontFamily,
+        };
+    });
+    expect(fonts.loaded).toEqual(['IBM Plex Mono', 'IBM Plex Sans Variable']);
+    expect(fonts.body).toMatch(/^"IBM Plex Sans Variable"/);
+    expect(fonts.code).toMatch(/^"IBM Plex Mono"/);
     const layout = await page.evaluate(() => ({
         pageWidth: document.documentElement.scrollWidth,
         viewportWidth: document.documentElement.clientWidth,
@@ -85,6 +113,9 @@ test('Modern theme, local assets, accessible content, and responsive layout', as
     const licenses = await page.request.get('/licenses.txt');
     expect(licenses.ok()).toBe(true);
     expect(await licenses.text()).toContain('SIL OPEN FONT LICENSE');
+    expect(await licenses.text()).toContain('IBM Plex Sans\n=');
+    expect(await licenses.text()).toContain('IBM Plex Mono\n=');
+    expect(await licenses.text()).not.toMatch(/^(Inter|JetBrains Mono)\n=/m);
     expect(await licenses.text()).toContain('Lucide icons');
     await page.screenshot({ path: testInfo.outputPath('homepage.png'), fullPage: true });
 });
@@ -145,6 +176,9 @@ test('the architecture page explains the layers and stays inside the viewport', 
         await expect(page.locator('.layers').getByText(label, { exact: true }).first()).toBeVisible();
     }
     await expect(page.locator('.component-card')).toHaveCount(6);
+    // Engines and hardware take Plexus's own layer roles, not Modern's green and grey.
+    await expect(page.locator('.layer-engines')).toHaveCSS('border-left-color', PLEXUS['--accent-engine']);
+    await expect(page.locator('.layer-hardware')).toHaveCSS('border-left-color', PLEXUS['--accent-hardware']);
     await expect(page.locator('.journey-step')).toHaveCount(5);
     await expect(page.locator('#components-title')).toHaveText('Six building blocks, distinct jobs.');
     await expect(page.locator('#ui')).toContainText('Static files, not a separate server');
@@ -200,6 +234,33 @@ test('a casual visitor sees what it does, what it looks like and what it needs',
     await face.scrollIntoViewIfNeeded();
     expect(await face.evaluate((img: HTMLImageElement) => img.complete && img.naturalWidth > 0)).toBe(true);
     await expect(face).toHaveAttribute('alt', '');
+    // The hair's outer silhouette is navy #061a2e and would vanish into
+    // the dark ground; each mark carries a rim around it that does not.
+    for (const mark of ['/eugene-face.svg', '/eugene-transparent.svg']) {
+        const rim = await page.evaluate(async (url) => {
+            const svg = new DOMParser().parseFromString(await (await fetch(url)).text(), 'image/svg+xml');
+            const silhouette = svg.getElementById('hair-and-glasses-silhouette')!;
+            const luminance = (hex: string) => {
+                const [r, g, b] = [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16) / 255)
+                    .map((c) => (c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4));
+                return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+            };
+            const ground = getComputedStyle(document.documentElement).getPropertyValue('--background').trim();
+            const contrast = (a: string, b: string) => {
+                const [hi, lo] = [luminance(a), luminance(b)].sort((x, y) => y - x);
+                return (hi + 0.05) / (lo + 0.05);
+            };
+            const stroke = silhouette.getAttribute('stroke') ?? '';
+            return {
+                fillOnGround: contrast(silhouette.getAttribute('fill')!, ground),
+                rimOnGround: /^#[0-9a-f]{6}$/i.test(stroke) ? contrast(stroke, ground) : 0,
+                behindFill: silhouette.getAttribute('paint-order'),
+            };
+        }, mark);
+        expect(rim.fillOnGround, `${mark} hair on the ground`).toBeLessThan(1.5);
+        expect(rim.rimOnGround, `${mark} rim on the ground`).toBeGreaterThanOrEqual(3);
+        expect(rim.behindFill, `${mark} rim sits outside the silhouette`).toBe('stroke');
+    }
     await expect(page.locator('#uses .use h3')).toHaveText([
         'Chat privately on your PC', 'Use it from your phone', 'Power your coding tools', 'Keep what you already run',
     ]);
