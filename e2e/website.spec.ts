@@ -20,7 +20,7 @@ test('the homepage describes current capabilities with an explicit alpha boundar
     const engines = page.locator('details').filter({ hasText: 'Which inference engines does it support?' });
     await engines.locator('summary').click();
     await expect(engines).toContainText('user-installed vLLM');
-    await expect(engines).toContainText('Alpha.3 adds experimental MLX');
+    await expect(engines).toContainText('Since alpha.3 it also has experimental MLX');
     await expect(engines).not.toContainText('separate branch');
     await expect(page.getByRole('link', { name: 'current roadmap' })).toHaveAttribute('href', /adoption-roadmap\.md$/);
     const clients = page.locator('details').filter({ hasText: 'Can I use Claude Code and my other tools?' });
@@ -190,7 +190,9 @@ test('the architecture page explains the layers and stays inside the viewport', 
     await expect(page.locator('#status')).toContainText('actual local models');
     await expect(page.locator('#status')).toContainText('not full vendor API parity');
     // alpha.3: per-node token keys replaced the install-wide signing key.
-    await expect(page.locator('#status')).toContainText('Alpha.3 is available for early testing');
+    await expect(page.locator('#status')).toContainText('Alpha.4 is available for early testing');
+    await expect(page.locator('#status')).toContainText('an alpha.3 install upgrades in place');
+    await expect(page.locator('#status')).toContainText('Updates and logs');
     await expect(page.locator('#status')).toContainText('its own Ed25519 token key');
     await expect(page.locator('#status')).not.toContainText('legacy signing');
     await expect(page.locator('#status')).toContainText('Codex CLI');
@@ -279,6 +281,10 @@ test('a casual visitor sees what it does, what it looks like and what it needs',
     for (const question of ['Is it free?', 'Does anything I type leave my computer?', 'How is this different from Ollama, LM Studio or ChatGPT?', 'Do I need to use the command line?']) {
         await expect(page.locator('#questions summary').filter({ hasText: question })).toHaveCount(1);
     }
+    // alpha.4 checks GitHub for updates; the answer about what goes online says so.
+    const online = page.locator('#questions details').filter({ hasText: 'Does anything I type leave my computer?' });
+    await online.locator('summary').click();
+    await expect(online).toContainText('Every six hours it also asks GitHub whether a newer Eugene is out');
     await expect(page.locator('.ask').getByRole('link', { name: 'Ask it on GitHub' })).toHaveAttribute('href', /issues\/new\?title=Question/);
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)).toBe(true);
 });

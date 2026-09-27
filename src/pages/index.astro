@@ -62,7 +62,7 @@ const requirements = [
   { term: 'Computer', text: 'Windows or Linux, 64-bit. Mac is still being tested.' },
   { term: 'Memory', text: '16 GB of RAM for a small first model. Bigger models need more.' },
   { term: 'Disk space', text: '10 GB free to start. Most models are several gigabytes each.' },
-  { term: 'Graphics card', text: 'Helps a lot, and NVIDIA cards are the best tested. Without one, models run on the processor, more slowly.' },
+  { term: 'Graphics card', text: "Helps a lot. NVIDIA cards are the best tested; AMD, Intel and integrated graphics are used through llama.cpp's Vulkan build, with less testing. Without one, models run on the processor, more slowly." },
 ];
 ---
 
@@ -246,7 +246,7 @@ const requirements = [
         </details>
         <details data-plain>
           <summary>Does anything I type leave my computer?<ChevronDown size={19} aria-hidden="true" /></summary>
-          <p>Not when you use a model on your own machine. Your messages go from your app to that machine and back. Eugene itself goes online to find and download models from Hugging Face, and to download or update the llama.cpp engine from GitHub. If you add a cloud service such as OpenAI, messages sent to it go to that service. A key marked local-only never falls back to one.</p>
+          <p>Not when you use a model on your own machine. Your messages go from your app to that machine and back. Eugene itself goes online to find and download models from Hugging Face, and to download or update the llama.cpp engine from GitHub. Every six hours it also asks GitHub whether a newer Eugene is out, which you can turn off. If you add a cloud service such as OpenAI, messages sent to it go to that service. A key marked local-only never falls back to one.</p>
         </details>
         <details data-plain>
           <summary>How is this different from Ollama, LM Studio or ChatGPT?<ChevronDown size={19} aria-hidden="true" /></summary>
@@ -266,7 +266,7 @@ const requirements = [
         </details>
         <details>
           <summary>Which inference engines does it support?<ChevronDown size={19} aria-hidden="true" /></summary>
-          <p>The current integrations install and supervise llama.cpp and drive user-installed vLLM. Alpha.3 adds experimental MLX support for Apple silicon, not yet checked on a physical Mac, and experimental Kev decision models. Existing OpenAI-compatible servers, including Ollama and LM Studio, can also be connected without Eugene Plexus managing their processes. Hardware verification remains uneven; see the <a href="/architecture#status">current boundaries</a>.</p>
+          <p>The current integrations install and supervise llama.cpp and drive user-installed vLLM. Since alpha.3 it also has experimental MLX support for Apple silicon, not yet checked on a physical Mac, and experimental Kev decision models. Existing OpenAI-compatible servers, including Ollama and LM Studio, can also be connected without Eugene Plexus managing their processes. Hardware verification remains uneven; see the <a href="/architecture#status">current boundaries</a>.</p>
         </details>
         <details>
           <summary>Can I use Claude Code and my other tools?<ChevronDown size={19} aria-hidden="true" /></summary>

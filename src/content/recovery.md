@@ -79,7 +79,7 @@ the tool refuses that layout instead of omitting it.
 
 ## Windows worker
 
-Download [scripts/recovery.py](https://github.com/eugene-plexus/specs/blob/9f23fc2bcd5d93ab497c5c7edd7941867dd6880c/scripts/recovery.py) from the release or development revision
+Download [scripts/recovery.py](https://github.com/eugene-plexus/specs/blob/da76daf2aec63356f5cea86ad6c040d7627ffc94/scripts/recovery.py) from the release or development revision
 you are using. Keep a trusted copy outside the installation. The saved `recover.py`
 is a convenience copy, not a signed executable: if backup storage was tampered
 with, fetch the helper from trusted source control before entering its password.

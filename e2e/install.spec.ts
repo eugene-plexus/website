@@ -75,11 +75,15 @@ test('recovery distinguishes the first alpha upgrade from checkpoint-capable rel
     try {
         const page = await context.newPage();
         await page.goto(`${baseURL}/install`);
-        // Moving from alpha.2 is a fresh install, and the update section says so
-        // before it sends anyone to the checkpoint procedure.
+        // alpha.4: alpha.3 updates in place, and later ones from the console;
+        // alpha.2 is still a fresh install, sent to the alpha.3 notes' steps.
+        await expect(page.locator('#update')).toContainText('From alpha.3, run the install command again');
+        await expect(page.locator('#update')).toContainText('Nodes → Versions');
         await expect(page.locator('#update')).toContainText('Moving from alpha.2 or earlier is a fresh install');
-        await expect(page.locator('#update').getByRole('link', { name: 'release notes' })).toHaveAttribute('href', `https://github.com/eugene-plexus/specs/blob/${release.specsCommit}/docs/releases/${release.version}.md#moving-from-alpha2`);
-        await page.locator('#update').getByRole('link', { name: 'Read the backup and recovery guide before updating within alpha.3.' }).click();
+        await expect(page.locator('#update').getByRole('link', { name: 'alpha.3 release notes' })).toHaveAttribute('href', 'https://github.com/eugene-plexus/specs/blob/main/docs/releases/v0.1.0-alpha.3.md#moving-from-alpha2');
+        await page.locator('#update').getByRole('link', { name: 'Read the backup and recovery guide before updating.' }).click();
+        await expect(page.locator('.version-notice')).toContainText('Moving from v0.1.0-alpha.3');
+        await expect(page.locator('.version-notice')).toContainText('does not make a checkpoint for you');
         await expect(page.locator('.version-notice')).toContainText('Moving from v0.1.0-alpha.2');
         await expect(page.locator('.version-notice')).toContainText('will refuse alpha.1');
         await expect(page.locator('.version-notice')).toContainText(`Published alpha (${release.version})`);
@@ -109,7 +113,8 @@ test('installation instructions remain usable without JavaScript', async ({ brow
         await expect(page.locator('#docker-join-windows')).toBeVisible();
         await page.getByText('Already running a NAS or Docker control plane?', { exact: true }).click();
         await expect(page.locator('#update details')).toContainText(release.container);
-        await expect(page.locator('#update details p')).toBeVisible();
+        // Every paragraph opens with the summary, not just the first.
+        for (const paragraph of await page.locator('#update details p').all()) await expect(paragraph).toBeVisible();
     } finally {
         await context.close();
     }
