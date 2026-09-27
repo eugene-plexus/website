@@ -60,15 +60,26 @@ consistent snapshot. Do not allow another root or standby to keep writing.
 Pass `--external PATH` for model/projector folders and custom engine bundles outside
 the state directory. Runtime model paths and explicit binaries are discovered
 automatically. Keep those assets separately at their recorded paths; restore
-verifies their hashes. For an externally managed Python engine such as vLLM,
-preserve its environment and system dependencies separately. A backup of Eugene
-does not reconstruct an arbitrary external engine environment. Consolidate any
+verifies their hashes. For an externally managed Python engine such as vLLM or
+mlx-lm, preserve its environment and system dependencies separately. A backup of
+Eugene does not reconstruct an arbitrary external engine environment. For MLX
+that means the `~/eugene-mlx` virtual environment (or wherever `mlxBinary`
+points) and any MLX model directories are rebuilt by you, not restored: recreate
+the environment with the pinned install command from the engine's own install
+notes, and re-download or re-copy the model directories to their recorded paths
+before restarting the runtimes that declare them. Kev is the same: its checkout
+and `.venv` (`~/eugene-kev`, or wherever `kevPython` points) are rebuilt from the
+pinned commit, and a restored runtime also needs its checkpoint directory and the
+base model Kev downloaded into the node's Hugging Face cache on first launch.
+Restore the checkpoint to its recorded path; without the cached base model the
+first start needs network access again, and a launch with `HF_HUB_OFFLINE=1`
+fails. Consolidate any
 component configuration stored outside the state directory before checkpointing;
 the tool refuses that layout instead of omitting it.
 
 ## Windows worker
 
-Download [scripts/recovery.py](https://github.com/eugene-plexus/specs/blob/ba0e6f7273ccc7063045da64cfe860ec87d7316c/scripts/recovery.py) from the release or development revision
+Download [scripts/recovery.py](https://github.com/eugene-plexus/specs/blob/9f23fc2bcd5d93ab497c5c7edd7941867dd6880c/scripts/recovery.py) from the release or development revision
 you are using. Keep a trusted copy outside the installation. The saved `recover.py`
 is a convenience copy, not a signed executable: if backup storage was tampered
 with, fetch the helper from trusted source control before entering its password.

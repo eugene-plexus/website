@@ -123,7 +123,7 @@ const choices = [
 
     <section id="docker" aria-labelledby="docker-title">
       <h2 id="docker-title">1. Install with Docker / NAS</h2>
-      <p>This runs the console, control root, gateway and model library on your NAS or Linux server. <strong>The container does not run GPU inference.</strong> Join a Windows or Linux worker below to run models.</p>
+      <p>This runs the console, control root, gateway and model library on your NAS or Linux server. New in alpha.3, the container can also run models itself, on its processor or on a passed-through NVIDIA card, which you turn on. <strong>The container's GPU path has not been checked on physical hardware yet</strong>; the tested way to run models on a GPU is to join a Windows or Linux worker, below.</p>
       <p>Use this example for a <strong>new install</strong>. If Eugene already runs on your NAS, follow <a href="#update">Update</a> and keep its existing storage and ports.</p>
 
       <h3>Prepare persistent storage</h3>
@@ -150,7 +150,8 @@ const choices = [
       <h3>Join the computer that will run models</h3>
       <ol>
         <li>In the NAS console, open <strong>Nodes → Add a node</strong>. Leave the optional node name blank, set <strong>Control root URL the other machine can reach</strong> to <code>http://NAS-IP:8283</code>, and choose <strong>Mint a join token</strong>.</li>
-        <li>Copy the token value after <code>--token</code> in the generated command. Replace <code>NAS-IP</code> and <code>JOIN-TOKEN</code> in the appropriate command below. Run it on the worker computer; these installers keep the worker on this alpha too. Tokens expire and work once, so mint a new one for each worker.</li>
+        <li>Copy the command the page prints for the worker's system and run it there; it installs this alpha and joins in one step. If you prefer the commands below, replace <code>NAS-IP</code> and <code>JOIN-TOKEN</code> with the address and the token value after <code>-Token</code> or <code>--token</code>. Tokens expire and work once, so mint a new one for each worker.</li>
+        <li>If Eugene is already on the worker, from any version or half-finished attempt, the join moves it aside first. Nothing is deleted, and if the join fails the machine is put back as it was, with a message that says why.</li>
       </ol>
       <InstallCommand id="docker-join-windows" command={joinWindows} label="Windows worker join command" />
       <InstallCommand id="docker-join-linux" command={joinLinux} label="Linux worker join command" />
@@ -181,12 +182,13 @@ const choices = [
 
     <section id="update" aria-labelledby="update-title">
       <h2 id="update-title">Update or repair an install</h2>
-      <p><a href="/recovery">Read the backup and recovery guide before updating.</a> Alpha.1 needs a complete stopped-install copy for its first upgrade. Alpha.2 includes the encrypted checkpoint procedure; create and rehearse a checkpoint after upgrading.</p>
+      <p><strong>Moving from alpha.2 or earlier is a fresh install.</strong> Alpha.3 changed how the machines in an install prove who they are, and nothing converts the old keys, so the installer recognises an older install and prints the command that removes it. Removing moves it aside rather than deleting it, and no model file is deleted. You then choose a new passphrase, make new app keys, and join your other machines again. The <a href={`https://github.com/eugene-plexus/specs/blob/${release.specsCommit}/docs/releases/${release.version}.md#moving-from-alpha2`}>release notes</a> list the steps.</p>
+      <p><a href="/recovery">Read the backup and recovery guide before updating within alpha.3.</a> Create and rehearse a checkpoint once your install is set up.</p>
       <p>Running the same command again reinstalls this alpha's Eugene revisions and keeps the existing configuration and model files. The service restarts, so let active requests finish first.</p>
       <p>For a later alpha, use that release's instructions. These versioned commands stay on <strong>{release.version}</strong>; they do not silently follow development changes. Do not run an older alpha installer over a newer installation. Keep your passphrase and back up the install's configuration before changing versions.</p>
       <details>
         <summary>Already running a NAS or Docker control plane?</summary>
-        <p>The matching Linux amd64 image is <code>{release.container}</code>. Back up first, then change only the image tag in your existing Compose file or NAS container settings. Keep the same project name, hostname, volumes, model-folder mapping and published ports. For Compose, run <code>docker compose pull</code> then <code>docker compose up -d</code> from the existing project folder. Sign in again to unlock the control root after restart. For a new install, use <a href="#docker">Docker / NAS</a> above.</p>
+        <p>The matching Linux amd64 image is <code>{release.container}</code>. <strong>From alpha.2, start the container with a new, empty data volume</strong>: alpha.3 cannot read an alpha.2 control root's data. Keep the model-folder mapping and published ports, and keep the old volume until the new install is working. Within alpha.3, back up first, then change only the image tag in your existing Compose file or NAS container settings, keeping the same project name, hostname, volumes, model-folder mapping and published ports. For Compose, run <code>docker compose pull</code> then <code>docker compose up -d</code> from the existing project folder. Sign in again to unlock the control root after restart. For a new install, use <a href="#docker">Docker / NAS</a> above.</p>
       </details>
     </section>
 

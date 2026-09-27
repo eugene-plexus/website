@@ -64,7 +64,7 @@ test('Docker is a top-level option with a copyable pinned Compose setup', async 
     await expect(page.locator('.docker-addresses')).toContainText('http://NAS-IP:8283');
     await expect(page.locator('#docker-join-windows')).toContainText(`/releases/${release.version}/install.ps1`);
     await expect(page.locator('#docker-join-linux')).toContainText(`/releases/${release.version}/install.sh`);
-    await expect(page.locator('#docker')).toContainText('The container does not run GPU inference');
+    await expect(page.locator('#docker')).toContainText("The container's GPU path has not been checked on physical hardware yet");
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)).toBe(true);
     await page.locator('#docker-compose').scrollIntoViewIfNeeded();
     await page.screenshot({ path: testInfo.outputPath('docker-compose.png') });
@@ -75,7 +75,12 @@ test('recovery distinguishes the first alpha upgrade from checkpoint-capable rel
     try {
         const page = await context.newPage();
         await page.goto(`${baseURL}/install`);
-        await page.locator('#update').getByRole('link', { name: 'Read the backup and recovery guide before updating.' }).click();
+        // Moving from alpha.2 is a fresh install, and the update section says so
+        // before it sends anyone to the checkpoint procedure.
+        await expect(page.locator('#update')).toContainText('Moving from alpha.2 or earlier is a fresh install');
+        await expect(page.locator('#update').getByRole('link', { name: 'release notes' })).toHaveAttribute('href', `https://github.com/eugene-plexus/specs/blob/${release.specsCommit}/docs/releases/${release.version}.md#moving-from-alpha2`);
+        await page.locator('#update').getByRole('link', { name: 'Read the backup and recovery guide before updating within alpha.3.' }).click();
+        await expect(page.locator('.version-notice')).toContainText('Moving from v0.1.0-alpha.2');
         await expect(page.locator('.version-notice')).toContainText('will refuse alpha.1');
         await expect(page.locator('.version-notice')).toContainText(`Published alpha (${release.version})`);
         await expect(page.locator('.version-notice')).toContainText('follow the checkpoint procedure below');

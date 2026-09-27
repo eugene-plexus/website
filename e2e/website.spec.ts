@@ -20,7 +20,7 @@ test('the homepage describes current capabilities with an explicit alpha boundar
     const engines = page.locator('details').filter({ hasText: 'Which inference engines does it support?' });
     await engines.locator('summary').click();
     await expect(engines).toContainText('user-installed vLLM');
-    await expect(engines).toContainText('neither is in alpha.2');
+    await expect(engines).toContainText('Alpha.3 adds experimental MLX');
     await expect(engines).not.toContainText('separate branch');
     await expect(page.getByRole('link', { name: 'current roadmap' })).toHaveAttribute('href', /adoption-roadmap\.md$/);
     const clients = page.locator('details').filter({ hasText: 'Can I use Claude Code and my other tools?' });
@@ -189,8 +189,11 @@ test('the architecture page explains the layers and stays inside the viewport', 
     await expect(page.locator('#status')).toContainText('There is no stable release yet');
     await expect(page.locator('#status')).toContainText('actual local models');
     await expect(page.locator('#status')).toContainText('not full vendor API parity');
-    await expect(page.locator('#status')).toContainText('public-only verification');
-    await expect(page.locator('#status')).toContainText('Older installs retain legacy signing until explicitly rotated');
+    // alpha.3: per-node token keys replaced the install-wide signing key.
+    await expect(page.locator('#status')).toContainText('Alpha.3 is available for early testing');
+    await expect(page.locator('#status')).toContainText('its own Ed25519 token key');
+    await expect(page.locator('#status')).not.toContainText('legacy signing');
+    await expect(page.locator('#status')).toContainText('Codex CLI');
     await expect(page.locator('#status')).toContainText('Explicit app settings win');
     await expect(page.locator('#measurements')).toHaveCount(0);
     await expect(page.locator('main')).not.toContainText(/3\.2 ms|172 ms|2\.5 s|21 s vs 266 s/);
