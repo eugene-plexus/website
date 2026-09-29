@@ -8,7 +8,7 @@ const revision = release.specsCommit;
 const source = `https://github.com/eugene-plexus/specs/blob/${revision}`;
 ---
 
-<SiteLayout title="Backup and recovery | Eugene Plexus" description="Prepare a backup before updating Eugene Plexus and recover from a failed update. Includes the in-place update from alpha.3, the fresh install from alpha.2, alpha.1 upgrade precautions and encrypted checkpoints.">
+<SiteLayout title="Backup and recovery | Eugene Plexus" description="Prepare a backup before updating Eugene Plexus and recover from a failed update. Includes updating from alpha.4 and alpha.3, the fresh install from alpha.2, alpha.1 upgrade precautions and encrypted checkpoints.">
   <article class="container recovery-page">
     <header>
       <p class="eyebrow">Keep your installation recoverable</p>
@@ -18,7 +18,8 @@ const source = `https://github.com/eugene-plexus/specs/blob/${revision}`;
 
     <aside class="version-notice" aria-labelledby="version-title">
       <h2 id="version-title">Start with your installed version</h2>
-      <p><strong>Moving from v0.1.0-alpha.3 to {release.version}:</strong> an update in place: run the install command again, after making a checkpoint. A checkpoint made on alpha.3 restores alpha.3. <strong>An update from Nodes → Versions does not make a checkpoint for you</strong>; make one first.</p>
+      <p><strong>Moving from v0.1.0-alpha.4 to {release.version}:</strong> update from Nodes → Versions, or run the install command again, after making a checkpoint. A checkpoint made on alpha.4 restores alpha.4. <strong>An update from Nodes → Versions does not make a checkpoint for you</strong>; make one first.</p>
+      <p><strong>Moving from v0.1.0-alpha.3:</strong> an update in place: run the install command again, after making a checkpoint. A checkpoint made on alpha.3 restores alpha.3.</p>
       <p><strong>Moving from v0.1.0-alpha.2:</strong> a fresh install, not an update, because alpha.3 changed how machines prove who they are and nothing converts the old keys. A checkpoint made on alpha.2 restores alpha.2; keep it if you may go back. Follow <a href="https://github.com/eugene-plexus/specs/blob/main/docs/releases/v0.1.0-alpha.3.md#moving-from-alpha2">Moving from alpha.2</a> in the alpha.3 release notes.</p>
       <p><strong>Upgrading from v0.1.0-alpha.1:</strong> the encrypted checkpoint helper below requires a newer agent and will refuse alpha.1. Before your first upgrade, stop the installation and its child processes, then keep a protected, complete copy of its installation and state, including Python and the virtual environment. Keep model files and any external engine environments separately. Restoring this older copy requires its original absolute paths.</p>
       <p><strong>Published alpha ({release.version}) and A7-capable development builds:</strong> follow the checkpoint procedure below. After upgrading from alpha.1, create and rehearse a checkpoint before relying on it for a later update.</p>
@@ -35,7 +36,7 @@ const source = `https://github.com/eugene-plexus/specs/blob/${revision}`;
     <div class="guide"><RecoveryGuide /></div>
 
     <footer class="guide-source">
-      <p>This procedure was reviewed on September 27, 2026, for alpha.4. <a href={`${source}/docs/recovery.md`}>View its source revision</a> and <a href={`${source}/docs/acceptance/a7-recovery-run.md`}>the Windows and container recovery checks</a>. These checks used isolated installations and real CPU inference; they do not establish recovery on every hardware or storage setup.</p>
+      <p>This procedure was reviewed on September 29, 2026, for alpha.5. <a href={`${source}/docs/recovery.md`}>View its source revision</a> and <a href={`${source}/docs/acceptance/a7-recovery-run.md`}>the Windows and container recovery checks</a>. These checks used isolated installations and real CPU inference; they do not establish recovery on every hardware or storage setup.</p>
       <p class="with-face"><Face size={36} /><span>Need help? <a href="https://github.com/eugene-plexus/specs/issues/new">Report a problem</a> with your version, operating system, failed step and error text. Keep backup files, passphrases, API keys and private logs out of public reports.</span></p>
     </footer>
   </article>

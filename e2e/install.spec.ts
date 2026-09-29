@@ -75,13 +75,15 @@ test('recovery distinguishes the first alpha upgrade from checkpoint-capable rel
     try {
         const page = await context.newPage();
         await page.goto(`${baseURL}/install`);
-        // alpha.4: alpha.3 updates in place, and later ones from the console;
-        // alpha.2 is still a fresh install, sent to the alpha.3 notes' steps.
+        // alpha.5: alpha.4 updates from the console, alpha.3 in place by
+        // running the installer again; alpha.2 is still a fresh install.
+        await expect(page.locator('#update')).toContainText('From alpha.4, update from the console');
         await expect(page.locator('#update')).toContainText('From alpha.3, run the install command again');
         await expect(page.locator('#update')).toContainText('Nodes → Versions');
         await expect(page.locator('#update')).toContainText('Moving from alpha.2 or earlier is a fresh install');
         await expect(page.locator('#update').getByRole('link', { name: 'alpha.3 release notes' })).toHaveAttribute('href', 'https://github.com/eugene-plexus/specs/blob/main/docs/releases/v0.1.0-alpha.3.md#moving-from-alpha2');
         await page.locator('#update').getByRole('link', { name: 'Read the backup and recovery guide before updating.' }).click();
+        await expect(page.locator('.version-notice')).toContainText('Moving from v0.1.0-alpha.4');
         await expect(page.locator('.version-notice')).toContainText('Moving from v0.1.0-alpha.3');
         await expect(page.locator('.version-notice')).toContainText('does not make a checkpoint for you');
         await expect(page.locator('.version-notice')).toContainText('Moving from v0.1.0-alpha.2');

@@ -190,8 +190,12 @@ test('the architecture page explains the layers and stays inside the viewport', 
     await expect(page.locator('#status')).toContainText('actual local models');
     await expect(page.locator('#status')).toContainText('not full vendor API parity');
     // alpha.3: per-node token keys replaced the install-wide signing key.
-    await expect(page.locator('#status')).toContainText('Alpha.4 is available for early testing');
+    await expect(page.locator('#status')).toContainText('Alpha.5 is available for early testing');
+    await expect(page.locator('#status')).toContainText('an alpha.4 install updates from the console');
     await expect(page.locator('#status')).toContainText('an alpha.3 install upgrades in place');
+    // alpha.5: the new doors and provider accounts are named with their limit.
+    await expect(page.locator('#status')).toContainText('speech, transcription and translation');
+    await expect(page.locator('#status')).toContainText('only to a model that says it can do the job');
     await expect(page.locator('#status')).toContainText('Updates and logs');
     await expect(page.locator('#status')).toContainText('its own Ed25519 token key');
     await expect(page.locator('#status')).not.toContainText('legacy signing');
