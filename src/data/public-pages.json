@@ -1,0 +1,7 @@
+[
+  { "path": "/", "title": "Overview", "description": "What Eugene Plexus does, requirements, common questions, and links to source." },
+  { "path": "/install", "title": "Installation", "description": "Current alpha installation, first reply, updates, and removal on supported platforms." },
+  { "path": "/architecture", "title": "Architecture and current limits", "description": "Components, request flow, supported APIs, verification evidence, and known limitations." },
+  { "path": "/recovery", "title": "Backup and recovery", "description": "Version-specific upgrade precautions, checkpoints, restoration steps, and recovery limits." },
+  { "path": "/principles", "title": "Mission and principles", "description": "Equal access to intelligence, openness, and the project's purpose." }
+]

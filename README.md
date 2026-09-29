@@ -49,6 +49,10 @@ Tests start their own preview on port 4322 and do not reuse existing servers. Th
 | [src/pages/404.astro](src/pages/404.astro)                     | GitHub Pages 404 page                                                    |
 | [src/pages/licenses.txt.ts](src/pages/licenses.txt.ts)         | Build-time generation of bundled font and icon license notices           |
 | [public/sitemap.xml](public/sitemap.xml)                       | Public page index; update when adding pages                              |
+| [src/pages/llms.txt.ts](src/pages/llms.txt.ts)                   | AI/text index with release-pinned documentation and API links |
+| [src/data/public-pages.json](src/data/public-pages.json)         | Public guides included in the AI index and Markdown export |
+| [integrations/markdown-guides.mjs](integrations/markdown-guides.mjs) | Build-time HTML-to-Markdown conversion of the public guides |
+| [src/lib/site-metadata.ts](src/lib/site-metadata.ts)             | Markdown paths and Schema.org project/page metadata |
 | [astro.config.mjs](astro.config.mjs)                           | Static output and production origin                                      |
 | [.github/workflows/pages.yml](.github/workflows/pages.yml)     | CI checks and manual deployment                                          |
 
@@ -96,6 +100,33 @@ On 2026-09-20, the standalone numbers section was removed. The records above rem
 The website is independent of the running platform. It makes no API calls to an installation, loads its fonts and icons locally, and has no analytics or contact-form backend. A future server-side feature would require a separate service because GitHub Pages does not run application backends.
 
 ## GitHub Pages
+
+### Machine-readable content
+
+`/llms.txt` is a curated index following the [llms.txt proposal](https://llmstxt.org/).
+It links to Markdown copies of the five public pages and to release-pinned upstream
+documentation and OpenAPI contracts. Development roadmap links are explicitly
+separate from released behavior. Release versions come from `alpha-release.json`.
+
+The `markdown-guides` Astro integration generates `/index.md`, `/install/index.md`,
+`/architecture/index.md`, `/recovery/index.md`, and `/principles/index.md` from each
+built page's `<main>` content. Edit the original pages, not generated Markdown.
+Navigation, controls, and decorative icons are omitted; commands, tables, closed FAQ
+answers, warnings, and image descriptions are retained. Links become absolute URLs
+and each export identifies its human-readable source page. The build fails if a
+configured page cannot be read or has no main heading. Add future guides to both
+`public-pages.json` and the sitemap.
+
+Markdown exports are production build artifacts: use `npm run build` and
+`npm run preview` to inspect them, rather than the Astro development server.
+The shared layout provides discovery links (`rel="describedby"` and
+`rel="alternate"`), footer links, and JSON-LD describing the website, public page,
+and source project. The 404 has no Markdown alternate or project metadata.
+No runtime service or AI-specific crawling permission is required. `robots.txt`
+keeps its existing policy. These additions help compatible tools find and read
+the documentation; they do not guarantee indexing, citations, or search ranking.
+
+### Deployment
 
 The workflow runs checks on pushes to `main` and on pull requests. **Only a manual workflow run on `main` deploys.** Repository creation alone does not publish the site.
 
