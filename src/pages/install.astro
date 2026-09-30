@@ -1,6 +1,7 @@
 ---
 import SiteLayout from '../layouts/SiteLayout.astro';
 import Face from '../components/Face.astro';
+import Mascot from '../components/Mascot.astro';
 import InstallCommand from '../components/InstallCommand.astro';
 import release from '../data/alpha-release.json';
 const base = `https://eugeneplexus.com/releases/${release.version}`;
@@ -49,12 +50,15 @@ const choices = [
 ---
 <SiteLayout title="Install the alpha | Eugene Plexus" description={`Install Eugene Plexus ${release.version} on Windows, Linux, or Docker / NAS. Get your first model answering and learn how to update or remove it. An early testing release.`}>
   <div class="container install-page">
-    <header class="install-intro">
+    <div class="install-intro-layout">
+      <header class="install-intro">
       <p class="eyebrow">Early testing · {release.version}</p>
       <h1>Get your first model answering.</h1>
       <p data-plain>Pick the computer you will run it on. Installing is one command you paste. Everything after that happens in your web browser.</p>
       <p class="alpha-notice"><strong>This is an alpha.</strong> It is ready for early testing, with rough edges still to find. There is no stable release yet. <a href={notes}>Release notes and known limits</a>.</p>
-    </header>
+      </header>
+      <div class="install-guide"><Mascot pose="guide" size={176} eager /></div>
+    </div>
     <nav class="install-nav" aria-label="Installation sections">
       <p class="chooser-label">Pick your computer</p>
       <ul class="chooser" role="list" data-plain>
@@ -245,6 +249,12 @@ const choices = [
 <style>
   .install-page { max-width: 960px; padding-block: 4rem; }
   .install-intro { max-width: 760px; }
+  .install-intro-layout { display: grid; grid-template-columns: minmax(0, 1fr) 176px; gap: 2rem; align-items: start; }
+  .install-guide { padding-top: 3rem; }
+  @media (max-width: 760px) {
+    .install-intro-layout { grid-template-columns: minmax(0, 1fr); gap: 0; }
+    .install-guide { grid-row: 1; width: 112px; padding-top: 0; }
+  }
   h1 { font-size: clamp(2rem, 5vw, 3.5rem); line-height: 1.12; letter-spacing: -.015em; margin-block: 1rem 1.5rem; }
   h2 { font-size: clamp(1.5rem, 3vw, 2rem); line-height: 1.25; margin-bottom: 1.25rem; }
   h3 { font-size: 1.125rem; margin-top: 2rem; }

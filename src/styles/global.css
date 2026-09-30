@@ -780,6 +780,25 @@ p {
     border-top: 1px solid var(--border);
 }
 
+.welcome-mascot {
+    margin: 0 auto 24px;
+}
+
+.workflow-mascot {
+    margin-top: 32px;
+}
+
+@media (max-width: 760px) {
+    .workflow-mascot {
+        width: 128px;
+        margin-top: 24px;
+    }
+
+    .welcome-mascot {
+        width: 144px;
+    }
+}
+
 .fact {
     display: flex;
     justify-content: space-between;

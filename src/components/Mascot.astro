@@ -1,0 +1,23 @@
+---
+interface Props {
+    pose: 'welcome' | 'guide' | 'working' | 'curious';
+    size?: number;
+    class?: string;
+    eager?: boolean;
+}
+const { pose, size = 160, class: className = '', eager = false } = Astro.props;
+---
+
+<img
+    class:list={['mascot', className]}
+    src={`/mascots/eugene-${pose}.svg`}
+    alt=""
+    width={size}
+    height={size}
+    loading={eager ? 'eager' : 'lazy'}
+    decoding="async"
+/>
+
+<style>
+    .mascot { flex-shrink: 0; height: auto; object-fit: contain; }
+</style>

@@ -8,6 +8,7 @@
         "node": ">=22.12.0"
     },
     "scripts": {
+        "mascots:build": "node scripts/build-mascots.mjs",
         "dev": "astro dev",
         "check": "astro check",
         "build": "astro build",
