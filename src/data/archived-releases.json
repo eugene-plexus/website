@@ -1,5 +1,31 @@
 [
   {
+    "version": "v0.1.0-alpha.5",
+    "specsCommit": "a1f7f40548a6168ed2040c021fab2a37219a8d4a",
+    "components": {
+      "agent": "89358602ab96a5282ea74fcf16aba7befb2db138",
+      "control": "847200f920949e2ef9762b28be9a413cbc319a39",
+      "gateway": "9d3dcd7003de7d4f36216dc196808cbe1c1a54f6",
+      "library": "f4e79794fad46e856d9ee6a36b1bc26ba8ae2166",
+      "ui": "678588bae4875d809c898cee4c7a910501053de6",
+      "inference-driver": "89770eacdca7f49342c1c3da3a01e0ee197ce3bc"
+    },
+    "files": {
+      "install.sh": {
+        "sha256": "16217d7abb85d980beb29265e12675a0b327aff6da6855ecba080c1b5b08b6b6",
+        "size": 64377,
+        "source": "https://raw.githubusercontent.com/eugene-plexus/specs/a1f7f40548a6168ed2040c021fab2a37219a8d4a/scripts/install.sh"
+      },
+      "install.ps1": {
+        "sha256": "e44c0675142f942c3919ec135aa1fd41c7f67a34baaf42204c5be93a4092d6e5",
+        "size": 114929,
+        "source": "https://raw.githubusercontent.com/eugene-plexus/specs/a1f7f40548a6168ed2040c021fab2a37219a8d4a/scripts/install.ps1"
+      }
+    },
+    "container": "ghcr.io/eugene-plexus/control-plane:v0.1.0-alpha.5",
+    "scope": "Eugene source pins; upstream tools, Python dependencies, engines and models are not locked"
+  },
+  {
     "version": "v0.1.0-alpha.4",
     "specsCommit": "da76daf2aec63356f5cea86ad6c040d7627ffc94",
     "components": {

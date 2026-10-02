@@ -271,11 +271,15 @@ const requirements = [
         </details>
         <details>
           <summary>Which inference engines does it support?<ChevronDown size={19} aria-hidden="true" /></summary>
-          <p>The current integrations install and supervise llama.cpp and drive user-installed vLLM. Since alpha.3 it also has experimental MLX support for Apple silicon, not yet checked on a physical Mac, and experimental Kev decision models. Existing OpenAI-compatible servers, including Ollama and LM Studio, can also be connected without Eugene Plexus managing their processes. Hardware verification remains uneven; see the <a href="/architecture#status">current boundaries</a>.</p>
+          <p>The current integrations install and supervise llama.cpp and drive user-installed vLLM. It also runs MLX on Apple silicon, checked on GitHub's macOS runners but not yet on a physical Mac, and experimental Kev decision models. Existing OpenAI-compatible servers, including Ollama and LM Studio, can also be connected without Eugene Plexus managing their processes. Hardware verification remains uneven; see the <a href="/architecture#status">current boundaries</a>.</p>
         </details>
         <details>
           <summary>Can I use Claude Code and my other tools?<ChevronDown size={19} aria-hidden="true" /></summary>
-          <p>The gateway serves OpenAI-compatible chat, tool calling and embeddings, plus Anthropic Messages for text and tool calls. Since alpha.5 it also serves speech, transcription, images, video and plain completions, each only through a model that can do the job. Client keys can be named and revoked from the console. Claude Code edit/check tasks and Open WebUI chat and images have been exercised with actual local models; full vendor API parity is not claimed. See <a href="/architecture#status">compatibility limits</a>.</p>
+          <p>The gateway serves OpenAI-compatible chat, tool calling and embeddings, plus Anthropic Messages for text and tool calls. Since alpha.5 it also serves speech, transcription, images, video and plain completions, each only through a model that can do the job. Since alpha.6, models can search the web through a search account your install runs, SearXNG or Brave, on all three APIs. Client keys can be named and revoked from the console. Claude Code edit/check tasks and Open WebUI chat and images have been exercised with actual local models; full vendor API parity is not claimed. See <a href="/architecture#status">compatibility limits</a>.</p>
+        </details>
+        <details>
+          <summary>Is there a chat app?<ChevronDown size={19} aria-hidden="true" /></summary>
+          <p>Yes. Since alpha.6, <strong>Workbench</strong> installs from <strong>Apps</strong> in the console, on any of your machines. Chat with the models your machines serve, attach files, and turn on web search. You sign in with Eugene, and each person you add under <strong>People</strong> gets their own chats. Read <a href="/first-search">the first chat a person had in it</a>.</p>
         </details>
         <details>
           <summary>Can I manage more than one machine?<ChevronDown size={19} aria-hidden="true" /></summary>

@@ -6,7 +6,7 @@ The public project website for **Eugene Plexus**, a self-hosted control plane fo
 - Production domain: <https://eugeneplexus.com>
 - Stack: Astro, TypeScript, self-hosted Inter and JetBrains Mono, Lucide icons.
 - Hosting: GitHub Pages. The build produces static files in `dist/`; no server, database, or platform service is required to serve them.
-- Status: v0.1.0-alpha.2 for early testing, 2026-09-21. No stable release yet. Deployment is manual.
+- Status: v0.1.0-alpha.6 for early testing, 2026-10-01. No stable release yet. Deployment is manual.
 
 ## Development
 
@@ -70,7 +70,7 @@ are upstream-selected; only Eugene source revisions are fixed by this manifest.
 
 The recovery page includes the full procedure without a runtime dependency on
 GitHub or a working Eugene installation. `src/content/recovery.md` is a snapshot
-of specs `docs/recovery.md` at `ba0e6f7273ccc7063045da64cfe860ec87d7316c`, with
+of specs `docs/recovery.md` at `ee3acf1466a160bb2c0abe6b69dc66dd2de0f6b2` (v0.1.0-alpha.6), with
 its first heading supplied by the page and its helper link made absolute to that
 revision. Update the snapshot and the page's source revision together after
 reviewing future procedure changes. Alpha.2 includes the recovery guard; retain

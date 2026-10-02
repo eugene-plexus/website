@@ -63,7 +63,7 @@ test('the page keeps the alpha boundary and is reachable from every page', async
     await page.goto('/');
     await page.locator('.site-footer').getByRole('link', { name: 'It looked itself up' }).click();
     await expect(page).toHaveURL(/\/first-search$/);
-    await expect(page.locator('#try-title + p')).toContainText(`not in the published alpha (${release.version}) yet`);
+    await expect(page.locator("#try-title + p")).toContainText(`Workbench and web search are in ${release.version}`);
 });
 
 test('the story fits the screen, loads nothing remote and passes accessibility checks', async ({ page }) => {

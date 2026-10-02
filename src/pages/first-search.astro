@@ -103,10 +103,10 @@ const sourceTitle = (title: string) => title.replace(/\s+·\s+GitHub$/, '').repl
       <div class="story-prose">
         <h2 id="learned-title">What we learned</h2>
         <h3>It said when a search failed</h3>
-        <p>In its second reply, Qwen asked for two searches at once. Brave's free plan turned down the second, because it came too soon after the first. Eugene told Qwen the search had failed and asked it to say so. Qwen did, and marked which part of its answer was its own reasoning rather than a source. Eugene should space searches out so this doesn't happen (<a href="https://github.com/eugene-plexus/tool-driver/issues/3">tool-driver #3</a>).</p>
+        <p>In its second reply, Qwen asked for two searches at once. Brave's free plan turned down the second, because it came too soon after the first. Eugene told Qwen the search had failed and asked it to say so. Qwen did, and marked which part of its answer was its own reasoning rather than a source. Since alpha.6, Eugene spaces an account's searches out and tries a refused one once more (<a href="https://github.com/eugene-plexus/tool-driver/issues/3">tool-driver #3</a>).</p>
         <h3>Two answers in one reply</h3>
         <p>Twice, Qwen wrote a whole answer and then searched, then answered again. Part of that is ours: on the first step of a reply, Eugene tells the model it must search. In its last reply, Qwen reasoned "No tools needed." It answered, then searched because it was told to.</p>
-        <p>Workbench then put both answers into one reply, so the reply reads twice. Text written before a search should be folded away (<a href="https://github.com/eugene-plexus/workbench/issues/1">Workbench #1</a>), and whether to force that first search is an open question (<a href="https://github.com/eugene-plexus/gateway/issues/4">gateway #4</a>).</p>
+        <p>Workbench then put both answers into one reply, so the reply reads twice. Since alpha.6, Eugene keeps the forced search and says when each search finishes, and Workbench folds what was written before a search under <em>Written before searching</em> and sends only the answer back to the model (<a href="https://github.com/eugene-plexus/workbench/issues/1">Workbench #1</a>, <a href="https://github.com/eugene-plexus/gateway/issues/4">gateway #4</a>). The chat above is kept as it happened.</p>
         <h3>One thing it got wrong</h3>
         <p>In its last reply, Qwen said no search query had to leave the network. The search terms do leave: they go to the search service, Brave here. Everything else stays on your machines.</p>
       </div>
@@ -114,7 +114,7 @@ const sourceTitle = (title: string) => title.replace(/\s+·\s+GitHub$/, '').repl
 
     <section class="story-invitation" aria-labelledby="try-title">
       <h2 id="try-title">Try it</h2>
-      <p>Workbench and web search are new, and they are not in the published alpha ({release.version}) yet. Until they are, you can install the alpha and chat with your models in its console, or read Workbench's source.</p>
+      <p>Workbench and web search are in {release.version}. Install the alpha, add a search account under <strong>Backends</strong>, then install Workbench from <strong>Apps</strong> on any of your machines.</p>
       <div class="story-actions">
         <a class="button button-primary" href="/install">Install the alpha <ArrowRight size={17} aria-hidden="true" /></a>
         <a class="text-link" href="https://github.com/eugene-plexus/workbench">Workbench on GitHub <ArrowUpRight size={17} aria-hidden="true" /></a>

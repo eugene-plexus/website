@@ -20,7 +20,8 @@ test('the homepage describes current capabilities with an explicit alpha boundar
     const engines = page.locator('details').filter({ hasText: 'Which inference engines does it support?' });
     await engines.locator('summary').click();
     await expect(engines).toContainText('user-installed vLLM');
-    await expect(engines).toContainText('Since alpha.3 it also has experimental MLX');
+    await expect(engines).toContainText('It also runs MLX on Apple silicon');
+    await expect(engines).not.toContainText('experimental MLX');
     await expect(engines).not.toContainText('separate branch');
     await expect(page.getByRole('link', { name: 'current roadmap' })).toHaveAttribute('href', /adoption-roadmap\.md$/);
     const clients = page.locator('details').filter({ hasText: 'Can I use Claude Code and my other tools?' });
@@ -190,8 +191,11 @@ test('the architecture page explains the layers and stays inside the viewport', 
     await expect(page.locator('#status')).toContainText('actual local models');
     await expect(page.locator('#status')).toContainText('not full vendor API parity');
     // alpha.3: per-node token keys replaced the install-wide signing key.
-    await expect(page.locator('#status')).toContainText('Alpha.5 is available for early testing');
-    await expect(page.locator('#status')).toContainText('an alpha.4 install updates from the console');
+    await expect(page.locator('#status')).toContainText('Alpha.6 is available for early testing');
+    await expect(page.locator('#status')).toContainText('an alpha.5 or alpha.4 install updates from the console');
+    // alpha.6: web search, and apps that sign in with Eugene.
+    await expect(page.locator('#status')).toContainText('web search run by your install');
+    await expect(page.locator('#status')).toContainText('Apps and sign-in');
     await expect(page.locator('#status')).toContainText('an alpha.3 install upgrades in place');
     // alpha.5: the new doors and provider accounts are named with their limit.
     await expect(page.locator('#status')).toContainText('speech, transcription and translation');
