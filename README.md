@@ -46,6 +46,8 @@ Tests start their own preview on port 4322 and do not reuse existing servers. Th
 | [src/layouts/SiteLayout.astro](src/layouts/SiteLayout.astro)   | Shared navigation, footer, fonts, metadata, canonical URLs               |
 | [src/styles/global.css](src/styles/global.css)                 | Modern theme tokens and responsive layout                                |
 | [public/eugene-transparent.svg](public/eugene-transparent.svg) | Owner-supplied logo, also used as the favicon                            |
+| [src/pages/first-search.astro](src/pages/first-search.astro)   | "It looked itself up": the first web search a person ran from Workbench, with the chat verbatim |
+| [src/data/first-search-chat.json](src/data/first-search-chat.json) and [src/content/first-search/](src/content/first-search/) | That chat as Workbench exported it (ids, owner and model file name removed), and each answer as Markdown. Never edit either: `e2e/first-search.spec.ts` checks they agree word for word |
 | [src/pages/404.astro](src/pages/404.astro)                     | GitHub Pages 404 page                                                    |
 | [src/pages/licenses.txt.ts](src/pages/licenses.txt.ts)         | Build-time generation of bundled font and icon license notices           |
 | [public/sitemap.xml](public/sitemap.xml)                       | Public page index; update when adding pages                              |

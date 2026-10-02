@@ -3,5 +3,6 @@
   { "path": "/install", "title": "Installation", "description": "Current alpha installation, first reply, updates, and removal on supported platforms." },
   { "path": "/architecture", "title": "Architecture and current limits", "description": "Components, request flow, supported APIs, verification evidence, and known limitations." },
   { "path": "/recovery", "title": "Backup and recovery", "description": "Version-specific upgrade precautions, checkpoints, restoration steps, and recovery limits." },
-  { "path": "/principles", "title": "Mission and principles", "description": "Equal access to intelligence, openness, and the project's purpose." }
+  { "path": "/principles", "title": "Mission and principles", "description": "Equal access to intelligence, openness, and the project's purpose." },
+  { "path": "/first-search", "title": "It looked itself up", "description": "The first web search a person ran from Workbench: a local model looked up Eugene Plexus. The full chat, verbatim, and what it taught us." }
 ]
