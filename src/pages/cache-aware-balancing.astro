@@ -107,7 +107,7 @@ const alsoRan = [
 
         <h3>4. Pinning conversations to slots can freeze the server</h3>
         <p>llama.cpp lets a request name the slot it runs in. Pinning each conversation to its own slot looked like an easy gain, and it is, by about 3 points, when the server has memory for a whole conversation per slot. Where it does not, it costs up to 10.</p>
-        <p>Pinning a request to a slot that is still busy sometimes froze the server: nine turns in 200 waited ten minutes, and once a server answered nothing for half an hour. We have not reproduced it outside these runs.</p>
+        <p>Pinning a request to a slot that is still busy sometimes froze the server: nine turns in 200 waited ten minutes, and once a server answered nothing for half an hour.</p>
         <p>The rule that removed it: never name a busy slot, and hold the turn in front of the server until its slot is free. With that rule, <strong>none of 612 turns stalled</strong>. Pinning stays off by default, as a per-model setting.</p>
 
         <h3>5. The cleverer ideas measured worse</h3>
