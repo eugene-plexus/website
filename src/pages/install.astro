@@ -48,14 +48,14 @@ const choices = [
   { id: 'mac', os: 'mac', name: 'Mac', note: 'Still being tested. Not yet checked on a real Mac.' },
 ];
 ---
-<SiteLayout title="Install the alpha | Eugene Plexus" description={`Install Eugene Plexus ${release.version} on Windows, Linux, or Docker / NAS. Get your first model answering and learn how to update or remove it. An early testing release.`}>
+<SiteLayout title="Install | Eugene Plexus" description={`Install Eugene Plexus ${release.version} on Windows, Linux, or Docker / NAS. Get your first model answering and learn how to update or remove it. The first release.`}>
   <div class="container install-page">
     <div class="install-intro-layout">
       <header class="install-intro">
       <p class="eyebrow">Early testing · {release.version}</p>
       <h1>Get your first model answering.</h1>
       <p data-plain>Pick the computer you will run it on. Installing is one command you paste. Everything after that happens in your web browser.</p>
-      <p class="alpha-notice"><strong>This is an alpha.</strong> It is ready for early testing, with rough edges still to find. There is no stable release yet. <a href={notes}>Release notes and known limits</a>.</p>
+      <p class="alpha-notice"><strong>This is the first release.</strong> It works, and it is early: expect rough edges. <a href={notes}>Release notes and known limits</a>.</p>
       </header>
       <div class="install-guide"><Mascot pose="guide" size={176} eager /></div>
     </div>
@@ -154,7 +154,7 @@ const choices = [
       <h3>Join the computer that will run models</h3>
       <ol>
         <li>In the NAS console, open <strong>Machines → Add a node</strong>. Leave the optional node name blank, set <strong>Control root URL the other machine can reach</strong> to <code>http://NAS-IP:8283</code>, and choose <strong>Mint a join token</strong>.</li>
-        <li>Copy the command the page prints for the worker's system and run it there; it installs this alpha and joins in one step. If you prefer the commands below, replace <code>NAS-IP</code> and <code>JOIN-TOKEN</code> with the address and the token value after <code>-Token</code> or <code>--token</code>. Tokens expire and work once, so mint a new one for each worker.</li>
+        <li>Copy the command the page prints for the worker's system and run it there; it installs this release and joins in one step. If you prefer the commands below, replace <code>NAS-IP</code> and <code>JOIN-TOKEN</code> with the address and the token value after <code>-Token</code> or <code>--token</code>. Tokens expire and work once, so mint a new one for each worker.</li>
         <li>If Eugene is already on the worker, from any version or half-finished attempt, the join moves it aside first. Nothing is deleted, and if the join fails the machine is put back as it was, with a message that says why.</li>
       </ol>
       <InstallCommand id="docker-join-windows" command={joinWindows} label="Windows worker join command" />
@@ -167,7 +167,7 @@ const choices = [
 
     <section id="mac" aria-labelledby="mac-title">
       <h2 id="mac-title">Mac testing</h2>
-      <p>The installer also has a macOS path, but physical Mac verification remains outstanding for this alpha. If you want to help test it, run the Linux/Mac command in Terminal as your normal user. It installs a launchd agent for your login. The experimental MLX adapter is not included.</p>
+      <p>The installer also has a macOS path, but physical Mac verification remains outstanding for this release. If you want to help test it, run the Linux/Mac command in Terminal as your normal user. It installs a launchd agent for your login. MLX and llama.cpp on Metal have run on GitHub's macOS runners, not yet on a physical Mac.</p>
       <InstallCommand id="mac-command" command={posix} label="Mac test install command" />
     </section>
 
@@ -186,14 +186,14 @@ const choices = [
 
     <section id="update" aria-labelledby="update-title">
       <h2 id="update-title">Update or repair an install</h2>
-      <p><strong>From alpha.4 or alpha.5, update from the console.</strong> <strong>Nodes → Versions</strong> (under <strong>Machines</strong> once a machine runs alpha.6) shows what each machine runs and whether a newer version is out, and updates any machine from whichever console you have open. Eugene checks GitHub for a newer version a minute after it starts and every six hours, and installs only when you press Update. <strong>Settings → Updates</strong> turns the check off or changes the channel.</p>
+      <p><strong>From alpha.4, alpha.5 or alpha.6, update from the console.</strong> <strong>Machines → Versions</strong> (<strong>Nodes → Versions</strong> on alpha.5 and alpha.4) shows what each machine runs and whether a newer version is out, and updates any machine from whichever console you have open. Eugene checks GitHub for a newer version a minute after it starts and every six hours, and installs only when you press Update. <strong>Settings → Updates</strong> turns the check off or changes the channel.</p>
       <p><strong>From alpha.3, run the install command again</strong> on each machine. It stops Eugene, replaces it with {release.version} and starts it again, keeping your passphrase, model files, app keys and joined machines. The service restarts, so let active requests finish first. From then on, update from the console.</p>
       <p><strong>Moving from alpha.2 or earlier is a fresh install.</strong> Alpha.3 changed how the machines in an install prove who they are, and nothing converts the old keys, so the installer recognises an older install and prints the command that removes it. Removing moves it aside rather than deleting it, and no model file is deleted. You then choose a new passphrase, make new app keys, and join your other machines again. The <a href="https://github.com/eugene-plexus/specs/blob/main/docs/releases/v0.1.0-alpha.3.md#moving-from-alpha2">alpha.3 release notes</a> list the steps.</p>
       <p><a href="/recovery">Read the backup and recovery guide before updating.</a> Create and rehearse a checkpoint once your install is set up.</p>
-      <p>These versioned commands stay on <strong>{release.version}</strong>; they do not silently follow development changes. Do not run an older alpha installer over a newer installation.</p>
+      <p>These versioned commands stay on <strong>{release.version}</strong>; they do not silently follow development changes. Do not run an older installer over a newer installation.</p>
       <details>
         <summary>Already running a NAS or Docker control plane?</summary>
-        <p>The matching Linux amd64 image is <code>{release.container}</code>. <strong>From alpha.3, alpha.4 or alpha.5, keep your data folder</strong>: back up first, then change only the image tag in your existing Compose file or NAS container settings, keeping the same project name, hostname, volumes, model-folder mapping and published ports. For Compose, run <code>docker compose pull</code> then <code>docker compose up -d</code> from the existing project folder. Sign in again to unlock the control root after restart. After that, <strong>Machines → Versions</strong> tells the container how to update in its platform's own words.</p>
+        <p>The matching Linux amd64 image is <code>{release.container}</code>. <strong>From alpha.3 to alpha.6, keep your data folder</strong>: back up first, then change only the image tag in your existing Compose file or NAS container settings, keeping the same project name, hostname, volumes, model-folder mapping and published ports. For Compose, run <code>docker compose pull</code> then <code>docker compose up -d</code> from the existing project folder. Sign in again to unlock the control root after restart. After that, <strong>Machines → Versions</strong> tells the container how to update in its platform's own words.</p>
         <p><strong>If other machines join it, set the container's Advertise address</strong> under <strong>Settings → Access &amp; security</strong> to the address you type in the browser, port included, such as <code>http://NAS-IP:8279</code> with the ports in <a href="#docker">Docker / NAS</a> above. Inside a container the agent cannot see its published address, and without it a worker cannot reach the Library to find your model folders; the Folders page names the machine and says so.</p>
         <p><strong>From alpha.2, start the container with a new, empty data volume</strong>: alpha.3 and later cannot read an alpha.2 control root's data. For a new install, use <a href="#docker">Docker / NAS</a> above.</p>
       </details>

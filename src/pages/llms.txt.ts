@@ -13,7 +13,7 @@ export const GET: APIRoute = ({ site }) => {
 
 > ${projectDescription}
 
-Published release: ${release.version}, an alpha for early testing. There is no stable release yet.
+Published release: ${release.version}, the first release: early software, with known limits.
 Use the installation guide and support matrix for available capabilities and platform limits.
 The roadmap describes development plans, not a promise of shipped features.
 The Markdown pages below are generated from the same HTML content as the public website on every build.
@@ -25,7 +25,7 @@ ${links}
 
 ## Published release documentation
 
-- [Release notes](${source}/docs/releases/${release.version}.md): Changes and upgrade guidance for the published alpha.
+- [Release notes](${source}/docs/releases/${release.version}.md): Changes and upgrade guidance for the published release.
 - [Support matrix](${source}/docs/support-matrix.md): Measured, simulated, and unverified configurations at the release revision.
 - [Application workflows](${source}/docs/application-workflows.md): Connecting applications and the limits of API compatibility.
 - [Gateway API](${source}/openapi/gateway.yaml): OpenAPI contract for client requests; relative schema references resolve beside this file.
@@ -36,7 +36,7 @@ ${links}
 
 ## Development and source
 
-- [Development roadmap](https://raw.githubusercontent.com/eugene-plexus/specs/main/docs/design/adoption-roadmap.md): Current work order and future plans; may be ahead of the published alpha.
+- [Development roadmap](https://raw.githubusercontent.com/eugene-plexus/specs/main/docs/design/adoption-roadmap.md): Current work order and future plans; may be ahead of the published release.
 - [Project repositories](https://github.com/eugene-plexus): Source code and contributions.
 - [Core source license](https://raw.githubusercontent.com/eugene-plexus/specs/${release.specsCommit}/LICENSE): Apache License 2.0; models and third-party assets have their own licenses.
 `, { headers: { 'Content-Type': 'text/plain; charset=utf-8' } });

@@ -64,7 +64,7 @@ const glossary = [
       <p class="eyebrow"><span class="section-index">Architecture</span></p>
       <h1 id="arch-title">How it fits together<span class="heading-period">.</span></h1>
       <p class="arch-lead">Eugene Plexus installs and manages engines, helps choose model settings for your hardware, and connects compatible tools to local and cloud backends. One machine or a homelab, the same layers do the work. It is not an inference engine. Its own chat app, Workbench, is an optional app you install from the console.</p>
-      <p class="arch-lead">Alpha.6 snapshot: <time datetime="2026-10-01">October 1, 2026</time>. <a href="/install">Current alpha available for testing</a>. <a href="#status">Current boundaries</a>.</p>
+      <p class="arch-lead">v0.1.0 snapshot: <time datetime="2026-10-02">October 2, 2026</time>. <a href="/install">Install the first release</a>. <a href="#status">Current boundaries</a>.</p>
     </div>
   </section>
 
@@ -288,8 +288,8 @@ const glossary = [
     <div class="container glossary-layout">
       <div>
         <p class="eyebrow"><span class="section-index">06 /</span> Current boundaries</p>
-        <h2 id="status-title">An alpha, with limits to know.</h2>
-        <p class="glossary-intro">As of October 1, 2026. Alpha.6 is available for early testing; an alpha.5 or alpha.4 install updates from the console, an alpha.3 install upgrades in place, and an alpha.2 install needs a fresh one. There is no stable release yet. Versioned installers and a matching container image are available; this is not a production-readiness claim. <a href="/install">Installation guide</a>.</p>
+        <h2 id="status-title">A first release, with limits to know.</h2>
+        <p class="glossary-intro">As of October 2, 2026. v0.1.0 is the first release: early software that works, with the limits below. An alpha.6, alpha.5 or alpha.4 install updates from the console, an alpha.3 install upgrades in place, and an alpha.2 install needs a fresh one. Versioned installers and a matching container image are available; this is not a production-readiness claim. <a href="/install">Installation guide</a>.</p>
         <p class="glossary-intro">The <a href="https://github.com/eugene-plexus/specs/tree/main/docs/acceptance">acceptance records</a> document the test setups, observed behavior and limits of what has been verified.</p>
         <p class="glossary-intro">For timings, see the <a href="https://github.com/eugene-plexus/specs/blob/main/docs/acceptance/control-plane-measurements.md">control-plane measurement record</a>, with hardware, baselines and limits for each observation.</p>
         <a class="text-link" href="https://github.com/eugene-plexus/specs/blob/main/docs/design/adoption-roadmap.md">Follow the roadmap <ArrowUpRight size={17} aria-hidden="true" /></a>
@@ -305,7 +305,7 @@ const glossary = [
         </div>
         <div class="glossary-row">
           <dt>Engines and hosts</dt>
-          <dd>llama.cpp and user-installed vLLM have live acceptance records on NVIDIA hardware. Windows and Linux via WSL2 have been exercised. Since alpha.4, every GPU the operating system lists is detected, AMD, Intel and integrated graphics included, and served by llama.cpp's Vulkan build where CUDA does not apply; one model can span several cards, including an NVIDIA card beside an AMD or Intel one on Windows. That was measured on an RTX 5090 beside an integrated Radeon, including Vulkan inference on the Radeon; an Intel Arc card and two physical cards in one machine have not run it yet. Since alpha.6, MLX on Apple silicon is no longer experimental: it runs on GitHub's macOS runners, which expose Metal, and a physical Mac has not run it yet. Kev decision models remain experimental, behind a typed-decision endpoint, run live only on a CPU under WSL. The control-plane container can run models too; its NVIDIA path awaits a physical run. See the <a href="https://github.com/eugene-plexus/specs/blob/main/docs/support-matrix.md">current support matrix</a>.</dd>
+          <dd>llama.cpp and user-installed vLLM have live acceptance records on NVIDIA hardware. Windows and Linux via WSL2 have been exercised. Since alpha.4, every GPU the operating system lists is detected, AMD, Intel and integrated graphics included, and served by llama.cpp's Vulkan build where CUDA does not apply; one model can span several cards, including an NVIDIA card beside an AMD or Intel one on Windows. That was measured on an RTX 5090 beside an integrated Radeon, including Vulkan inference on the Radeon; an Intel Arc card has since run it on a tester's machine, and two physical cards in one machine have not run it yet. Since alpha.6, MLX on Apple silicon is no longer experimental: it runs on GitHub's macOS runners, which expose Metal, and a physical Mac has not run it yet. Kev decision models remain experimental, behind a typed-decision endpoint, run live only on a CPU under WSL. The control-plane container can run models too; its NVIDIA path awaits a physical run. See the <a href="https://github.com/eugene-plexus/specs/blob/main/docs/support-matrix.md">current support matrix</a>.</dd>
         </div>
         <div class="glossary-row">
           <dt>Updates and logs</dt>
@@ -313,7 +313,7 @@ const glossary = [
         </div>
         <div class="glossary-row">
           <dt>Apps and sign-in</dt>
-          <dd>New in alpha.6: Workbench, Eugene's own chat app, installs from the console on any machine. On a Windows service or a Linux system install, each app runs in an operating-system account of its own, with no access to Eugene's keys; that was run on GitHub's Windows and Ubuntu runners, and Workbench itself has not run in one yet. Apps can send their logs to the machine's Logs page, and sign people in with Eugene over OpenID Connect: the owner with the passphrase, or each person added under People with their own password. <a href="https://github.com/eugene-plexus/specs/blob/main/docs/acceptance/c3-workbench-run.md">Workbench's record</a> lists what has and has not run.</dd>
+          <dd>New in alpha.6: Workbench, Eugene's own chat app, installs from the console on any machine. New in v0.1.0: Open WebUI installs from the same registry and signs people in with Eugene. On a Windows service or a Linux system install, each app runs in an operating-system account of its own, with no access to Eugene's keys; that was run on GitHub's Windows and Ubuntu runners, and Workbench itself has not run in one yet. Apps can send their logs to the machine's Logs page, and sign people in with Eugene over OpenID Connect: the owner with the passphrase, or each person added under People with their own password. <a href="https://github.com/eugene-plexus/specs/blob/main/docs/acceptance/c3-workbench-run.md">Workbench's record</a> lists what has and has not run.</dd>
         </div>
         <div class="glossary-row">
           <dt>Windows startup</dt>

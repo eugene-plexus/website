@@ -31,6 +31,7 @@ Argon2id. Keep that password separately; it is not recoverable from the backup.
 | Client-key policies, revocations, admission accounting and gateway policy caches | Retained; revoked keys stay revoked at the checkpoint's point in time |
 | `metrics.sqlite3` and related component stores | Retained; restored SQLite files pass integrity checks |
 | Managed engine builds under the state directory | Retained, including build metadata, binaries and companion libraries |
+| Installed apps' own data (Workbench's chats, Open WebUI's database) | Retained. On a Linux system install systemd keeps it outside the state directory, in `/var/lib/private/eugene-plexus-apps/<app>`, so make the checkpoint as root there; a folder it cannot read is refused rather than left out. Activation puts it back there only where that app has no data yet, and otherwise asks you to move the existing data aside |
 | Model files | External assets: paths, sizes and SHA256; **not copied** |
 | `venv`, `pythons`, `bin` | Reconstructed from exact Python/package versions and immutable Eugene archive URLs/hashes |
 | `logs`, `.cache`, `__pycache__` | Expendable; excluded |
@@ -79,7 +80,7 @@ the tool refuses that layout instead of omitting it.
 
 ## Windows worker
 
-Download [scripts/recovery.py](https://github.com/eugene-plexus/specs/blob/ee3acf1466a160bb2c0abe6b69dc66dd2de0f6b2/scripts/recovery.py) from the release or development revision
+Download [scripts/recovery.py](https://github.com/eugene-plexus/specs/blob/b9de033b766115cde12232e4d0eb4794af760499/scripts/recovery.py) from the release or development revision
 you are using. Keep a trusted copy outside the installation. The saved `recover.py`
 is a convenience copy, not a signed executable: if backup storage was tampered
 with, fetch the helper from trusted source control before entering its password.

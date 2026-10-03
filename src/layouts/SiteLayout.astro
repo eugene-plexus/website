@@ -16,7 +16,7 @@ interface Props {
 
 const {
   title = 'Eugene Plexus | A self-hosted control plane for local LLM inference',
-  description = 'Run AI models on your own computer, privately and for free. Eugene Plexus installs the engine, suggests models that fit, and connects your apps through OpenAI and Anthropic Messages APIs. Self-hosted and open source. Alpha available for testing.',
+  description = 'Run AI models on your own computer, privately and for free. Eugene Plexus installs the engine, suggests models that fit, and connects your apps through OpenAI and Anthropic Messages APIs. Self-hosted and open source. First release available.',
   noindex = false,
 } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site);
@@ -78,7 +78,7 @@ const metadata = !noindex && Astro.site ? structuredData(Astro.site, canonical, 
           <p>Build something that's yours.</p>
         </div>
         <nav aria-label="Footer navigation">
-          <a href="/install">Install the alpha</a>
+          <a href="/install">Install</a>
           <a href="/recovery">Backup and recovery</a>
           <a href="/principles">Our principles</a>
           <a href="/architecture">Architecture</a>

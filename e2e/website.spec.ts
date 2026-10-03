@@ -8,7 +8,7 @@ test('the homepage describes current capabilities with an explicit alpha boundar
     await expect(page.locator('.hero-technical')).toContainText('self-hosted control plane for local LLM inference');
     await expect(page.locator('.hero-technical')).toContainText('OpenAI and Anthropic Messages APIs');
     for (const selector of ['meta[name="description"]', 'meta[property="og:description"]']) {
-        await expect(page.locator(selector)).toHaveAttribute('content', /OpenAI and Anthropic Messages APIs.*Alpha available for testing/);
+        await expect(page.locator(selector)).toHaveAttribute('content', /OpenAI and Anthropic Messages APIs.*First release available/);
     }
     await expect(page.locator('.principle h3')).toHaveText([
         'Engine setup, handled', 'Settings start with your machine', 'Your files stay yours',
@@ -16,7 +16,7 @@ test('the homepage describes current capabilities with an explicit alpha boundar
     await expect(page.locator('#configure')).toContainText('two-screen setup');
     await expect(page.locator('#runtimes')).toContainText('Download and run');
     await expect(page.locator('#routing')).toContainText('revocable client keys');
-    await expect(page.locator('#open-source')).toContainText('There is no stable release yet');
+    await expect(page.locator('#open-source')).toContainText('It is early software: it works, with rough edges and known limits.');
     const engines = page.locator('details').filter({ hasText: 'Which inference engines does it support?' });
     await engines.locator('summary').click();
     await expect(engines).toContainText('user-installed vLLM');
@@ -60,7 +60,7 @@ test('Plexus theme, local assets, accessible content, and responsive layout', as
     await expect(page.getByRole('heading', { level: 1 })).toHaveText('Eugene Plexus.');
     await expect(page).toHaveTitle('Eugene Plexus | A self-hosted control plane for local LLM inference');
     await expect(page.locator('main')).not.toContainText(/training|tokenizer|checkpoints/i);
-    await expect(page.locator('.release-note')).toContainText('is available for early testing. No stable release yet.');
+    await expect(page.locator('.release-note')).toContainText('is the first release: early software, with known limits.');
     await expect(page.locator('html')).toHaveAttribute('data-theme', 'plexus');
     await expect(page.locator('html')).toHaveCSS('color-scheme', 'dark');
     await expect(page.locator('meta[name="theme-color"]')).toHaveAttribute('content', '#141619');
@@ -187,12 +187,12 @@ test('the architecture page explains the layers and stays inside the viewport', 
     await expect(page.locator('#principles')).not.toContainText('Never copied');
     await expect(page.locator('#request')).toContainText('Embeddings fail over only between replicas of the same model');
     await expect(page.locator('#request')).toContainText('not a second computation on another replica');
-    await expect(page.locator('#status')).toContainText('There is no stable release yet');
+    await expect(page.locator('#status')).toContainText('v0.1.0 is the first release');
     await expect(page.locator('#status')).toContainText('actual local models');
     await expect(page.locator('#status')).toContainText('not full vendor API parity');
     // alpha.3: per-node token keys replaced the install-wide signing key.
-    await expect(page.locator('#status')).toContainText('Alpha.6 is available for early testing');
-    await expect(page.locator('#status')).toContainText('an alpha.5 or alpha.4 install updates from the console');
+    await expect(page.locator('#status')).toContainText('this is not a production-readiness claim');
+    await expect(page.locator('#status')).toContainText('An alpha.6, alpha.5 or alpha.4 install updates from the console');
     // alpha.6: web search, and apps that sign in with Eugene.
     await expect(page.locator('#status')).toContainText('web search run by your install');
     await expect(page.locator('#status')).toContainText('Apps and sign-in');

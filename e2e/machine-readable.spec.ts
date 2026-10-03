@@ -13,7 +13,7 @@ test('the AI index leads to readable, current guides for every public page', asy
     const index = await response.text();
     expect(index).toMatch(/^# Eugene Plexus\n/);
     expect(index).toContain(`Published release: ${release.version}`);
-    expect(index).toContain('There is no stable release yet.');
+    expect(index).toContain('the first release: early software, with known limits.');
     expect(index).toContain(`${release.specsCommit}/docs/support-matrix.md`);
     expect(index).toContain(`${release.specsCommit}/openapi/gateway.yaml`);
     expect(index).toContain('roadmap describes development plans');
@@ -68,7 +68,7 @@ test('HTML advertises Markdown and includes factual project metadata', async ({ 
         expect(project.version).toBe(release.version);
         expect(project.license).toBe('https://github.com/eugene-plexus/specs/blob/main/LICENSE');
         expect(project.codeRepository).toContain('https://github.com/eugene-plexus/gateway');
-        expect(project.creativeWorkStatus).toContain('No stable release yet');
+        expect(project.creativeWorkStatus).toContain('early software, with known limits');
         expect(project).not.toHaveProperty('aggregateRating');
     }
     await page.goto('/404.html');

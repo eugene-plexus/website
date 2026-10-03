@@ -78,10 +78,10 @@ const requirements = [
       <p class="hero-description" data-plain>Private and free. Eugene sets up the engine, suggests a model that fits your machine, and gives your apps one address to use.</p>
       <p class="hero-technical">A self-hosted control plane for local LLM inference, with OpenAI and Anthropic Messages APIs.</p>
       <div class="hero-actions">
-        <a class="button button-primary" href="/install"><ArrowDown size={19} aria-hidden="true" /> Install the alpha <ArrowRight size={17} aria-hidden="true" /></a>
+        <a class="button button-primary" href="/install"><ArrowDown size={19} aria-hidden="true" /> Install Eugene Plexus <ArrowRight size={17} aria-hidden="true" /></a>
         <a class="text-link" href="#uses">See what it can do <ArrowDown size={17} aria-hidden="true" /></a>
       </div>
-      <p class="release-note">{release.version} is available for early testing. No stable release yet.</p>
+      <p class="release-note">{release.version} is the first release: early software, with known limits.</p>
     </div>
   </section>
 
@@ -223,7 +223,7 @@ const requirements = [
       <div>
         <p class="eyebrow"><span class="section-index">06 /</span> Built in the open</p>
         <h2 id="open-source-title">Early days.<br />An open invitation.</h2>
-        <p>Eugene Plexus is under active development. The current alpha is available for early testing, with versioned installers and a matching container image. There is no stable release yet.</p>
+        <p>Eugene Plexus is under active development. {release.version} is its first release, with versioned installers and a matching container image. It is early software: it works, with rough edges and known limits.</p>
         <p>Follow the <a href="https://github.com/eugene-plexus/specs/blob/main/docs/design/adoption-roadmap.md">current roadmap</a> and <a href="https://github.com/eugene-plexus/specs/tree/main/docs/acceptance">acceptance records</a> for what is built, what has been exercised, and what still needs work.</p>
         <a class="button button-primary" href="https://github.com/eugene-plexus">Find us on GitHub <ArrowUpRight size={18} aria-hidden="true" /></a>
       </div>
@@ -268,7 +268,7 @@ const requirements = [
         </details>
         <details>
           <summary>Can I download it yet?<ChevronDown size={19} aria-hidden="true" /></summary>
-          <p>Yes. <a href="/install">Install {release.version}</a> to help test the current alpha. The guide covers setup, your first reply, updates and removal. This is an early testing release; see the <a href="/architecture#status">current boundaries</a> before relying on it.</p>
+          <p>Yes. <a href="/install">Install {release.version}</a>, the first release. The guide covers setup, your first reply, updates and removal. It is early software; see the <a href="/architecture#status">current boundaries</a> before relying on it.</p>
         </details>
         <details>
           <summary>Which inference engines does it support?<ChevronDown size={19} aria-hidden="true" /></summary>
@@ -276,7 +276,7 @@ const requirements = [
         </details>
         <details>
           <summary>Can I use Claude Code and my other tools?<ChevronDown size={19} aria-hidden="true" /></summary>
-          <p>The gateway serves OpenAI-compatible chat, tool calling and embeddings, plus Anthropic Messages for text and tool calls. Since alpha.5 it also serves speech, transcription, images, video and plain completions, each only through a model that can do the job. Since alpha.6, models can search the web through a search account your install runs, SearXNG or Brave, on all three APIs. Client keys can be named and revoked from the console. Claude Code edit/check tasks and Open WebUI chat and images have been exercised with actual local models; full vendor API parity is not claimed. See <a href="/architecture#status">compatibility limits</a>.</p>
+          <p>The gateway serves OpenAI-compatible chat, tool calling and embeddings, plus Anthropic Messages for text and tool calls. Since alpha.5 it also serves speech, transcription, images, video and plain completions, each only through a model that can do the job. Since alpha.6, models can search the web through a search account your install runs, SearXNG or Brave, on all three APIs. Since v0.1.0, each conversation goes back to the copy of a model that already holds it (<a href="/cache-aware-balancing">the research</a>). Client keys can be named and revoked from the console. Claude Code edit/check tasks and Open WebUI chat and images have been exercised with actual local models; full vendor API parity is not claimed. See <a href="/architecture#status">compatibility limits</a>.</p>
         </details>
         <details>
           <summary>Is there a chat app?<ChevronDown size={19} aria-hidden="true" /></summary>

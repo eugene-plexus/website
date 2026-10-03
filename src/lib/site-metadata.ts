@@ -27,7 +27,7 @@ export function structuredData(site: URL, canonical: URL, title: string, descrip
                 url: site.href,
                 description: projectDescription,
                 version: release.version,
-                creativeWorkStatus: 'Alpha; available for early testing. No stable release yet.',
+                creativeWorkStatus: 'First release (v0.1.0); early software, with known limits.',
                 license: 'https://github.com/eugene-plexus/specs/blob/main/LICENSE',
                 codeRepository: Object.keys(release.components).map(name => `https://github.com/eugene-plexus/${name}`),
             },

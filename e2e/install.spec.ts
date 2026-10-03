@@ -6,10 +6,10 @@ import archived from '../src/data/archived-releases.json' with { type: 'json' };
 
 test('a visitor can find, read and copy the versioned installer', async ({ page, context }, testInfo) => {
     await page.goto('/');
-    await page.locator('.hero-actions').getByRole('link', { name: 'Install the alpha' }).click();
+    await page.locator('.hero-actions').getByRole('link', { name: 'Install Eugene Plexus' }).click();
     await expect(page).toHaveURL(/\/install\/?$/);
     await expect(page.getByRole('heading', { level: 1 })).toHaveText('Get your first model answering.');
-    await expect(page.locator('.alpha-notice')).toContainText('There is no stable release yet');
+    await expect(page.locator('.alpha-notice')).toContainText('This is the first release.');
     await page.getByRole('navigation', { name: 'Installation sections' }).getByRole('link', { name: 'Windows', exact: true }).click();
     await expect(page.locator('#windows-title')).toBeInViewport();
     const command = `irm https://eugeneplexus.com/releases/${release.version}/install.ps1 | iex`;
@@ -77,7 +77,7 @@ test('recovery distinguishes the first alpha upgrade from checkpoint-capable rel
         await page.goto(`${baseURL}/install`);
         // alpha.6: alpha.4 and alpha.5 update from the console, alpha.3 in
         // place by running the installer again; alpha.2 is still a fresh install.
-        await expect(page.locator('#update')).toContainText('From alpha.4 or alpha.5, update from the console');
+        await expect(page.locator('#update')).toContainText('From alpha.4, alpha.5 or alpha.6, update from the console');
         await expect(page.locator('#update')).toContainText('Settings → Updates');
         await expect(page.locator('#update')).not.toContainText('Config → Agent');
         await expect(page.locator('#update')).toContainText('From alpha.3, run the install command again');
@@ -85,12 +85,12 @@ test('recovery distinguishes the first alpha upgrade from checkpoint-capable rel
         await expect(page.locator('#update')).toContainText('Moving from alpha.2 or earlier is a fresh install');
         await expect(page.locator('#update').getByRole('link', { name: 'alpha.3 release notes' })).toHaveAttribute('href', 'https://github.com/eugene-plexus/specs/blob/main/docs/releases/v0.1.0-alpha.3.md#moving-from-alpha2');
         await page.locator('#update').getByRole('link', { name: 'Read the backup and recovery guide before updating.' }).click();
-        await expect(page.locator('.version-notice')).toContainText('Moving from v0.1.0-alpha.5 or alpha.4');
+        await expect(page.locator('.version-notice')).toContainText('Moving from v0.1.0-alpha.6, alpha.5 or alpha.4');
         await expect(page.locator('.version-notice')).toContainText('Moving from v0.1.0-alpha.3');
         await expect(page.locator('.version-notice')).toContainText('does not make a checkpoint for you');
         await expect(page.locator('.version-notice')).toContainText('Moving from v0.1.0-alpha.2');
         await expect(page.locator('.version-notice')).toContainText('will refuse alpha.1');
-        await expect(page.locator('.version-notice')).toContainText(`Published alpha (${release.version})`);
+        await expect(page.locator('.version-notice')).toContainText(`The published release (${release.version})`);
         await expect(page.locator('.version-notice')).toContainText('follow the checkpoint procedure below');
         await expect(page.getByRole('heading', { name: 'Windows worker', exact: true })).toBeVisible();
         await expect(page.getByRole('link', { name: 'scripts/recovery.py', exact: true })).toHaveAttribute('href', `https://github.com/eugene-plexus/specs/blob/${release.specsCommit}/scripts/recovery.py`);
