@@ -2,6 +2,7 @@
 import { ArrowDown, ArrowRight, ArrowUpRight, Cloud, Cpu, Database, FolderOpen, Globe, HardDrive, KeyRound, Monitor, Radio, Server, ShieldCheck, Terminal } from '@lucide/astro';
 import SiteLayout from '../layouts/SiteLayout.astro';
 import release from '../data/alpha-release.json';
+import { cacheAwareBalancingShipped } from '../lib/features';
 
 const title = 'Architecture | Eugene Plexus';
 const description = 'How the parts of Eugene Plexus fit together: the agent on each machine, the gateway your tools talk to, the drivers and engines behind it, the model library, and the control root that ties several machines into one install.';
@@ -14,7 +15,7 @@ const components = [
   },
   {
     id: 'gateway', name: 'Gateway', icon: Radio, where: 'One per install',
-    what: 'One address serving OpenAI-compatible chat and embeddings plus Anthropic Messages. Both chat formats share routing, cache-aware replica balancing, ordered failover, wake-on-demand, and retained request metrics.',
+    what: `One address serving OpenAI-compatible chat and embeddings plus Anthropic Messages. Both chat formats share routing, ${cacheAwareBalancingShipped ? 'cache-aware ' : ''}replica balancing, ordered failover, wake-on-demand, and retained request metrics.`,
     talks: 'Your tools on one side; every inference driver on the other. Reads model defaults from the Library through its agent.', repo: 'gateway',
   },
   {

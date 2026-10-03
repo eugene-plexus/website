@@ -3,6 +3,7 @@ import { ArrowRight, ArrowUpRight } from '@lucide/astro';
 import SiteLayout from '../layouts/SiteLayout.astro';
 import Mascot from '../components/Mascot.astro';
 import release from '../data/alpha-release.json';
+import { cacheAwareBalancingShipped as shipped } from '../lib/features';
 
 // Every number on this page is in one of two measurement records in the specs
 // repo. Change a number here only after changing it there.
@@ -16,7 +17,7 @@ const eightReplicas = [
   { policy: 'Fewest requests in flight', note: 'what most balancers do', reused: 49.7, ttft: '6.35 s', failed: 60 },
   { policy: 'Same copy as last turn', note: 'conversation affinity', reused: 60.4, ttft: '4.00 s', failed: 56 },
   { policy: 'Affinity, new conversations spread', note: 'by conversations held', reused: 80.2, ttft: '1.05 s', failed: 44 },
-  { policy: 'Spread, plus a token budget', note: 'what Eugene does now', reused: 81.5, ttft: '1.26 s', failed: 0, chosen: true },
+  { policy: 'Spread, plus a token budget', note: 'what we built', reused: 81.5, ttft: '1.26 s', failed: 0, chosen: true },
 ];
 
 // Record §3, §5, §7: placements that sound smarter and measured worse.
@@ -46,7 +47,7 @@ const alsoRan = [
         <p>Claude Code and Codex work in turns. Each turn sends everything so far: the instructions, the tools, every file read and every answer. A model server such as <strong>llama.cpp</strong> keeps a <em>prompt cache</em>. If it has seen the start of a prompt before, it skips reading that part again, and the reply starts much sooner.</p>
         <p>That works on one server. Run two copies of the same model, to serve more people or more agents at once, and a simple balancer sends turns to whichever copy looks least busy. On an idle install that means <strong>every other turn lands on the copy that has never seen the conversation</strong>, and reads it all again.</p>
         <p>We measured that first: one Claude Code session on two copies of an 8B model reused 52.8% of its prompt tokens and took 6.0 seconds a turn. Sent back to the same copy each turn, the same session reused 75.3% and took 3.2 seconds (<a href={firstRecord}>record, §7 and §11</a>).</p>
-        <p>Then Troy asked the harder question: <em>what about dozens of people, across dozens of servers?</em> This page is what we found.</p>
+        <p>Then Troy, who builds Eugene Plexus, asked the harder question: <em>what about dozens of people, across dozens of servers?</em> This page is what we found.</p>
       </div>
     </section>
 
@@ -74,7 +75,7 @@ const alsoRan = [
         <p>Three copies of a model, twelve agents at once. Choosing the least busy copy reused 67.7% of prompt tokens, with the first token after 1.49 seconds at the median. Sending each conversation back to the copy that served its last turn reused 80.8%, after 0.71 seconds. The servers read 41% fewer tokens.</p>
 
         <h3>2. At eight servers, where a new conversation starts matters as much</h3>
-        <p>"Least busy" counts requests in progress. An agent spends much of its time thinking between turns, so a server whose four agents are all thinking looks empty, and new conversations pile onto it. Counting the conversations a server <em>holds</em> instead fixed that.</p>
+        <p>"Least busy" counts requests in progress. An agent spends much of its time thinking between turns, so a server whose four agents are all thinking looks empty, and new conversations pile onto it. Counting the conversations a server <em>holds</em> instead fixed that. (Once the token budget in finding 3 was in place, most of this gap closed; see <a href="#built-title">what we built</a>.)</p>
 
         <figure class="chart" aria-labelledby="chart-eight-title">
           <figcaption id="chart-eight-title" class="chart-title">Eight copies of a model, 32 agents at once, 544 turns a run</figcaption>
@@ -96,7 +97,7 @@ const alsoRan = [
               ))}
             </tbody>
           </table>
-          <p class="chart-source">Llama 3.2 1B on one RTX 5090. <a href={`${record}#5-eight-replicas-thirty-two-sessions-at-once-the-pool-not-the-slots`}>Record, §5</a>.</p>
+          <p class="chart-source">Llama 3.2 1B on one RTX 5090, before the build: the test harness placed the turns. The built gateway measured 78.3% on this test (below). <a href={`${record}#5-eight-replicas-thirty-two-sessions-at-once-the-pool-not-the-slots`}>Record, §5</a>.</p>
         </figure>
 
         <h3>3. Under load, the failures were ours</h3>
@@ -132,7 +133,7 @@ const alsoRan = [
       <div class="story-aside"></div>
       <div class="story-prose">
         <h2 id="built-title">What we built, and what it measured</h2>
-        <p>All of this is on by default in Eugene's gateway (<a href={design}>design</a>):</p>
+        <p>{shipped ? <>All of this is on by default in Eugene's gateway in {release.version}</> : <>All of this is on by default in Eugene's gateway from the next release, after {release.version}</>} (<a href={design}>design</a>):</p>
         <ul class="story-steps">
           <li><strong>Conversation affinity</strong> (<code>conversationAffinity</code>, on). A conversation goes back to the copy that served it, for 30 minutes, unless that copy is saturated.</li>
           <li><strong>Spread</strong> (<code>loadBalancing: spread</code>, the default). A new conversation goes to the copy holding the fewest conversations per slot.</li>
@@ -184,15 +185,19 @@ const alsoRan = [
           <li>Slot pinning that never names a busy slot.</li>
           <li>The same gateway in front of Ollama, LM Studio, vLLM and cloud services, with failover between them.</li>
         </ul>
-        <p>That is a search that came up empty, not a proof. We also have not seen anyone else publish this kind of measurement for agent sessions on llama.cpp. If we missed a project, <a href="https://github.com/eugene-plexus/specs/issues/new?title=Prior%20art%3A%20">tell us</a> and we will add it here.</p>
+        <p>That is a search that came up empty, not a proof. If we missed a project, <a href="https://github.com/eugene-plexus/specs/issues/new?title=Prior%20art%3A%20">tell us</a> and we will add it here.</p>
       </div>
     </section>
 
     <section class="story-invitation" aria-labelledby="try-title">
       <h2 id="try-title">Try it</h2>
-      <p>Cache-aware balancing is on by default. Launch a second copy of a model on the same machine or another one, and Eugene's gateway balances between them. The Metrics page shows cached tokens and evictions per copy.</p>
+      {shipped ? (
+        <p>Cache-aware balancing is on by default in {release.version}. Launch a second copy of a model on the same machine or another one, and Eugene's gateway balances between them. The Metrics page shows cached tokens and evictions per copy.</p>
+      ) : (
+        <p>Cache-aware balancing arrives in the next release, after {release.version}. Install the alpha now and it comes with that update: launch a second copy of a model, and Eugene's gateway balances between them.</p>
+      )}
       <div class="story-actions">
-        <a class="button button-primary" href="/install">Install Eugene Plexus <ArrowRight size={17} aria-hidden="true" /></a>
+        <a class="button button-primary" href="/install">{shipped ? 'Install Eugene Plexus' : 'Install the alpha'} <ArrowRight size={17} aria-hidden="true" /></a>
         <a class="text-link" href={record}>The full measurement record <ArrowUpRight size={17} aria-hidden="true" /></a>
       </div>
     </section>

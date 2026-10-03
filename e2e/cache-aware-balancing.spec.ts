@@ -1,5 +1,6 @@
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test } from '@playwright/test';
+import release from '../src/data/alpha-release.json' with { type: 'json' };
 
 /**
  * The cache-aware balancing story reports measurements. These checks keep it
@@ -16,6 +17,23 @@ test('the chart is a readable table and the page names who else does this', asyn
     await expect(page.locator('#others')).toContainText('We are not the first');
     for (const name of ['SGLang', 'llm-d', 'Dynamo', 'LiteLLM', 'GPUStack']) {
         await expect(page.locator('#others')).toContainText(name);
+    }
+});
+
+test('the copy says whether the published release carries it', async ({ page }) => {
+    // Built after v0.1.0-alpha.6: no alpha may be described as having it.
+    const shipped = !/^v0\.1\.0-alpha\./.test(release.version);
+    await page.goto('/cache-aware-balancing');
+    const invitation = page.locator('.story-invitation');
+    if (shipped) {
+        await expect(invitation).toContainText(`on by default in ${release.version}`);
+    } else {
+        await expect(invitation).toContainText(`arrives in the next release, after ${release.version}`);
+        await expect(page.locator('main')).not.toContainText(`on by default in Eugene's gateway in ${release.version}`);
+        await page.goto('/');
+        await expect(page.locator('main')).not.toContainText('goes back to the copy that already remembers it');
+        await page.goto('/architecture');
+        await expect(page.locator('main')).not.toContainText('cache-aware replica balancing');
     }
 });
 
