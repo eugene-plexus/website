@@ -20,6 +20,12 @@ test('a visitor can find, read and copy the versioned installer', async ({ page,
     expect(await page.evaluate(() => navigator.clipboard.readText())).toBe(command);
     await expect(page.locator('#linux-command')).toHaveText(`curl -fsSL https://eugeneplexus.com/releases/${release.version}/install.sh | sh`);
     await expect(page.locator('#remove')).toContainText('Run as administrator');
+    await expect(page.locator('#remove')).toContainText('Settings → Apps → Installed apps → Eugene Plexus → Uninstall');
+    await expect(page.locator('#remove')).toContainText('Original model folders are always kept');
+    if (!(release as { offlineRemoval?: boolean }).offlineRemoval) {
+        await expect(page.locator('#remove')).toContainText('entire installation folder');
+        await expect(page.locator('#remove')).toContainText('Published release files have not been changed');
+    }
     await expect(page.locator('#update')).toContainText('they do not silently follow development changes');
     await expect(page.locator('#mac')).toContainText('physical Mac verification remains outstanding');
     for (const hash of await page.locator('.install-nav a').evaluateAll(links => links.map(link => (link as HTMLAnchorElement).hash.slice(1)))) {

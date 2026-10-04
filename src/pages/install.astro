@@ -9,6 +9,8 @@ const windows = `irm ${base}/install.ps1 | iex`;
 const posix = `curl -fsSL ${base}/install.sh | sh`;
 const uninstallWindows = `& ([scriptblock]::Create((irm ${base}/install.ps1))) -Uninstall`;
 const uninstallPosix = `curl -fsSL ${base}/install.sh | sh -s -- --uninstall`;
+// Set only when the published installer assets include the offline utilities.
+const offlineRemoval = Boolean((release as { offlineRemoval?: boolean }).offlineRemoval);
 const notes = `https://github.com/eugene-plexus/specs/releases/tag/${release.version}`;
 const containerGuide = `https://github.com/eugene-plexus/specs/blob/${release.specsCommit}/docs/deployment/container.md`;
 const compose = `name: eugene-plexus
@@ -201,11 +203,16 @@ const choices = [
 
     <section id="remove" aria-labelledby="remove-title">
       <h2 id="remove-title">Remove Eugene</h2>
+      <p><strong>If your installation has the local removal utility, start there.</strong> On Windows, open <strong>Settings → Apps → Installed apps → Eugene Plexus → Uninstall</strong>. On Mac, open <strong>Remove Eugene Plexus</strong> in your home folder’s <strong>Applications</strong> folder. These utilities work without an internet connection or a running Eugene.</p>
+      <p>The local utility shows sizes and offers two separate, unchecked choices: delete settings, app data and logs; or delete downloaded engines and managed model copies. By default it removes the software and keeps that data. Original model folders are always kept. The final report names retained files and gives a local cleanup command that works later, even after Python has been removed.</p>
+      {!offlineRemoval && <p><strong>The local utilities are currently included in development installers after {release.version}.</strong> The published commands below still use the older removal behavior. Published release files have not been changed.</p>}
+      <p><strong>If the local utility is missing, use the matching installer below.</strong></p>
       <p>On Windows, open PowerShell with <strong>Run as administrator</strong> for the default service install, then run:</p>
       <InstallCommand id="windows-remove" command={uninstallWindows} label="Windows removal command" />
       <p>On Linux or Mac, use your normal terminal account:</p>
       <InstallCommand id="posix-remove" command={uninstallPosix} label="Linux and Mac removal command" />
-      <p>These commands remove startup registration and the application environment. They leave original model files alone, keep downloaded engines and managed model copies, and move configuration and logs to the backup folder shown in the output. They apply to the default locations above; custom installations need their original prefix.</p>
+      {offlineRemoval ? <p>On Windows and Mac, these commands remove the software and startup registration while keeping settings, app data and downloads. The retained folder includes an offline cleanup utility. Linux system removal preserves its installation folder. Custom installations need their original prefix.</p> : <p>These published commands remove startup registration and move the <strong>entire installation folder</strong> to a folder ending in <code>.removed-&lt;timestamp&gt;</code>. Python, installed packages, settings, app data and logs remain there. Downloaded engines and managed model copies are also kept. To reclaim space, review the locations printed by the command and delete only files you no longer want. Any original models inside the installation’s <code>models</code> folder move with it: keep or move those models before deleting the retained folder. Custom installations need their original prefix.</p>}
+      <p>A cleanup warning means an item still needs attention. Read the final report before treating removal as complete. Shared operating-system dependencies, such as the Microsoft Visual C++ runtime, are kept.</p>
       <p>For Docker, run <code>docker compose down</code> from the project folder to stop and remove the container while retaining the state volume and model files. Do not add <code>--volumes</code> if you want to keep the install's identity and configuration.</p>
     </section>
 

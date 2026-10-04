@@ -32,6 +32,11 @@ Tests start their own preview on port 4322 and do not reuse existing servers. Th
 
 ## Editing
 
+The installation page distinguishes the local removal utility from the older
+published installer. Set `offlineRemoval: true` in `src/data/alpha-release.json`
+only when publishing release assets that contain the generated offline removal
+payload. Do not replace immutable existing installer assets to enable this copy.
+
 | File                                                           | Purpose                                                                  |
 | -------------------------------------------------------------- | ------------------------------------------------------------------------ |
 | [src/pages/index.astro](src/pages/index.astro)                 | Homepage copy, workflow, FAQs, and source links                          |
