@@ -60,7 +60,7 @@ test('installation and recovery Markdown retain exact executable examples and ca
     expect(overview).toContain('Is this a chatbot or an inference engine?');
     expect(overview).toContain('Core license: [Apache 2.0]');
     const principles = await (await request.get('/principles/index.md')).text();
-    expect(principles).toContain('## Five principles. One purpose.');
+    expect(principles).toContain('## Our five principles');
 });
 
 test('HTML advertises Markdown and includes factual project metadata', async ({ page }) => {

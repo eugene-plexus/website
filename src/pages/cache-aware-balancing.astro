@@ -30,13 +30,13 @@ const alsoRan = [
 ---
 
 <SiteLayout
-  title="Sending each conversation home | Eugene Plexus"
+  title="Cache-aware balancing | Eugene Plexus"
   description="How Eugene Plexus balances AI agent sessions across copies of a local model so each turn lands where its prompt is already cached. 64 real Claude Code and Codex sessions, replayed on up to eight llama.cpp servers, and what we built from the numbers."
 >
   <article class="container story-page">
     <header class="story-header">
       <p class="eyebrow">From the build · 2 October 2026</p>
-      <h1>Sending each conversation home.</h1>
+      <h1>Sending each conversation to the server that has it cached</h1>
       <p class="story-lede">An AI coding agent sends its whole conversation with every step, often 20,000 to 30,000 tokens. Whether that step takes half a second or ten depends on one thing: does the server that gets it still remember the conversation?</p>
     </header>
 
@@ -132,7 +132,7 @@ const alsoRan = [
     <section class="story-section" aria-labelledby="built-title">
       <div class="story-aside"></div>
       <div class="story-prose">
-        <h2 id="built-title">What we built, and what it measured</h2>
+        <h2 id="built-title">What we built and what it measured</h2>
         <p>{shipped ? <>All of this is on by default in Eugene's gateway in {release.version}</> : <>All of this is on by default in Eugene's gateway from the next release, after {release.version}</>} (<a href={design}>design</a>):</p>
         <ul class="story-steps">
           <li><strong>Conversation affinity</strong> (<code>conversationAffinity</code>, on). A conversation goes back to the copy that served it, for 30 minutes, unless that copy is saturated.</li>

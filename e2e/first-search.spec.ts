@@ -27,7 +27,7 @@ test('the answer files are the recorded chat, word for word', () => {
 
 test('the chat is on the page, reasoning folded and every source linked', async ({ page }) => {
     await page.goto('/first-search');
-    await expect(page.getByRole('heading', { level: 1 })).toHaveText('It looked itself up.');
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText('A local model searched the web for Eugene Plexus');
     const questions = chat.messages.filter((m) => m.role === 'user').map((m) => m.content);
     await expect(page.locator('.question')).toHaveText(questions);
 
@@ -61,7 +61,7 @@ test('the chat is on the page, reasoning folded and every source linked', async 
 
 test('the page keeps the alpha boundary and is reachable from every page', async ({ page }) => {
     await page.goto('/');
-    await page.locator('.site-footer').getByRole('link', { name: 'It looked itself up' }).click();
+    await page.locator('.site-footer').getByRole('link', { name: 'The first web search' }).click();
     await expect(page).toHaveURL(/\/first-search$/);
     await expect(page.locator("#try-title + p")).toContainText(`Workbench and web search are in ${release.version}`);
 });

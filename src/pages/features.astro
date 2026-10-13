@@ -20,7 +20,7 @@ const sections = [
   <div class="container features-page">
     <header class="features-intro">
       <p class="eyebrow">What it does · {release.version}</p>
-      <h1>Everything Eugene does, in one place.</h1>
+      <h1>Features in {release.version}</h1>
       <p class="lead" data-plain>Eugene runs AI models on your own machines and gives every app one address. Here is each part: what it does for you, what it looks like, and its limits.</p>
       <nav class="jump" aria-label="On this page">
         {sections.map(([id, name]) => <a href={`#${id}`}>{name}</a>)}
@@ -40,7 +40,7 @@ const sections = [
       </li>
     </ul>
 
-    <Feature id="library" index="01" title="Models that fit, before you download" lead="Every model and search result says whether it runs on your machine and why, engine by engine, with a fit estimate where there is one." guides={['manage-models']}>
+    <Feature id="library" index="01" title="Check that a model fits before you download it" lead="Every model and search result says whether it runs on your machine and why, engine by engine, with a fit estimate where there is one." guides={['manage-models']}>
       <Fragment slot="shots">
         <Shot name="discover" alt="Discover filtered to Works here now. Each result is marked works here; an open model shows its suggested version, and a note lists each engine: llama.cpp runs it as it is and it fits in free graphics memory, while MLX, vLLM, Strata and Kev each say why they cannot." caption="Each engine’s reason, and its fit, before you download." />
       </Fragment>
@@ -54,7 +54,7 @@ const sections = [
       <Shot name="delete" alt="A model’s page in the Library with the Delete confirmation open: it names the one file it removes, with its full path and size, says it cannot be undone, and offers Delete and free 146 MB or Cancel." />
     </Feature>
 
-    <Feature id="search-models" index="02" title="Search models, on your own machine" lead="Run the models that find passages by meaning and sort what a search found, for Workbench and Open WebUI." guides={['run-search-models']} limits={["Workbench's sorter: its default Sort time (3 s) suits a GPU, where a question takes about 0.6 s, not a typical CPU, where it takes about 7 s."]}>
+    <Feature id="search-models" index="02" title="Run search models on your own machine" lead="Run the models that find passages by meaning and sort what a search found, for Workbench and Open WebUI." guides={['run-search-models']} limits={["Workbench's sorter: its default Sort time (3 s) suits a GPU, where a question takes about 0.6 s, not a typical CPU, where it takes about 7 s."]}>
       <Fragment slot="shots">
         <Shot name="runs-as" alt="A search model’s page in the Library. Beside the Run button it says Runs as: search model (found in the file), with a link to change how it runs; the model list shows a search model and a result sorter running." caption="The Library knows a search model from a chat model by the file itself." />
       </Fragment>
@@ -67,7 +67,7 @@ const sections = [
       </ul>
     </Feature>
 
-    <Feature id="tools" index="03" title="Tools on every model" lead="Coding agents such as Codex and Claude Code work with more models. A chat model is offered tools unless its engine or provider has shown it cannot." guides={['connect-codex-and-claude-code']} limits={['A Claude Code turn reserves its whole answer allowance (32,000 tokens), so a llama.cpp server with a 64k-token pool runs one Claude Code turn at a time. The others wait; they do not fail.']}>
+    <Feature id="tools" index="03" title="Use tools with any model" lead="Coding agents such as Codex and Claude Code work with more models. A chat model is offered tools unless its engine or provider has shown it cannot." guides={['connect-codex-and-claude-code']} limits={['A Claude Code turn reserves its whole answer allowance (32,000 tokens), so a llama.cpp server with a 64k-token pool runs one Claude Code turn at a time. The others wait; they do not fail.']}>
       <Fragment slot="shots">
         <Shot name="apps-codex" alt="The setup buttons under Use it from your apps, with Codex chosen: the block for ~/.codex/config.toml, naming Eugene as the model provider with the model’s context window, and the EUGENE_API_KEY variable to set where Codex starts." caption="The Home page writes Codex’s setup for you." />
       </Fragment>

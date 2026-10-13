@@ -4,7 +4,7 @@
 4. Press **Sign in with Eugene**. The owner signs in with Eugene's passphrase; once other people are added, the owner's name is usually `operator`.
 5. To add someone, open **People → Add a person** in the console. Give a **Name they sign in with**, a **First password**, and tick Workbench under **Apps they may sign in to**. Press **Add**.
 
-Next: [give Workbench documents, folders and tools](/guides/workbench-documents-and-tools).
+Next: [have it remember things](/guides/workbench-memory), [ask about your documents](/guides/workbench-documents), or [give it folders and tools](/guides/workbench-tools).
 
 <details>
 <summary>On a NAS container</summary>

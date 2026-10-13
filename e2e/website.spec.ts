@@ -160,7 +160,7 @@ test('navigation and FAQs work with a keyboard', async ({ page }) => {
 
 test('custom 404 offers a working route home', async ({ page }) => {
     await page.goto('/404.html');
-    await expect(page.getByRole('heading', { level: 1 })).toHaveText('A little off the path.');
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText('Page not found');
     await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'noindex');
     await page.getByRole('link', { name: 'Back to Eugene Plexus' }).click();
     await expect(page.getByRole('heading', { level: 1 })).toHaveText('Eugene Plexus.');
@@ -183,7 +183,7 @@ test('the architecture page explains the layers and stays inside the viewport', 
     });
     await page.goto('/architecture');
     await page.evaluate(() => document.fonts.ready);
-    await expect(page.getByRole('heading', { level: 1 })).toHaveText('How it fits together.');
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText('How Eugene Plexus is built');
     await expect(page).toHaveTitle('Architecture | Eugene Plexus');
     // The five layers of the diagram, top to bottom, and the three services beside it.
     for (const label of ['Your tools', 'Gateway', 'Inference drivers', 'Engines and backends', 'Your hardware', 'Agent', 'Library', 'Control root']) {
@@ -194,7 +194,7 @@ test('the architecture page explains the layers and stays inside the viewport', 
     await expect(page.locator('.layer-engines')).toHaveCSS('border-left-color', PLEXUS['--accent-engine']);
     await expect(page.locator('.layer-hardware')).toHaveCSS('border-left-color', PLEXUS['--accent-hardware']);
     await expect(page.locator('.journey-step')).toHaveCount(5);
-    await expect(page.locator('#components-title')).toHaveText('Nine building blocks, distinct jobs.');
+    await expect(page.locator('#components-title')).toHaveText('The nine components and what each one does');
     await expect(page.locator('#ui')).toContainText('Static files, not a separate server');
     await expect(page.locator('#principles')).toContainText('Originals stay yours; local copies are optional');
     await expect(page.locator('#principles')).not.toContainText('Never copied');
@@ -252,7 +252,7 @@ test('the architecture page explains the layers and stays inside the viewport', 
     await page.screenshot({ path: testInfo.outputPath('architecture.png'), fullPage: true });
     await page.locator('#status').screenshot({ path: testInfo.outputPath('boundaries.png') });
     await page.getByRole('link', { name: 'What it does' }).click();
-    await expect(page.getByRole('heading', { level: 1 })).toHaveText('Everything Eugene does, in one place.');
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText(`Features in ${release.version}`);
 });
 
 test('a casual visitor sees what it does, what it looks like and what it needs', async ({ page }) => {

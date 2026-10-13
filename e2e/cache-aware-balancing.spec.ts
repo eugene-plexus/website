@@ -39,7 +39,7 @@ test('the copy says whether the published release carries it', async ({ page }) 
 
 test('the story is reachable from every page', async ({ page }) => {
     await page.goto('/');
-    await page.locator('.site-footer').getByRole('link', { name: 'Sending each conversation home' }).click();
+    await page.locator('.site-footer').getByRole('link', { name: 'Cache-aware balancing' }).click();
     await expect(page).toHaveURL(/\/cache-aware-balancing$/);
 });
 

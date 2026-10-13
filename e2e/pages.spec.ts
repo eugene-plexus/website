@@ -53,7 +53,7 @@ async function sound(page: Page, failed: string[]) {
 test('What Eugene does: every v0.2.0 area, its limits in view, its guides linked', async ({ page }) => {
     const failed = watch(page);
     await page.goto('/features');
-    await expect(page.getByRole('heading', { level: 1 })).toHaveText('Everything Eugene does, in one place.');
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText(`Features in ${release.version}`);
     for (const id of ['library', 'search-models', 'tools', 'providers', 'strata', 'machines']) {
         await expect(page.locator(`section#${id}`)).toHaveCount(1);
     }
@@ -80,7 +80,7 @@ test('What Eugene does: every v0.2.0 area, its limits in view, its guides linked
 test('Workbench describes memory, documents and tools, with the sorter limit in view', async ({ page }) => {
     const failed = watch(page);
     await page.goto('/workbench');
-    await expect(page.getByRole('heading', { level: 1 })).toHaveText('Your chats, your documents, your machines.');
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText("Workbench, Eugene's chat app");
     for (const id of ['memory', 'documents', 'saved-documents', 'tools', 'more']) {
         await expect(page.locator(`section#${id}`)).toHaveCount(1);
     }
@@ -93,7 +93,7 @@ test('Workbench describes memory, documents and tools, with the sorter limit in 
 test('Job Sites says how it stays yours and what it cannot do yet', async ({ page }) => {
     const failed = watch(page);
     await page.goto('/job-sites');
-    await expect(page.getByRole('heading', { level: 1 })).toHaveText('Workbench on your own machines, wherever they are.');
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText('Let Workbench work on your own computers');
     await expect(page.locator('.promises li')).toHaveCount(6);
     await expect(page.locator('.limits')).toContainText('Job Sites cannot yet copy between machines.');
     await expect(page.getByRole('link', { name: 'Set up a Job Site' })).toHaveAttribute('href', '/guides/set-up-a-job-site');
@@ -117,8 +117,13 @@ test('no text on any page is smaller than 14px', async ({ page }) => {
 test('the guides index lists every guide, and each guide renders and links soundly', async ({ page, request }) => {
     const failed = watch(page);
     await page.goto('/guides');
-    await expect(page.getByRole('heading', { level: 1 })).toHaveText('Do one thing, step by step.');
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText('Step-by-step guides');
     await expect(page.locator('.guide-card a')).toHaveText(guides.map((guide) => guide.title));
+    await expect(page.locator('.guide-card > svg.guide-icon')).toHaveCount(guides.length);
+    // The guide split after v0.2.0 left an old address; it lands on the list.
+    await page.goto('/guides/workbench-documents-and-tools');
+    await expect(page).toHaveURL(/\/guides\/?$/);
+    await page.goto('/guides');
     await sound(page, failed);
     for (const guide of guides) {
         await page.goto(guide.path);
