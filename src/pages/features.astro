@@ -40,9 +40,9 @@ const sections = [
       </li>
     </ul>
 
-    <Feature id="library" index="01" title="Models that fit, before you download" lead="Every model, and every search result, says whether it runs on your machine, with each engine's reason and how it fits." guides={['manage-models']}>
+    <Feature id="library" index="01" title="Models that fit, before you download" lead="Every model and search result says whether it runs on your machine and why, engine by engine, with a fit estimate where there is one." guides={['manage-models']}>
       <Fragment slot="shots">
-        <Shot name="discover" alt="Discover filtered to Works here now. Each result is marked works here; an open model shows its suggested version, and a note lists each engine: llama.cpp runs it as it is and it fits in free graphics memory, while MLX, vLLM, Strata and Kev each say why they cannot." caption="Each engine’s reason and fit, before you download." />
+        <Shot name="discover" alt="Discover filtered to Works here now. Each result is marked works here; an open model shows its suggested version, and a note lists each engine: llama.cpp runs it as it is and it fits in free graphics memory, while MLX, vLLM, Strata and Kev each say why they cannot." caption="Each engine’s reason, and its fit, before you download." />
       </Fragment>
       <ul>
         <li>Discover opens on <strong>Works here now</strong>. The format filter adds <strong>Works with another engine</strong> and <strong>Everything</strong>, and results show a count.</li>
@@ -98,12 +98,12 @@ const sections = [
         <li>Download and prepare from Discover in one action. <strong>Run</strong> suggests preparing when Strata suits the machine better.</li>
         <li>Prepared models live in the Library, and each machine runs its own copy.</li>
         <li>Tools and structured output work.</li>
-        <li>It prepared and ran a 68 GB model on an RTX 5090.</li>
+        <li>It prepared and ran a 68 GB model on one RTX 5090 under Windows, passing 18 of 19 checks.</li>
         <li>Coming from v0.1.0? Reinstall Strata before its first preparation: <strong>Backends → Strata</strong>, uninstall, then install. Prepared models are kept.</li>
       </ul>
     </Feature>
 
-    <Feature id="machines" index="06" title="Machines, updates and install" lead="See every machine's update status in one place, keep a second machine ready to take over, and remove Eugene even when it will not start." guides={['update-from-v0-1-0', 'add-a-warm-standby', 'container-https']} limits={['Switching over to the warm standby is not a button in the console yet.']}>
+    <Feature id="machines" index="06" title="Machines, updates and install" lead="See every machine's update status in one place, keep a second machine ready to take over, and remove Eugene even when it will not start." guides={['update-from-v0-1-0', 'add-a-warm-standby', 'container-https']} limits={['Taking over is done on the standby with your passphrase; it is not a button in the console yet.', 'With many llama.cpp servers on one machine, a reply can stall while llama.cpp saves and restores its prompt cache: 3 turns in 3,808 in our tests.']}>
       <Fragment slot="shots">
         <Shot name="machines" alt="The Machines page for two machines, desk-pc and garage-nas, both reachable, with the models each serves; a Standby section to choose a standby machine; and a Versions section where each machine reads v0.2.0, Up to date on releases, with Check now." caption="Every machine’s status and version in one place." />
       </Fragment>
@@ -112,10 +112,10 @@ const sections = [
         <li>A warm standby for the control root.</li>
         <li>Guided HTTPS setup, trusted proxies, and one HTTPS port for the container.</li>
         <li>A replica whose model is still loading is skipped for another.</li>
-        <li>Uninstall works offline: an Installed Apps entry on Windows, a removal app on a Mac.</li>
+        <li>Uninstall works offline: an Installed Apps entry on Windows, a removal app on a Mac. The Mac app has not been run on a physical Mac yet.</li>
         <li>Metrics shows requests served and not served, with the percentage served.</li>
       </ul>
-      <Shot name="metrics" alt="The Metrics page’s summary: 28 requests, 3 failed, median latency and first-token time, decode speed in tok/s, and a Request outcomes bar reading 89.3% served, 25 served and 3 not served." />
+      <Shot name="metrics" caption="From a demo install with a small model on the processor." alt="The Metrics page’s summary: 28 requests, 3 failed, median latency and first-token time, decode speed in tok/s, and a Request outcomes bar reading 89.3% served, 25 served and 3 not served." />
     </Feature>
 
     <p class="more">That is the headline list. <a href={notes}>The release notes</a> have every change and fix in {release.version}. <ArrowUpRight size={15} aria-hidden="true" /></p>

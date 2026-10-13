@@ -28,7 +28,7 @@ const hasDetails = Astro.slots.has('default');
 
 <section class="feature" id={id} aria-labelledby={`${id}-title`}>
   <div class="feature-head">
-    {index && <p class="eyebrow"><span class="section-index">{index} /</span> {title}</p>}
+    {index && <p class="eyebrow" aria-hidden="true"><span class="section-index">{index} /</span> {title}</p>}
     <h2 id={`${id}-title`}>{title}{experimental && <span class="badge"><FlaskConical size={14} aria-hidden="true" /> Experimental</span>}</h2>
     <p class="feature-lead" data-plain>{lead}</p>
   </div>

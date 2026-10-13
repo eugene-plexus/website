@@ -1,7 +1,7 @@
 1. In the console, open **Apps**. Workbench is under **Available**.
 2. With more than one machine, choose where it runs under **install on**. Press **Install**.
 3. When it says **Installed.**, press **Open ↗**.
-4. Press **Sign in with Eugene**. The owner signs in with Eugene's passphrase; once other people are added, the owner's name is `operator`.
+4. Press **Sign in with Eugene**. The owner signs in with Eugene's passphrase; once other people are added, the owner's name is usually `operator`.
 5. To add someone, open **People → Add a person** in the console. Give a **Name they sign in with**, a **First password**, and tick Workbench under **Apps they may sign in to**. Press **Add**.
 
 Next: [give Workbench documents, folders and tools](/guides/workbench-documents-and-tools).

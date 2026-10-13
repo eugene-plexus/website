@@ -31,13 +31,20 @@ const sizes = phone ? '(max-width: 480px) 80vw, 390px' : '(max-width: 1200px) 10
   {image
     ? <Picture src={image} alt={alt} widths={widths} sizes={sizes} formats={['webp']} loading={eager ? 'eager' : 'lazy'} decoding="async" />
     : <div class="shot-missing">Screenshot {name} is not made yet.</div>}
-  {caption && <figcaption>{caption}</figcaption>}
+  {(caption || (image && !phone)) && (
+    <figcaption>
+      {caption}
+      {/* A desktop screen is too small to read on a phone: the original is one tap away. */}
+      {image && !phone && <a class="shot-full" href={image.src} aria-label={`Full size: ${alt.split('. ')[0]}`}>Full size</a>}
+    </figcaption>
+  )}
 </figure>
 
 <style>
   .shot-figure { margin: 1.5rem 0; }
   .shot-figure :global(img) { display: block; width: 100%; height: auto; border: 1px solid var(--border); border-radius: var(--radius); background: var(--panel); }
   .shot-phone { max-width: 320px; }
-  figcaption { margin-top: .6rem; color: var(--muted); font-size: .875rem; line-height: 1.5; }
+  figcaption { display: flex; flex-wrap: wrap; justify-content: space-between; gap: .25rem 1rem; margin-top: .6rem; color: var(--muted); font-size: .875rem; line-height: 1.5; }
+  .shot-full { margin-left: auto; color: var(--accent-left); white-space: nowrap; }
   .shot-missing { padding: 3rem 1rem; text-align: center; border: 1px dashed var(--border); border-radius: var(--radius); color: var(--muted); }
 </style>

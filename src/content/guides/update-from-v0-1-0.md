@@ -13,6 +13,8 @@ Your models, settings, profiles and chats carry over. v0.2.0 converts what v0.1.
 3. Update every other machine the same way. A machine left on v0.1.0 will not work with a v0.2.0 root.
 4. On **Machines → Versions**, each machine now reads **Up to date**.
 
+A Linux system install has been measured updating from v0.1.0 to v0.2.0. A Windows machine updating itself from the console has been seen once, not measured.
+
 ## After the update
 
 <details>
@@ -30,4 +32,4 @@ Your models, settings, profiles and chats carry over. v0.2.0 converts what v0.1.
 
 ## Coming from an alpha
 
-Move to v0.1.0 first, with v0.1.0's own install command on each machine, then follow this guide. [Update](/install#update) has the commands.
+Move to v0.1.0 first, with v0.1.0's own install command on each machine, then follow this guide. See [the install page's update commands](/install#update).

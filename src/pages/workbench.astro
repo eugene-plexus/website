@@ -32,7 +32,7 @@ const matrix = `https://github.com/eugene-plexus/specs/blob/${docs.commit}/docs/
       </ul>
     </Feature>
 
-    <Feature id="documents" index="02" title="Answers from your documents" lead="Attach a PDF, a Word file, Markdown, text, CSV, HTML or code, and any model answers from it. The answer names the files." guides={['workbench-documents-and-tools']}>
+    <Feature id="documents" index="02" title="Answers from your documents" lead="Attach a PDF, a Word file, Markdown, text, CSV, HTML or code, and any model answers from it. The answer names the files.">
       <Fragment slot="shots">
         <Shot name="workbench-document" alt="A Workbench chat with a four-page PDF attached and the question how often the compost bins are turned. The answer, Every Monday evening, names the file, and Sources lists the pages sent to the model and their size in tokens." />
       </Fragment>
@@ -44,12 +44,12 @@ const matrix = `https://github.com/eugene-plexus/specs/blob/${docs.commit}/docs/
       </Fragment>
       <ul>
         <li>When a fast local result sorter runs, it puts the best passages first.</li>
-        <li>New, edited, deleted and moved files in a granted folder reach the next answer.</li>
+        <li>A granted folder is checked for new, edited, deleted and moved files every 10 minutes, or when you press <strong>Sync now</strong>.</li>
         <li>Searching by meaning uses a search model on your own machines.</li>
       </ul>
     </Feature>
 
-    <Feature id="tools" index="04" title="Tools, approved call by call" lead="Add shared or local MCP servers and folder tools. Each call waits for your approval in the chat." guides={['workbench-documents-and-tools']}>
+    <Feature id="tools" index="04" title="Tools, approved call by call" lead="Add shared or local MCP servers and folder tools. Each call waits for your approval in the chat.">
       <Fragment slot="shots">
         <Shot name="workbench-approval" alt="A Workbench chat in which the model asked to call a tool named list_files on a documents folder server. The call shows Waiting for approval, its arguments, and Approve call and Decline buttons." />
       </Fragment>
@@ -77,7 +77,7 @@ const matrix = `https://github.com/eugene-plexus/specs/blob/${docs.commit}/docs/
 
     <details class="checked">
       <summary>How we checked</summary>
-      <p>Memory, documents, saved documents, folders and the sorter each ran with a real Workbench and llama.cpp on the processor, with a small model; a run on the owner's own install is still owed. Tools ran on GitHub's Windows and Ubuntu runners with real service accounts and a scripted model. <a href={matrix}>The support matrix</a> has each record. <ArrowUpRight size={14} aria-hidden="true" /></p>
+      <p>Memory, documents, saved documents, folders and the sorter each ran with a real Workbench and llama.cpp on the processor, with a small model; a run on the owner's own install is still owed. Tools ran on GitHub's Windows and Ubuntu runners with real service accounts and a scripted model. The image, speech and video screens each ran live once with paid accounts; the owner's install has no such model, so they have not run there. <a href={matrix}>The support matrix</a> has each record. <ArrowUpRight size={14} aria-hidden="true" /></p>
     </details>
   </div>
 </SiteLayout>

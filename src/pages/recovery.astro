@@ -19,7 +19,7 @@ const source = `https://github.com/eugene-plexus/specs/blob/${revision}`;
     <aside class="version-notice" aria-labelledby="version-title">
       <h2 id="version-title">Start with your installed version</h2>
       <p><strong>Moving from v0.1.0 to {release.version}:</strong> make a checkpoint first; <strong>an update from the console does not make a checkpoint for you</strong>. Then update the control root, and every other machine after it (<a href="/guides/update-from-v0-1-0">the update guide</a>). What v0.1.0 saved is converted at the first start, and each converted file keeps a <code>.v0.1.bak</code> copy beside it. A checkpoint made on v0.1.0 restores v0.1.0.</p>
-      <p><strong>The published release ({release.version}):</strong> follow the checkpoint procedure below. A checkpoint includes installed apps' own data, such as Workbench's chats.</p>
+      <p><strong>The published release ({release.version}):</strong> follow the checkpoint procedure below. A checkpoint includes installed apps' own data, such as Workbench's chats; on a Linux system install, make it as root.</p>
       <details>
         <summary>Coming from an alpha</summary>
         <p><strong>Moving from v0.1.0-alpha.6, alpha.5 or alpha.4 to v0.1.0:</strong> make a checkpoint, then run v0.1.0's install command on each machine (see <a href="/install#update">Update</a>); the console would skip v0.1.0. A checkpoint restores the version it was made on: one made on alpha.6 restores alpha.6.</p>

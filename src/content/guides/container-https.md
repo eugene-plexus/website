@@ -14,4 +14,6 @@ The console stays on its own port unless you choose **Through this setup too**. 
 
 The [container access guide](https://github.com/eugene-plexus/specs/blob/08899f2ca2116ce67dd3051ea17a4c0fecbfc3ec/docs/deployment/container-access.md) compares the options and has recipes for Nginx Proxy Manager, Caddy and Traefik. With local certificates, install only the generated `root.crt` on each device that connects, and keep the rest of `/data/entrypoint` private.
 
+Let's Encrypt has been tested only against a stand-in certificate authority (Pebble), and the Traefik recipe has not been run yet.
+
 </details>

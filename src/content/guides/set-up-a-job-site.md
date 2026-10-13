@@ -2,7 +2,7 @@ A Job Site is a person's own computer that Workbench can work on. Each site belo
 
 ## Before you start
 
-- The machine runs Eugene and has joined your install. See [joining a computer](/install#docker).
+- The machine runs Eugene and has joined your install. See [Join the computer that will run models](/install#join).
 - The person is on **People** and may sign in to Workbench. Job Sites are allowed for everyone by default; to set one person's, open **People → Choose what they may do with job sites**.
 
 ## Add the machine

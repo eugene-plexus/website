@@ -58,6 +58,10 @@ test('What Eugene does: every v0.2.0 area, its limits in view, its guides linked
     await details.locator('summary').click();
     await expect(details.locator('li').first()).toBeVisible();
     await expect(page.locator('main')).toContainText(`every change and fix in ${release.version}`);
+    // A desktop screen is unreadable on a phone; its full size is one tap away.
+    const full = page.locator('#library .shot-full').first();
+    await expect(full).toHaveText('Full size');
+    expect((await page.request.get((await full.getAttribute('href'))!)).ok()).toBe(true);
     await sound(page, failed);
 });
 

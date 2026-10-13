@@ -156,7 +156,7 @@ const choices = [
       </dl>
       <p>Open the console, choose and save your passphrase, and use <code>/models</code> as the model folder inside the container. In <strong>Settings → Access &amp; security</strong>, set the NAS machine's <strong>Advertise address</strong> to <code>http://NAS-IP:8279</code> so other nodes can reach it. If you change the left side of a port mapping, use that new port in the matching address above.</p>
 
-      <h3>Join the computer that will run models</h3>
+      <h3 id="join">Join the computer that will run models</h3>
       <ol>
         <li>In the NAS console, open <strong>Machines → Add a node</strong>. Leave the optional node name blank, set <strong>Control root URL the other machine can reach</strong> to <code>http://NAS-IP:8283</code>, and choose <strong>Mint a join token</strong>.</li>
         <li>Copy the command the page prints for the worker's system and run it there; it installs this release and joins in one step. If you prefer the commands below, replace <code>NAS-IP</code> and <code>JOIN-TOKEN</code> with the address and the token value after <code>-Token</code> or <code>--token</code>. Tokens expire and work once, so mint a new one for each worker.</li>
@@ -207,7 +207,7 @@ const choices = [
 
     <section id="remove" aria-labelledby="remove-title">
       <h2 id="remove-title">Remove Eugene</h2>
-      <p><strong>If your installation has the local removal utility, start there.</strong> On Windows, open <strong>Settings → Apps → Installed apps → Eugene Plexus → Uninstall</strong>. On Mac, open <strong>Remove Eugene Plexus</strong> in your home folder’s <strong>Applications</strong> folder. These utilities work without an internet connection or a running Eugene.</p>
+      <p><strong>If your installation has the local removal utility, start there.</strong> On Windows, open <strong>Settings → Apps → Installed apps → Eugene Plexus → Uninstall</strong>. On Mac, open <strong>Remove Eugene Plexus</strong> in your home folder’s <strong>Applications</strong> folder. These utilities work without an internet connection or a running Eugene. The Mac app has not been run on a physical Mac yet.</p>
       <p>The local utility shows sizes and offers two separate, unchecked choices: delete settings, app data and logs; or delete downloaded engines and managed model copies. By default it removes the software and keeps that data. Original model folders are always kept. The final report names retained files and gives a local cleanup command that works later, even after Python has been removed.</p>
       {!offlineRemoval && <p><strong>The local utilities are currently included in development installers after {release.version}.</strong> The published commands below still use the older removal behavior. Published release files have not been changed.</p>}
       <p><strong>If the local utility is missing, use the matching installer below.</strong></p>

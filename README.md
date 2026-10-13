@@ -109,14 +109,14 @@ The 2026-10-13 overhaul for v0.2.0 (specs `docs/design/a10-website-overhaul.md`)
 | Claim | Source and boundary |
 | --- | --- |
 | Every v0.2.0 feature named on the site | [v0.2.0 release notes](https://github.com/eugene-plexus/specs/blob/1fd8ab559f7f0ee83d0057735de56990911fe6ea/docs/releases/v0.2.0.md); nothing from the roadmap |
-| The six known issues | The notes' Known issues, each on its feature's section and all on `/architecture#status` |
+| The six known issues | The notes' Known issues, each on its feature's section (the llama.cpp stall under Machines) and all on `/architecture#status` |
 | Memory, documents, saved documents, folders, the sorter | MR1, MR2, MR4, MR5, MR7, MR6b records: a real Workbench and llama.cpp on the processor with a small model; the owner's live run is owed, and the pages say so |
 | Search models, `/v1/rerank`, Open WebUI document search | MR3 and MR6 records |
 | Per-engine eligibility and fit, hub sources, Delete | LS1, LS2, LS4, LS6 and LS8 records: header-only fixtures and stand-in hubs |
 | Strata ran a 68 GB model on an RTX 5090 | LS5 record, 18 of 19; experimental, with the notes' four limits |
 | Job Sites | Slice 1, 2 and 2b records, J14a and J14b; limits from the support matrix |
 | Warm standby; switching over is not in the console | Warm standby record; warm-standby design §3.5 |
-| Anthropic documents and structured output carried; server tools refused in Claude Code's retry wording | gateway `7b9a4c4` `anthropic.py`, and specs `docs/api-compatibility.md` corrected on main |
+| Anthropic documents and structured output carried; server tools refused in Claude Code's retry wording | Documents: the [P2a media-inputs record](https://github.com/eugene-plexus/specs/blob/main/docs/acceptance/media-inputs-run.md) (2026-09-28). Structured output: the v0.2.0 notes (Claude Code's prompt hooks). Refusals: gateway `7b9a4c4` `anthropic.py`; specs `docs/api-compatibility.md` corrected on main |
 | v0.1.0 to v0.2.0 update on a Linux system install | [v0.2.0 release run](https://github.com/eugene-plexus/specs/blob/main/docs/acceptance/v0.2.0-release-run.md) |
 | Labels in the guides | Read from ui `a483c9e` and Workbench `d5aad5f` on 2026-10-13 |
 

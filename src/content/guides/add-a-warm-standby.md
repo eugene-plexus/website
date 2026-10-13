@@ -9,7 +9,7 @@ The standby's row shows whether it is up to date. To undo, press **Stop being th
 <details>
 <summary>Known limits</summary>
 
-- Switching over to the standby is not a button in the console yet.
+- Taking over is done on the standby with your passphrase; it is not a button in the console yet.
 - After a switch, only the machine that took over reaches the new root.
 
 </details>
