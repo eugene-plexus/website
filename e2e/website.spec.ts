@@ -1,5 +1,6 @@
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test } from '@playwright/test';
+import release from '../src/data/alpha-release.json' with { type: 'json' };
 
 test('the homepage describes current capabilities with an explicit alpha boundary', async ({ page }) => {
     await page.goto('/');
@@ -60,7 +61,7 @@ test('Plexus theme, local assets, accessible content, and responsive layout', as
     await expect(page.getByRole('heading', { level: 1 })).toHaveText('Eugene Plexus.');
     await expect(page).toHaveTitle('Eugene Plexus | A self-hosted control plane for local LLM inference');
     await expect(page.locator('main')).not.toContainText(/training|tokenizer|checkpoints/i);
-    await expect(page.locator('.release-note')).toContainText('is the first release: early software, with known limits.');
+    await expect(page.locator('.release-note')).toContainText(`${release.version}: early software, with known limits.`);
     await expect(page.locator('html')).toHaveAttribute('data-theme', 'plexus');
     await expect(page.locator('html')).toHaveCSS('color-scheme', 'dark');
     await expect(page.locator('meta[name="theme-color"]')).toHaveAttribute('content', '#141619');

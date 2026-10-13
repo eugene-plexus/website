@@ -9,7 +9,7 @@ test('a visitor can find, read and copy the versioned installer', async ({ page,
     await page.locator('.hero-actions').getByRole('link', { name: 'Install Eugene Plexus' }).click();
     await expect(page).toHaveURL(/\/install\/?$/);
     await expect(page.getByRole('heading', { level: 1 })).toHaveText('Get your first model answering.');
-    await expect(page.locator('.alpha-notice')).toContainText('This is the first release.');
+    await expect(page.locator('.alpha-notice')).toContainText('This is early software.');
     await page.getByRole('navigation', { name: 'Installation sections' }).getByRole('link', { name: 'Windows', exact: true }).click();
     await expect(page.locator('#windows-title')).toBeInViewport();
     const command = `irm https://eugeneplexus.com/releases/${release.version}/install.ps1 | iex`;
@@ -25,6 +25,11 @@ test('a visitor can find, read and copy the versioned installer', async ({ page,
     if (!(release as { offlineRemoval?: boolean }).offlineRemoval) {
         await expect(page.locator('#remove')).toContainText('entire installation folder');
         await expect(page.locator('#remove')).toContainText('Published release files have not been changed');
+    } else {
+        // The release's installers embed the offline utility, so the page says the retained folder holds it.
+        await expect(page.locator('#remove')).toContainText('The retained folder includes an offline cleanup utility');
+        await expect(page.locator('#remove')).not.toContainText('entire installation folder');
+        await expect(page.locator('#remove')).not.toContainText('Published release files have not been changed');
     }
     await expect(page.locator('#update')).toContainText('they do not silently follow development changes');
     await expect(page.locator('#mac')).toContainText('physical Mac verification remains outstanding');
@@ -81,17 +86,21 @@ test('recovery distinguishes the first alpha upgrade from checkpoint-capable rel
     try {
         const page = await context.newPage();
         await page.goto(`${baseURL}/install`);
-        // alpha.6: alpha.4 and alpha.5 update from the console, alpha.3 in
-        // place by running the installer again; alpha.2 is still a fresh install.
-        await expect(page.locator('#update')).toContainText('From alpha.4, alpha.5 or alpha.6, update from the console');
+        // v0.2.0: v0.1.0 updates from the console, the root first; an alpha moves
+        // to v0.1.0 first, because an alpha's console would skip it.
+        await expect(page.locator('#update')).toContainText('From v0.1.0, update from the console');
         await expect(page.locator('#update')).toContainText('Settings → Updates');
         await expect(page.locator('#update')).not.toContainText('Config → Agent');
-        await expect(page.locator('#update')).toContainText('From alpha.3, run the install command again');
-        await expect(page.locator('#update')).toContainText('Nodes → Versions');
-        await expect(page.locator('#update')).toContainText('Moving from alpha.2 or earlier is a fresh install');
+        await expect(page.locator('#update')).toContainText('From an alpha, move to v0.1.0 first');
+        // That path names v0.1.0's own commands, so v0.1.0 must stay served.
+        await expect(page.locator('#update')).toContainText('irm https://eugeneplexus.com/releases/v0.1.0/install.ps1 | iex');
+        await expect(page.locator('#update')).toContainText('curl -fsSL https://eugeneplexus.com/releases/v0.1.0/install.sh | sh');
+        expect(archived.map((item) => item.version)).toContain('v0.1.0');
         await expect(page.locator('#update').getByRole('link', { name: 'alpha.3 release notes' })).toHaveAttribute('href', 'https://github.com/eugene-plexus/specs/blob/main/docs/releases/v0.1.0-alpha.3.md#moving-from-alpha2');
         await page.locator('#update').getByRole('link', { name: 'Read the backup and recovery guide before updating.' }).click();
-        await expect(page.locator('.version-notice')).toContainText('Moving from v0.1.0-alpha.6, alpha.5 or alpha.4');
+        // The v0.1.0 to current paragraph comes first.
+        await expect(page.locator('.version-notice p').first()).toContainText(`Moving from v0.1.0 to ${release.version}:`);
+        await expect(page.locator('.version-notice')).toContainText('Moving from v0.1.0-alpha.6, alpha.5 or alpha.4 to v0.1.0');
         await expect(page.locator('.version-notice')).toContainText('Moving from v0.1.0-alpha.3');
         await expect(page.locator('.version-notice')).toContainText('does not make a checkpoint for you');
         await expect(page.locator('.version-notice')).toContainText('Moving from v0.1.0-alpha.2');
@@ -123,6 +132,8 @@ test('installation instructions remain usable without JavaScript', async ({ brow
         await expect(page.locator('#docker-join-windows')).toBeVisible();
         await page.getByText('Already running a NAS or Docker control plane?', { exact: true }).click();
         await expect(page.locator('#update details')).toContainText(release.container);
+        await expect(page.locator('#update details')).toContainText('From v0.1.0, keep your data folder');
+        await expect(page.locator('#update details')).toContainText(`From an alpha, change the tag to v0.1.0 first, start it once, then change it to ${release.version}.`);
         // Every paragraph opens with the summary, not just the first.
         for (const paragraph of await page.locator('#update details p').all()) await expect(paragraph).toBeVisible();
     } finally {

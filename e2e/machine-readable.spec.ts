@@ -13,7 +13,7 @@ test('the AI index leads to readable, current guides for every public page', asy
     const index = await response.text();
     expect(index).toMatch(/^# Eugene Plexus\n/);
     expect(index).toContain(`Published release: ${release.version}`);
-    expect(index).toContain('the first release: early software, with known limits.');
+    expect(index).toContain(`${release.version}: early software, with known limits.`);
     expect(index).toContain(`${release.specsCommit}/docs/support-matrix.md`);
     expect(index).toContain(`${release.specsCommit}/openapi/gateway.yaml`);
     expect(index).toContain('roadmap describes development plans');

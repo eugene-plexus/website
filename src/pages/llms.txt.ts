@@ -13,7 +13,7 @@ export const GET: APIRoute = ({ site }) => {
 
 > ${projectDescription}
 
-Published release: ${release.version}, the first release: early software, with known limits.
+Published release: ${release.version}: early software, with known limits.
 Use the installation guide and support matrix for available capabilities and platform limits.
 The roadmap describes development plans, not a promise of shipped features.
 The Markdown pages below are generated from the same HTML content as the public website on every build.
