@@ -23,6 +23,6 @@
     }
   },
   "container": "ghcr.io/eugene-plexus/control-plane:v0.2.0",
-  "scope": "Eugene source pins; upstream tools, Python dependencies, engines and models are not locked",
+  "scope": "Eugene source pins and hashed Python runtime/build dependencies; interpreter patch, bootstrap uv, engines and models are not locked",
   "offlineRemoval": true
 }

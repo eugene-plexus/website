@@ -102,6 +102,16 @@ test('recovery distinguishes the first alpha upgrade from checkpoint-capable rel
         await expect(page.locator('.version-notice p').first()).toContainText(`Moving from v0.1.0 to ${release.version}:`);
         await expect(page.locator('.version-notice')).toContainText('Moving from v0.1.0-alpha.6, alpha.5 or alpha.4 to v0.1.0');
         await expect(page.locator('.version-notice')).toContainText('Moving from v0.1.0-alpha.3');
+        // An alpha goes to v0.1.0 by v0.1.0's own command: the console would skip
+        // v0.1.0, and "the install command" now installs the current release.
+        const fromAlpha6 = page.locator('.version-notice p').filter({ hasText: 'Moving from v0.1.0-alpha.6, alpha.5 or alpha.4 to v0.1.0' });
+        await expect(fromAlpha6).toContainText("make a checkpoint, then run v0.1.0's install command on each machine (see Update); the console would skip v0.1.0.");
+        await expect(fromAlpha6.getByRole('link', { name: 'Update', exact: true })).toHaveAttribute('href', '/install#update');
+        await expect(fromAlpha6).not.toContainText('Machines → Versions');
+        await expect(fromAlpha6).not.toContainText('install command again');
+        const fromAlpha3 = page.locator('.version-notice p').filter({ hasText: 'Moving from v0.1.0-alpha.3' });
+        await expect(fromAlpha3).toContainText("an update in place: run v0.1.0's install command, after making a checkpoint.");
+        await expect(fromAlpha3).not.toContainText('install command again');
         await expect(page.locator('.version-notice')).toContainText('does not make a checkpoint for you');
         await expect(page.locator('.version-notice')).toContainText('Moving from v0.1.0-alpha.2');
         await expect(page.locator('.version-notice')).toContainText('will refuse alpha.1');
@@ -133,7 +143,8 @@ test('installation instructions remain usable without JavaScript', async ({ brow
         await page.getByText('Already running a NAS or Docker control plane?', { exact: true }).click();
         await expect(page.locator('#update details')).toContainText(release.container);
         await expect(page.locator('#update details')).toContainText('From v0.1.0, keep your data folder');
-        await expect(page.locator('#update details')).toContainText(`From an alpha, change the tag to v0.1.0 first, start it once, then change it to ${release.version}.`);
+        // The alpha path follows the v0.1.0 instruction and comes before the Compose commands.
+        await expect(page.locator('#update details')).toContainText(`published ports. From an alpha, change the tag to v0.1.0 first, start it once, then change it to ${release.version}. For Compose, run`);
         // Every paragraph opens with the summary, not just the first.
         for (const paragraph of await page.locator('#update details p').all()) await expect(paragraph).toBeVisible();
     } finally {
