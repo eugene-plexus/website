@@ -57,6 +57,8 @@ payload. Do not replace immutable existing installer assets to enable this copy.
 | [src/pages/licenses.txt.ts](src/pages/licenses.txt.ts)         | Build-time generation of bundled font and icon license notices           |
 | [src/pages/sitemap.xml.ts](src/pages/sitemap.xml.ts)           | Sitemap, generated from `public-pages.json`                              |
 | [src/pages/guides/](src/pages/guides/) and [src/content/guides/](src/content/guides/) | `/guides` and one page per guide. A guide is a Markdown file plus its line (with a `group`) in `public-pages.json`; either without the other fails the build |
+| [public/scenes/eugene-sawing.svg](public/scenes/eugene-sawing.svg) | One of Workbench's working scenes, copied unchanged from workbench `d5aad5f` `web/public/scenes/` |
+| [scripts/place-screenshots.mjs](scripts/place-screenshots.mjs) | Places a reviewed run of specs `scripts/website-screenshots.py` into `src/assets/screenshots/` (crops included) and Home's three WebP files |
 | [src/data/docs-revision.json](src/data/docs-revision.json)     | The specs commit whose linked docs (support matrix, uninstall, application workflows, container guides) describe the release; installers stay on the release's own commit |
 | [src/pages/llms.txt.ts](src/pages/llms.txt.ts)                   | AI/text index with release-pinned documentation and API links |
 | [src/data/public-pages.json](src/data/public-pages.json)         | Public guides included in the AI index and Markdown export |

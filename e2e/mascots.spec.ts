@@ -6,7 +6,7 @@ import { expect, test } from '@playwright/test';
  * Chrome does not pass an emulated reduced-motion preference into an SVG
  * shown through <img>, so each file is checked as a document of its own.
  */
-const ANIMATED = ['welcome'];
+const ANIMATED = ['welcome', 'guide', 'working', 'curious'];
 
 test.beforeEach(({}, testInfo) => {
     test.skip(testInfo.project.name !== 'desktop', 'An SVG animates the same at every width');
@@ -19,11 +19,11 @@ for (const pose of ANIMATED) {
         await page.goto(`/mascots/eugene-${pose}.svg`);
         // Sample the moving parts across one loop: their transforms must change.
         const samples = await page.evaluate(async () => {
-            const parts = Array.from(document.querySelectorAll('.arm, .hand, .head, #left-eye'));
+            const parts = [...new Set(document.getAnimations().map((animation) => (animation.effect as KeyframeEffect).target as Element))];
             const seen = new Set<string>();
             for (let i = 0; i < 12; i++) {
                 for (const animation of document.getAnimations()) animation.currentTime = i * 500;
-                seen.add(parts.map((part) => getComputedStyle(part).transform).join('|'));
+                seen.add(parts.map((part) => `${getComputedStyle(part).transform}/${getComputedStyle(part).opacity}`).join('|'));
             }
             return { animations: document.getAnimations().length, distinct: seen.size };
         });

@@ -20,11 +20,18 @@ Use `Mascot.astro` beside welcoming or explanatory copy:
 <Mascot pose="guide" size={176} />
 ```
 
+Each pose moves a little in a loop (CSS inside the SVG, so it plays in an
+`<img>`): Welcome waves, Guide presents with its open hand, Working nods while
+the laptop's network mark pulses, and Curious sweeps its glass. All four blink,
+and every pose holds still under `prefers-reduced-motion`; `e2e/mascots.spec.ts`
+checks both. Moving parts pivot about drawing points named in
+`scripts/build-mascots.mjs`.
+
 The component is decorative (`alt=""`) because the adjacent words carry the
 meaning. It reserves image dimensions and lazy-loads by default; use `eager`
 for the first visible section of a page. The SVG files also have titles and
-descriptions for standalone use, and require no fonts, scripts, animation,
-external images or network dependencies.
+descriptions for standalone use, and require no fonts, scripts, external
+images or network dependencies.
 
 Use the full poses at 96–240 CSS pixels. Below that, use `Face.astro` so the
 expression stays readable. Keep the network-ring logo for brand identification.

@@ -43,58 +43,94 @@ const poses = {
       @keyframes arm { 0%, 34%, 100% { transform: rotate(0deg); } 7%, 21% { transform: rotate(-7deg); } 14%, 28% { transform: rotate(4deg); } }
       @keyframes hand { 0%, 34%, 100% { transform: rotate(0deg); } 7%, 21% { transform: rotate(-9deg); } 14%, 28% { transform: rotate(7deg); } }
       @keyframes head { 0%, 40%, 100% { transform: rotate(0deg); } 12%, 28% { transform: rotate(-2deg); } }`,
+    // The arm is drawn after the head, so the waving hand passes in front of
+    // the face; the hand sits 6 units left, centred on the sleeve's cuff.
     artwork: `${body}
       ${sleeve('M118 174 Q100 175 92 203 L84 233 L105 241 L126 198')}
       ${hand('M84 230 Q75 235 79 245 L88 256 Q94 262 99 256 L107 244 L105 235')}
+      <g class="head">${headAt(-4)}</g>
       <g class="arm">
       ${sleeve('M199 174 Q218 171 230 156 L243 128 L263 138 L249 176 Q233 198 211 205')}
-      <g class="hand">
+      <g class="hand"><g transform="translate(-6 0)">
       ${hand('M244 137 L239 120 L231 109 Q227 103 232 100 Q236 98 241 105 L246 112 L240 88 Q239 82 244 81 Q249 80 251 87 L257 106 L255 78 Q255 72 260 72 Q265 72 265 79 L266 104 L270 84 Q272 78 277 80 Q281 81 279 88 L276 111 L282 100 Q285 95 289 99 Q292 102 288 110 L277 133 Q273 142 261 143 Z')}
       <g fill="none" stroke="#7fb0cf" stroke-width="3" stroke-linecap="round"><path d="M283 62 L290 54 M299 82 L309 78"/></g>
-      </g>
-      </g>
-      <g class="head">${headAt(-4)}</g>`,
+      </g></g>
+      </g>`,
   },
   guide: {
     title: 'Eugene shows the next step',
     description: 'Eugene holds an open guide and gestures toward the next step with a relaxed, open palm.',
+    // The open hand presents from the shoulder (206 190), the guide lifts a
+    // little, and the head nods about the neck (160 160).
+    motion: `
+      .arm { transform-origin: 206px 190px; animation: present 5s ease-in-out infinite; }
+      .book { animation: book 5s ease-in-out infinite; }
+      .head { transform-origin: 160px 160px; animation: nod 5s ease-in-out infinite; }
+      @keyframes present { 0%, 70%, 100% { transform: rotate(0deg); } 25% { transform: rotate(-7deg); } 45% { transform: rotate(2deg); } }
+      @keyframes book { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
+      @keyframes nod { 0%, 60%, 100% { transform: rotate(0deg); } 30% { transform: rotate(3deg); } }`,
     artwork: `${body}
       ${sleeve('M113 174 Q98 178 86 207 L105 222 L127 194')}
+      <g class="arm">
       ${sleeve('M201 175 Q219 172 234 188 L255 183 L264 204 L232 213 Q216 211 204 203')}
       ${hand('M253 185 Q259 180 263 174 Q266 168 270 171 Q274 174 268 182 L288 180 Q295 180 295 185 Q295 189 289 190 L275 192 L289 192 Q295 192 295 197 Q295 202 288 202 L267 207 Q259 206 255 201 Z')}
-      ${headAt(2)}
+      </g>
+      <g class="head">${headAt(2)}</g>
+      <g class="book">
       <g stroke="${ink}" stroke-width="4" stroke-linejoin="round">
         <path d="M62 212 Q85 205 112 218 Q136 205 157 212 L162 264 Q140 257 114 270 Q89 259 68 265 Z" fill="#f7f7f9"/>
         <path d="M112 218 L114 270" fill="none"/>
         <path d="M76 224 L99 228 M77 235 L99 239 M126 227 L145 222 M127 238 L145 233" fill="none" stroke="#758695" stroke-width="3" stroke-linecap="round"/>
         <path d="M136 210 V232 L142 227 L148 230 V211" fill="#cf9a72" stroke-width="2"/>
       </g>
-      ${hand('M64 228 Q58 228 60 239 L64 250 Q67 256 74 253 L79 250 L75 235 Q73 228 69 231 L69 238')}`,
+      ${hand('M64 228 Q58 228 60 239 L64 250 Q67 256 74 253 L79 250 L75 235 Q73 228 69 231 L69 238')}
+      </g>`,
   },
   working: {
     title: 'Eugene at his laptop',
     description: 'Eugene smiles over a laptop, ready to work alongside you. A small network mark connects three points on its lid.',
+    // The forearms type in turn, the head nods over the work, and the mark's
+    // three points light one after another.
+    motion: `
+      .left { animation: type-left 1.2s ease-in-out infinite; }
+      .right { animation: type-right 1.2s ease-in-out infinite; }
+      .head { transform-origin: 160px 160px; animation: nod 6s ease-in-out infinite; }
+      .mark circle { animation: pulse 3s ease-in-out infinite; }
+      .mark circle:nth-of-type(2) { animation-delay: .4s; }
+      .mark circle:nth-of-type(3) { animation-delay: .8s; }
+      @keyframes type-left { 0%, 50%, 100% { transform: translateY(0); } 25% { transform: translateY(-3px); } }
+      @keyframes type-right { 0%, 50%, 100% { transform: translateY(0); } 75% { transform: translateY(-3px); } }
+      @keyframes nod { 0%, 70%, 100% { transform: rotate(0deg); } 35% { transform: rotate(2deg); } }
+      @keyframes pulse { 0%, 60%, 100% { opacity: 1; } 30% { opacity: .35; } }`,
     artwork: `${body}
-      ${sleeve('M115 174 Q94 177 86 215 L104 230 L129 194')}
-      ${sleeve('M202 174 Q224 180 232 218 L212 230 L191 194')}
-      ${headAt()}
-      ${hand('M87 211 Q82 219 92 229 L112 237 Q121 237 119 230 L109 218 Q99 210 94 216')}
-      ${hand('M231 213 Q237 220 227 230 L207 237 Q198 237 201 230 L211 218 Q221 210 225 217')}
+      <g class="left">${sleeve('M115 174 Q94 177 86 215 L104 230 L129 194')}
+      ${hand('M87 211 Q82 219 92 229 L112 237 Q121 237 119 230 L109 218 Q99 210 94 216')}</g>
+      <g class="right">${sleeve('M202 174 Q224 180 232 218 L212 230 L191 194')}
+      ${hand('M231 213 Q237 220 227 230 L207 237 Q198 237 201 230 L211 218 Q221 210 225 217')}</g>
+      <g class="head">${headAt()}</g>
       <g stroke="${rim}" stroke-width="3" stroke-linejoin="round">
         <path d="M78 213 Q77 207 84 207 H236 Q243 207 242 213 L232 274 H88 Z" fill="#29343d"/>
         <path d="M73 274 H247 L257 283 Q258 287 250 287 H70 Q62 287 63 283 Z" fill="#46668b"/>
         <path d="M141 276 H179" stroke="#7fb0cf" stroke-linecap="round"/>
       </g>
-      <g stroke="#7fb0cf" stroke-width="3" fill="#7fb0cf"><path d="M145 247 L160 234 L175 247" fill="none"/><circle cx="145" cy="247" r="4"/><circle cx="160" cy="234" r="4"/><circle cx="175" cy="247" r="4"/></g>`,
+      <g class="mark" stroke="#7fb0cf" stroke-width="3" fill="#7fb0cf"><path d="M145 247 L160 234 L175 247" fill="none"/><circle cx="145" cy="247" r="4"/><circle cx="160" cy="234" r="4"/><circle cx="175" cy="247" r="4"/></g>`,
   },
   curious: {
     title: 'Eugene looks for the way',
     description: 'Eugene tilts his head and holds a magnifying glass, a friendly companion when a page cannot be found.',
+    // The glass sweeps from the shoulder (200 192), searching, while the head
+    // tilts a little further about the neck.
+    motion: `
+      .glass { transform-origin: 200px 192px; animation: search 5s ease-in-out infinite; }
+      .head { transform-origin: 160px 160px; animation: tilt 5s ease-in-out infinite; }
+      @keyframes search { 0%, 100% { transform: rotate(0deg); } 25% { transform: rotate(-5deg); } 50% { transform: rotate(3deg); } 75% { transform: rotate(-2deg); } }
+      @keyframes tilt { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(-3deg); } }`,
     artwork: `${body}
       ${sleeve('M116 174 Q100 179 94 204 L93 231 L113 235 L130 195')}
       ${hand('M93 229 Q85 234 90 245 L98 253 Q104 258 110 250 L114 236')}
+      <g class="head">${headAt(-8)}</g>
+      <g class="glass">
       ${sleeve('M201 176 Q222 179 227 210 L242 223 L227 244 L209 229 L190 197')}
-      ${headAt(-8)}
       <g stroke-linecap="round" stroke-linejoin="round">
         <path d="M246 211 L275 249" stroke="${ink}" stroke-width="17"/>
         <path d="M246 211 L275 249" stroke="#cf9a72" stroke-width="10"/>
@@ -102,7 +138,8 @@ const poses = {
         <circle cx="231" cy="186" r="33" fill="none" stroke="${rim}" stroke-width="4"/>
         <path d="M211 185 Q211 167 229 166" fill="none" stroke="#7fb0cf" stroke-width="4"/>
       </g>
-      ${hand('M235 227 Q229 229 232 236 L243 246 Q251 252 256 245 L260 239 Q262 234 258 231 L249 221 Q245 217 240 221 L246 229')}`,
+      ${hand('M235 227 Q229 229 232 236 L243 246 Q251 252 256 245 L260 239 Q262 234 258 231 L249 221 Q245 217 240 221 L246 229')}
+      </g>`,
   },
 };
 
@@ -112,7 +149,7 @@ mkdirSync(new URL('public/mascots/', root), { recursive: true });
 // about their own centre (fill-box), and reduced motion shows the still pose.
 // The reduced-motion rule needs !important: the part rules are more specific.
 const motionStyle = (motion) => `<style>
-      .arm, .hand, .head { transform-box: view-box; }
+      .arm, .hand, .head, .book, .left, .right, .glass { transform-box: view-box; }
       #left-eye, #right-eye { transform-box: fill-box; transform-origin: center; animation: blink 6s infinite; }
       @keyframes blink { 0%, 55%, 59%, 100% { transform: scaleY(1); } 57% { transform: scaleY(.12); } }${motion}
       @media (prefers-reduced-motion: reduce) { * { animation: none !important; } }
