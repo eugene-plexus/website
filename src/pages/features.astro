@@ -16,12 +16,12 @@ const sections = [
 ];
 ---
 
-<SiteLayout title="What Eugene does | Eugene Plexus" description={`Everything in Eugene Plexus ${release.version}: models that fit before you download, local search models, tools on every model, cloud providers and web search, Strata, Workbench, Job Sites, and machines.`}>
+<SiteLayout title="A self-hosted alternative to Ollama and LM Studio | Eugene Plexus" description={`Eugene Plexus ${release.version}, a free, self-hosted alternative to Ollama and LM Studio: models that fit your GPU before you download, local search models, tools on every model, cloud providers and web search, Strata, Workbench, Job Sites, and machines.`}>
   <div class="container features-page">
     <header class="features-intro">
       <p class="eyebrow">What it does · {release.version}</p>
       <h1>Features in {release.version}</h1>
-      <p class="lead" data-plain>Eugene runs AI models on your own machines and gives every app one address. Here is each part: what it does for you, what it looks like, and its limits.</p>
+      <p class="lead" data-plain>Eugene runs AI models on your own machines and gives every app one address. Use it in place of Ollama or LM Studio, or beside them. Here is each part: what it does for you, what it looks like, and its limits.</p>
       <nav class="jump" aria-label="On this page">
         {sections.map(([id, name]) => <a href={`#${id}`}>{name}</a>)}
       </nav>

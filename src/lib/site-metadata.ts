@@ -1,6 +1,6 @@
 import release from '../data/alpha-release.json';
 
-export const projectDescription = 'Eugene Plexus is an open-source, self-hosted control plane for local LLM inference.';
+export const projectDescription = 'Eugene Plexus is an open-source, self-hosted control plane for running LLMs locally.';
 
 export function markdownPath(path: string): string {
     return `${path.replace(/\/$/, '')}/index.md`;

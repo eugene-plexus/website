@@ -6,7 +6,7 @@ test('the homepage describes current capabilities with an explicit early-softwar
     await page.goto('/');
     await expect(page.locator('.hero-statement')).toHaveText('Run AI models on your own computer.');
     await expect(page.locator('.hero-description')).toHaveText(/^Private and free\./);
-    await expect(page.locator('.hero-technical')).toContainText('self-hosted control plane for local LLM inference');
+    await expect(page.locator('.hero-technical')).toContainText('Run LLMs locally on a self-hosted server');
     await expect(page.locator('.hero-technical')).toContainText('OpenAI and Anthropic Messages APIs');
     for (const selector of ['meta[name="description"]', 'meta[property="og:description"]']) {
         await expect(page.locator(selector)).toHaveAttribute('content', /OpenAI and Anthropic Messages APIs.*Workbench/);
@@ -61,7 +61,7 @@ test('Plexus theme, local assets, accessible content, and responsive layout', as
     await page.goto('/');
     await page.evaluate(() => document.fonts.ready);
     await expect(page.getByRole('heading', { level: 1 })).toHaveText('Eugene Plexus.');
-    await expect(page).toHaveTitle('Eugene Plexus | A self-hosted control plane for local LLM inference');
+    await expect(page).toHaveTitle('Run LLMs locally, self-hosted and free | Eugene Plexus');
     await expect(page.locator('main')).not.toContainText(/training|tokenizer|checkpoints/i);
     await expect(page.locator('.release-note')).toContainText(`${release.version}: early software, with known limits.`);
     await expect(page.locator('html')).toHaveAttribute('data-theme', 'plexus');
@@ -184,7 +184,7 @@ test('the architecture page explains the layers and stays inside the viewport', 
     await page.goto('/architecture');
     await page.evaluate(() => document.fonts.ready);
     await expect(page.getByRole('heading', { level: 1 })).toHaveText('How Eugene Plexus is built');
-    await expect(page).toHaveTitle('Architecture | Eugene Plexus');
+    await expect(page).toHaveTitle('Architecture of a self-hosted LLM gateway | Eugene Plexus');
     // The five layers of the diagram, top to bottom, and the three services beside it.
     for (const label of ['Your tools', 'Gateway', 'Inference drivers', 'Engines and backends', 'Your hardware', 'Agent', 'Library', 'Control root']) {
         await expect(page.locator('.layers').getByText(label, { exact: true }).first()).toBeVisible();

@@ -80,7 +80,7 @@ test('What Eugene does: every v0.2.0 area, its limits in view, its guides linked
 test('Workbench describes memory, documents and tools, with the sorter limit in view', async ({ page }) => {
     const failed = watch(page);
     await page.goto('/workbench');
-    await expect(page.getByRole('heading', { level: 1 })).toHaveText("Workbench, Eugene's chat app");
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText('Workbench, a local AI chat app');
     for (const id of ['memory', 'documents', 'saved-documents', 'tools', 'more']) {
         await expect(page.locator(`section#${id}`)).toHaveCount(1);
     }
@@ -128,7 +128,7 @@ test('the guides index lists every guide, and each guide renders and links sound
     for (const guide of guides) {
         await page.goto(guide.path);
         await expect(page.getByRole('heading', { level: 1 })).toHaveText(guide.title);
-        await expect(page).toHaveTitle(`${guide.title} | Eugene Plexus guides`);
+        await expect(page).toHaveTitle(`${guide.title} | Eugene Plexus`);
         await expect(page.locator('meta[name="description"]')).toHaveAttribute('content', guide.description);
         const text = await page.locator('main').textContent() ?? '';
         expect(text, `${guide.path} shows raw Markdown`).not.toMatch(/\*\*|\]\(|<\/?details>|<summary>/);

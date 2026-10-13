@@ -16,7 +16,7 @@ Each document has **Open original**, **Show indexed text**, **Re-read** and **Re
 
 ## Search by meaning
 
-Without a search model, Workbench finds passages by their words, spelled the same: "costs" does not find "cost". With one running, it searches by meaning and by words. To run one, see [Run a search model and a result sorter](/guides/run-search-models). Workbench uses the first local search model it finds. If the search model changes, **Documents** offers **Rebuild search**.
+Without a search model, Workbench finds passages by their words, spelled the same: "costs" does not find "cost". With one running, it searches by meaning and by words. To run one, see [Run a local embedding model and reranker](/guides/run-search-models). Workbench uses the first local search model it finds. If the search model changes, **Documents** offers **Rebuild search**.
 
 A result sorter puts the best passages first. Its **Sort time** is 3 s by default, which suits a GPU, where a question takes about 0.6 s. On a typical CPU a question takes about 7 s, so Workbench skips the sort and says why. To sort there anyway, raise **Sort time** in Workbench's settings in Eugene's console.
 
@@ -24,7 +24,7 @@ To see what a question finds, use **Test a question** on **Documents**.
 
 ## Add a folder
 
-The owner first grants you the folder: see [Give Workbench folders and tools](/guides/workbench-tools#grant-a-folder). Then:
+The owner first grants you the folder: see [Add MCP tools and folders to Workbench](/guides/workbench-tools#grant-a-folder). Then:
 
 1. Open **Documents** and go to **Folders**, then **Add a folder**.
 2. Pick the **Folder to add**. To skip some files, open **Choose what to leave out first**.

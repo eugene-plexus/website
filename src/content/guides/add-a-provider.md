@@ -20,4 +20,4 @@ A cloud account or subscription sits beside your own models, behind the same add
 
 </details>
 
-Want models to search the web too? [Add a web search account](/guides/add-web-search).
+Want models to search the web too? [Add web search to your local models](/guides/add-web-search).

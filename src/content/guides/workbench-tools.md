@@ -8,7 +8,7 @@ The owner grants a folder to one person:
 2. Fill in **Folder name**, **Full folder path on Workbench's host** and **Person who can use it**. People appear after they sign in to Workbench once. Tick **Allow creating and editing text files** only if they need it.
 3. Press **Grant folder access**.
 
-To share a folder, grant it to each person separately. A person can also search the folder as documents: see [Ask Workbench about your documents](/guides/workbench-documents#add-a-folder).
+To share a folder, grant it to each person separately. A person can also search the folder as documents: see [Chat with your documents and PDFs in Workbench](/guides/workbench-documents#add-a-folder).
 
 ## Add a tool server
 

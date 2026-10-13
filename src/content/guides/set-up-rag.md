@@ -1,10 +1,10 @@
 RAG answers a question from your own documents. A search model finds passages that match, a result sorter puts the best first, and a chat model answers from them. Eugene runs all three on your machines.
 
-Start by running a search model and a result sorter: see [Run a search model and a result sorter](/guides/run-search-models).
+Start by running a search model and a result sorter: see [Run a local embedding model and reranker](/guides/run-search-models).
 
 ## In Workbench
 
-There is nothing to connect. Add your documents and ask: see [Ask Workbench about your documents](/guides/workbench-documents).
+There is nothing to connect. Add your documents and ask: see [Chat with your documents and PDFs in Workbench](/guides/workbench-documents).
 
 ## In Open WebUI
 

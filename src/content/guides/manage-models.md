@@ -1,3 +1,5 @@
+Eugene checks each model against this machine's graphics memory (VRAM) and RAM before you download it.
+
 ## Find a model that runs here
 
 1. Open **Discover**. It opens on **Works here now**; the filter also offers **Works with another engine** and **Everything**.

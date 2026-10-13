@@ -28,7 +28,7 @@ for (const guide of all) if (!icons[guide.slug]) throw new Error(`Guide ${guide.
 const groups = [...new Set(all.map((guide) => guide.group))];
 ---
 
-<SiteLayout title="Guides | Eugene Plexus" description={`Step-by-step guides for Eugene Plexus ${release.version}: updating, providers, web search, search models, Codex and Claude Code, Workbench, Job Sites and more.`}>
+<SiteLayout title="Guides to running LLMs locally | Eugene Plexus" description={`Step-by-step guides to running LLMs locally with Eugene Plexus ${release.version}: local RAG, Claude Code and Codex with local models, which models fit your GPU, web search, providers, Workbench and Job Sites.`}>
   <div class="container guides-page">
     <header class="guides-intro">
       <div>

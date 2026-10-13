@@ -8,7 +8,7 @@ test('a visitor can find, read and copy the versioned installer', async ({ page,
     await page.goto('/');
     await page.locator('.hero-actions').getByRole('link', { name: 'Install Eugene Plexus' }).click();
     await expect(page).toHaveURL(/\/install\/?$/);
-    await expect(page.getByRole('heading', { level: 1 })).toHaveText('Get your first model answering.');
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText('Install a local LLM on Windows, Linux or Docker');
     await expect(page.locator('.alpha-notice')).toContainText('This is early software.');
     await page.getByRole('navigation', { name: 'Installation sections' }).getByRole('link', { name: 'Windows', exact: true }).click();
     await expect(page.locator('#windows-title')).toBeInViewport();
