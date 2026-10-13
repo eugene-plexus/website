@@ -37,7 +37,7 @@ const alsoRan = [
     <header class="story-header">
       <p class="eyebrow">From the build · 2 October 2026</p>
       <h1>Sending each conversation to the server that has it cached</h1>
-      <p class="story-lede">An AI coding agent sends its whole conversation with every step, often 20,000 to 30,000 tokens. Whether that step takes half a second or ten depends on one thing: does the server that gets it still remember the conversation?</p>
+      <p class="story-lede">An AI coding agent sends its whole conversation with every step, often 20,000 to 30,000 tokens. Whether that step takes half a second or ten depends on whether the server that gets it still has the conversation cached.</p>
     </header>
 
     <section class="story-section" aria-labelledby="why-title">
@@ -47,7 +47,7 @@ const alsoRan = [
         <p>Claude Code and Codex work in turns. Each turn sends everything so far: the instructions, the tools, every file read and every answer. A model server such as <strong>llama.cpp</strong> keeps a <em>prompt cache</em>. If it has seen the start of a prompt before, it skips reading that part again, and the reply starts much sooner.</p>
         <p>That works on one server. Run two copies of the same model, to serve more people or more agents at once, and a simple balancer sends turns to whichever copy looks least busy. On an idle install that means <strong>every other turn lands on the copy that has never seen the conversation</strong>, and reads it all again.</p>
         <p>We measured that first: one Claude Code session on two copies of an 8B model reused 52.8% of its prompt tokens and took 6.0 seconds a turn. Sent back to the same copy each turn, the same session reused 75.3% and took 3.2 seconds (<a href={firstRecord}>record, §7 and §11</a>).</p>
-        <p>Then Troy, who builds Eugene Plexus, asked the harder question: <em>what about dozens of people, across dozens of servers?</em> This page is what we found.</p>
+        <p>Then Troy, who builds Eugene Plexus, asked what happens with dozens of people across dozens of servers. This page is what we found.</p>
       </div>
     </section>
 
@@ -139,17 +139,17 @@ const alsoRan = [
           <li><strong>Spread</strong> (<code>loadBalancing: spread</code>, the default). A new conversation goes to the copy holding the fewest conversations per slot.</li>
           <li><strong>A token budget</strong> per server, read from the server's own settings, with a short wait for room.</li>
           <li><strong>A full server is busy, not broken.</strong> It does not trip the circuit breaker, and Claude Code and Codex are told to retry rather than stop.</li>
-          <li><strong>Evictions on the Metrics page.</strong> A turn that went home and found its history gone is counted per server: a sign that model needs more memory or another copy.</li>
+          <li><strong>Evictions on the Metrics page.</strong> A turn sent back to its server that found its history gone is counted per server: a sign that model needs more memory or another copy.</li>
           <li><strong>Slot pinning</strong>, off by default, with the never-a-busy-slot rule.</li>
         </ul>
-        <p>Then we ran the same tests against the built code. The honest summary:</p>
+        <p>Then we ran the same tests against the built code. The summary:</p>
         <ul class="story-steps">
           <li>The 8B outage is gone: 204 of 204 turns, none refused as "cooling down".</li>
           <li>On eight copies, spread reused 78.3% on average over four runs, with no turn failed for lack of memory in 2,176.</li>
           <li><strong>With the budget in, spread and "least busy" place new conversations about equally well</strong> (78.3% against 79.4%, inside the noise). The budget itself sends a new conversation where there is room, which is most of what spread did. Spread keeps one measured edge: no memory overflow in four runs, against eight in one of three for least busy.</li>
           <li>Three turns in 3,808 still failed. In each, llama.cpp paused for 6 to 10 seconds while it saved and restored its cache, enough times in a row to trip our 30-second stall check. Placement cannot fix that one.</li>
         </ul>
-        <p>So the two things that matter most are the simplest: <strong>send a conversation home, and do not send a server more than it can hold.</strong></p>
+        <p><strong>Send a conversation back to the server that has it cached, and do not send a server more than it can hold.</strong> Those two rules matter most, and they are the simplest.</p>
       </div>
     </section>
 
@@ -174,7 +174,7 @@ const alsoRan = [
         <h3>In the data centre, it is an established idea</h3>
         <p>The <a href="https://docs.sglang.io/advanced_features/sgl_model_gateway.html">SGLang Model Gateway</a> routes by an approximate prefix tree by default. <a href="https://github.com/llm-d/llm-d-inference-scheduler">llm-d</a>, the Kubernetes <a href="https://github.com/kubernetes-sigs/gateway-api-inference-extension">Gateway API Inference Extension</a>, <a href="https://docs.nvidia.com/dynamo/design-docs/component-design/router-design">NVIDIA Dynamo</a>, the <a href="https://github.com/vllm-project/production-stack">vLLM production stack</a>, <a href="https://aibrix.readthedocs.io/latest/features/gateway-plugins.html">AIBrix</a> and <a href="https://docs.ray.io/en/latest/serve/llm/user-guides/prefix-aware-routing.html">Ray Serve</a> all do some form of it, and research such as <a href="https://arxiv.org/abs/2407.00023">Preble</a> studies it. Dynamo and llm-d go further than we do: the engine reports exactly which blocks it holds.</p>
         <p>They are built for vLLM, SGLang or TensorRT-LLM, mostly on Kubernetes. They mostly place by prompt prefix, which suits many users sharing one long system prompt. Our agent sessions share less (finding 5), so on this workload prefix placement did not win. On theirs it may well.</p>
-        <h3>Sending a conversation home exists too</h3>
+        <h3>Others route by cache too</h3>
         <p><a href="https://docs.litellm.ai/docs/routing">LiteLLM</a> has session affinity that pins a conversation to one deployment, reads Claude Code's own session header, and falls back when that deployment is cooling down. <a href="https://github.com/gpustack/gpustack/pull/6332">GPUStack</a>, which runs llama.cpp-based servers, turned session affinity on by default for models with several copies on 30 September 2026. Small projects such as <a href="https://github.com/issixx/llama-balancer">llama-balancer</a> keep a client on one llama-server to reuse its cache.</p>
         <h3>What we think is ours</h3>
         <p>We found no other project that does these together:</p>

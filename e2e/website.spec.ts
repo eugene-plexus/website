@@ -18,7 +18,7 @@ test('the homepage describes current capabilities with an explicit early-softwar
     await expect(page.locator('#configure')).toContainText('two-screen setup');
     await expect(page.locator('#runtimes')).toContainText('Download and run');
     await expect(page.locator('#routing')).toContainText('revocable client keys');
-    await expect(page.locator('#open-source')).toContainText('It is early software: it works, with rough edges and known limits.');
+    await expect(page.locator('#open-source')).toContainText('It is early software. It works, but it has rough edges and known limits.');
     const engines = page.locator('details').filter({ hasText: 'Which inference engines does it support?' });
     await engines.locator('summary').click();
     await expect(engines).toContainText('drives a vLLM you installed');

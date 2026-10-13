@@ -7,7 +7,7 @@
   {"path": "/guides", "title": "Guides", "description": "Step-by-step guides: updating, providers, web search, search models, Codex and Claude Code, Workbench, Job Sites and more."},
   {"path": "/architecture", "title": "Architecture and current limits", "description": "Components, request flow, supported APIs, verification evidence, and known limitations."},
   {"path": "/recovery", "title": "Backup and recovery", "description": "Version-specific upgrade precautions, checkpoints, restoration steps, and recovery limits."},
-  {"path": "/principles", "title": "Mission and principles", "description": "Equal access to intelligence, openness, and the project's purpose."},
+  {"path": "/principles", "title": "Mission and principles", "description": "Why Eugene Plexus exists, and the principles behind it."},
   {"path": "/first-search", "title": "The first web search", "description": "The first web search a person ran from Workbench: a local model looked up Eugene Plexus. The full chat, verbatim, and what it taught us."},
   {"path": "/cache-aware-balancing", "title": "Cache-aware balancing", "description": "Cache-aware balancing for local models: 64 real Claude Code and Codex sessions replayed on up to eight llama.cpp servers, what each placement measured, and what Eugene does by default."},
   {"path": "/guides/update-from-v0-1-0", "group": "Updating", "title": "Update from v0.1.0 to v0.2.0", "description": "Update the control root first, then every other machine. What carries over, and the few things to do after."},

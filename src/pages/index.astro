@@ -24,7 +24,7 @@ const stages = [
   },
   {
     id: 'routing', number: '04', name: 'One address, more options', short: 'Route', icon: Radio,
-    description: `Connect Claude Code, Codex, Open WebUI or any OpenAI-compatible tool to one address, using revocable client keys. Keep Ollama or LM Studio beside the engines Eugene manages, cloud accounts such as Gemini or OpenRouter, and Claude Code or Codex subscriptions. Tools are offered to every chat model unless its engine has shown it cannot. Work is shared across copies of a model${cacheAwareBalancingShipped ? ', each conversation goes back to the copy that already remembers it,' : ''} and moves to your next choice when one fails.`,
+    description: `Connect Claude Code, Codex, Open WebUI or any OpenAI-compatible tool to one address, using revocable client keys. Keep Ollama or LM Studio beside the engines Eugene manages, cloud accounts such as Gemini or OpenRouter, and Claude Code or Codex subscriptions. Tools are offered to every chat model unless its engine has shown it cannot. Work is shared across copies of a model${cacheAwareBalancingShipped ? ', each conversation goes back to the copy that already has it cached,' : ''} and moves to your next choice when one fails.`,
     output: 'OpenAI and Anthropic Messages APIs', repo: 'gateway',
   },
   {
@@ -55,7 +55,7 @@ const uses = [
   },
   {
     icon: Boxes, title: 'Keep what you already run',
-    text: 'Already use Ollama, LM Studio or a cloud account? Add them beside the models Eugene runs, and give every app the same address.',
+    text: 'Add the Ollama, LM Studio or cloud account you already use beside the models Eugene runs. Every app then uses one address.',
   },
   {
     icon: House, title: 'Work on your own machines',
@@ -79,7 +79,7 @@ const requirements = [
 <SiteLayout>
   <section class="hero" aria-labelledby="hero-title">
     <div class="hero-inner container">
-      <p class="eyebrow hero-eyebrow"><span class="status-dot" aria-hidden="true"></span> Local-first. Open source. In development.</p>
+      <p class="eyebrow hero-eyebrow"><span class="status-dot" aria-hidden="true"></span> Local-first and open source, still in development.</p>
       <img class="hero-logo" src="/eugene-transparent.svg" alt="Eugene, the glasses-wearing face surrounded by a network ring" width="152" height="152" fetchpriority="high" />
       <h1 id="hero-title">Eugene Plexus<span class="heading-period">.</span></h1>
       <p class="hero-statement" data-plain>Run AI models on <strong>your own computer.</strong></p>
@@ -180,19 +180,19 @@ const requirements = [
           <Layers size={27} stroke-width={1.5} aria-hidden="true" />
           <h3>Engine setup, handled</h3>
           <p>Install, update and remove llama.cpp, MLX and the experimental Strata from the browser, and restart them after a crash. Run a vLLM installation you already have. Eugene Plexus wraps upstream engines instead of replacing them.</p>
-          <span class="principle-note">The operations layer, not another engine.</span>
+          <span class="principle-note">It manages engines and does not replace them.</span>
         </article>
         <article class="principle">
           <SlidersHorizontal size={27} stroke-width={1.5} aria-hidden="true" />
           <h3>Settings start with your machine</h3>
           <p>Get a suggested model and a memory estimate before you download. Settings start at a conversation length that fits the machine you picked, and you can change them.</p>
-          <span class="principle-note">A fit estimate, not a speed guarantee.</span>
+          <span class="principle-note">The estimate shows what fits. It does not predict speed.</span>
         </article>
         <article class="principle">
           <HardDrive size={27} stroke-width={1.5} aria-hidden="true" />
           <h3>Your files stay yours</h3>
           <p>Find and download models into your own folders as plainly named files, or scan the models already there. Delete one and Eugene lists every file first. Remove Eugene Plexus and your original model files stay where you put them.</p>
-          <span class="principle-note">Your library, without the lock-in.</span>
+          <span class="principle-note">The files are plain, and they stay in your folders.</span>
         </article>
       </div>
     </div>
@@ -203,7 +203,7 @@ const requirements = [
       <div class="workflow-intro">
         <p class="eyebrow"><span class="section-index">05 /</span> The workflow</p>
         <h2 id="workflow-title">From a model on disk<br /><span class="accent-text">to the apps you use</span></h2>
-        <p>The console's Home page brings setup, the first model, and the first reply together. The side panel keeps every machine and setting within reach as your setup grows.</p>
+        <p>The console's Home page brings setup, the first model, and the first reply together. The side panel lists every machine and setting as your setup grows.</p>
         <a class="text-link" href="/architecture">Explore the architecture <ArrowRight size={17} aria-hidden="true" /></a>
         <Mascot pose="working" size={192} class="workflow-mascot" />
       </div>
@@ -230,7 +230,7 @@ const requirements = [
       <div>
         <p class="eyebrow"><span class="section-index">06 /</span> Built in the open</p>
         <h2 id="open-source-title">Where the project stands</h2>
-        <p>Eugene Plexus is under active development. {release.version} is its latest release, with versioned installers and a matching container image. It is early software: it works, with rough edges and known limits.</p>
+        <p>Eugene Plexus is under active development. {release.version} is its latest release, with versioned installers and a matching container image. It is early software. It works, but it has rough edges and known limits.</p>
         <p>Follow the <a href="https://github.com/eugene-plexus/specs/blob/main/docs/design/audience-roadmap.md">current roadmap</a> and <a href="https://github.com/eugene-plexus/specs/tree/main/docs/acceptance">acceptance records</a> for what is built, what has been exercised, and what still needs work.</p>
         <a class="button button-primary" href="https://github.com/eugene-plexus">Find us on GitHub <ArrowUpRight size={18} aria-hidden="true" /></a>
       </div>
@@ -291,7 +291,7 @@ const requirements = [
         </details>
         <details>
           <summary>Can I manage more than one machine?<ChevronDown size={19} aria-hidden="true" /></summary>
-          <p>Yes. Join machines and manage them from one console, with every machine's update status in one place. A second machine can stand by to take over the control root. Each machine can keep a local copy of the models it runs, while leaving the original files alone. A person's own computer anywhere can be a <a href="/job-sites">Job Site</a> for Workbench. Use a trusted LAN or a mesh VPN such as Tailscale to reach the console from other devices.</p>
+          <p>Yes. Join machines and manage them from one console, which shows every machine's update status. A second machine can stand by to take over the control root. Each machine can keep a local copy of the models it runs, while leaving the original files alone. A person's own computer anywhere can be a <a href="/job-sites">Job Site</a> for Workbench. Use a trusted LAN or a mesh VPN such as Tailscale to reach the console from other devices.</p>
         </details>
         <details>
           <summary>How can I get involved?<ChevronDown size={19} aria-hidden="true" /></summary>

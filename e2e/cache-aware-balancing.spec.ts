@@ -31,7 +31,7 @@ test('the copy says whether the published release carries it', async ({ page }) 
         await expect(invitation).toContainText(`arrives in the next release, after ${release.version}`);
         await expect(page.locator('main')).not.toContainText(`on by default in Eugene's gateway in ${release.version}`);
         await page.goto('/');
-        await expect(page.locator('main')).not.toContainText('goes back to the copy that already remembers it');
+        await expect(page.locator('main')).not.toContainText('goes back to the copy that already has it cached');
         await page.goto('/architecture');
         await expect(page.locator('main')).not.toContainText('cache-aware replica balancing');
     }

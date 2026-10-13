@@ -103,9 +103,9 @@ const sections = [
       </ul>
     </Feature>
 
-    <Feature id="machines" index="06" title="Machines, updates and install" lead="See every machine's update status in one place, keep a second machine ready to take over, and remove Eugene even when it will not start." guides={['update-from-v0-1-0', 'add-a-warm-standby', 'container-https']} limits={['Taking over is done on the standby with your passphrase; it is not a button in the console yet.', 'With many llama.cpp servers on one machine, a reply can stall while llama.cpp saves and restores its prompt cache: 3 turns in 3,808 in our tests.']}>
+    <Feature id="machines" index="06" title="Machines, updates and install" lead="See each machine's update status on one page, keep a second machine ready to take over, and remove Eugene even when it will not start." guides={['update-from-v0-1-0', 'add-a-warm-standby', 'container-https']} limits={['Taking over is done on the standby with your passphrase; it is not a button in the console yet.', 'With many llama.cpp servers on one machine, a reply can stall while llama.cpp saves and restores its prompt cache: 3 turns in 3,808 in our tests.']}>
       <Fragment slot="shots">
-        <Shot name="machines" alt="The Machines page for two machines, desk-pc and garage-nas, both reachable, with the models each serves; a Standby section to choose a standby machine; and a Versions section where each machine reads v0.2.0, Up to date on releases, with Check now." caption="Every machine’s status and version in one place." />
+        <Shot name="machines" alt="The Machines page for two machines, desk-pc and garage-nas, both reachable, with the models each serves; a Standby section to choose a standby machine; and a Versions section where each machine reads v0.2.0, Up to date on releases, with Check now." caption="Each machine’s status and version on one page." />
       </Fragment>
       <ul>
         <li>Machines and Needs Attention show every machine's update status. An update re-checks the channel first, and installs nothing if the check fails or the target moved.</li>
