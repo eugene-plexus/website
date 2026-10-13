@@ -138,5 +138,7 @@ test('the guides index lists every guide, and each guide renders and links sound
             const response = await request.get(href.split('#')[0]);
             expect(response.ok(), `${guide.path} links ${href}`).toBe(true);
         }
+        // Each guide is held to the same standard as the list, axe included.
+        await sound(page, failed);
     }
 });

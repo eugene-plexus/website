@@ -4,7 +4,7 @@ A search model (embedding) finds passages by meaning. A result sorter (rerank) p
 2. Choose **Find it in Discover** or **See its files**, and download it.
 3. On the model's page, press **Run**. The line under it, **Runs as: search model (found in the file)**, says what Eugene will start.
 4. Run the sorter the same way.
-5. Apps reach them at Eugene's address: `/v1/embeddings`, and `/v1/rerank`, which takes Jina, Cohere and TEI requests.
+5. Apps reach them at Eugene's address: `/v1/embeddings`, and `/v1/rerank`, which takes Jina, Cohere and TEI requests. To use them from Open WebUI or your own code, see [Set up RAG with Eugene](/guides/set-up-rag).
 
 <details>
 <summary>Open WebUI</summary>

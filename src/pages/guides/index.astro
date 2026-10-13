@@ -1,5 +1,5 @@
 ---
-import { ArrowRight, Boxes, CircleArrowUp, Cloud, FileSearch, Globe, Hammer, HardHat, Lock, NotebookPen, ScanSearch, Server, SquareTerminal, Wrench } from '@lucide/astro';
+import { ArrowRight, BookSearch, Boxes, CircleArrowUp, Cloud, FileSearch, Globe, Hammer, HardHat, Lock, NotebookPen, ScanSearch, Server, SquareTerminal, Wrench } from '@lucide/astro';
 import Mascot from '../../components/Mascot.astro';
 import SiteLayout from '../../layouts/SiteLayout.astro';
 import release from '../../data/alpha-release.json';
@@ -15,6 +15,7 @@ const icons: Record<string, typeof ArrowRight> = {
   'run-search-models': ScanSearch,
   'manage-models': Boxes,
   'connect-codex-and-claude-code': SquareTerminal,
+  'set-up-rag': BookSearch,
   'install-workbench': Hammer,
   'workbench-memory': NotebookPen,
   'workbench-documents': FileSearch,

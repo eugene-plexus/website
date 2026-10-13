@@ -54,7 +54,7 @@ const sections = [
       <Shot name="delete" alt="A model’s page in the Library with the Delete confirmation open: it names the one file it removes, with its full path and size, says it cannot be undone, and offers Delete and free 146 MB or Cancel." />
     </Feature>
 
-    <Feature id="search-models" index="02" title="Run search models on your own machine" lead="Run the models that find passages by meaning and sort what a search found, for Workbench and Open WebUI." guides={['run-search-models']} limits={["Workbench's sorter: its default Sort time (3 s) suits a GPU, where a question takes about 0.6 s, not a typical CPU, where it takes about 7 s."]}>
+    <Feature id="search-models" index="02" title="Run search models on your own machine" lead="Run the models that find passages by meaning and sort what a search found, for Workbench and Open WebUI." guides={['run-search-models', 'set-up-rag']} limits={["Workbench's sorter: its default Sort time (3 s) suits a GPU, where a question takes about 0.6 s, not a typical CPU, where it takes about 7 s."]}>
       <Fragment slot="shots">
         <Shot name="runs-as" alt="A search model’s page in the Library. Beside the Run button it says Runs as: search model (found in the file), with a link to change how it runs; the model list shows a search model and a result sorter running." caption="The Library knows a search model from a chat model by the file itself." />
       </Fragment>
