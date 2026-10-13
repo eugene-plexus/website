@@ -1,5 +1,5 @@
 ---
-import { Activity, ArrowDown, ArrowRight, ArrowUpRight, Boxes, Check, ChevronDown, Code, Cpu, Database, HardDrive, Layers, MessageSquare, Radio, SlidersHorizontal, Smartphone } from '@lucide/astro';
+import { Activity, ArrowDown, ArrowRight, ArrowUpRight, Boxes, Check, ChevronDown, Code, Cpu, Database, FileText, HardDrive, House, Layers, MessageSquare, Radio, SlidersHorizontal, Smartphone } from '@lucide/astro';
 import Face from '../components/Face.astro';
 import Mascot from '../components/Mascot.astro';
 import SiteLayout from '../layouts/SiteLayout.astro';
@@ -9,7 +9,7 @@ import { cacheAwareBalancingShipped } from '../lib/features';
 const stages = [
   {
     id: 'discover', number: '01', name: 'Find your next model', short: 'Discover', icon: Database,
-    description: 'Start with a model recommended for the machine you choose. See which versions fit its available memory, at a stated context length, before downloading. Search the catalogue or paste a Hugging Face link for more options.',
+    description: 'Start with a model recommended for the machine you choose. Discover opens on what works there now, and says for each engine whether a model runs and how it fits, at a stated context length, before you download. Search Hugging Face and compatible hubs, or paste a link.',
     output: 'A starting point for your hardware', repo: 'library',
   },
   {
@@ -19,12 +19,12 @@ const stages = [
   },
   {
     id: 'runtimes', number: '03', name: 'From download to first reply', short: 'Run', icon: Cpu,
-    description: 'Download and run is one action. Install llama.cpp with your approval, launch the model, and try a first reply right away. The agent restarts crashed engines; the gateway can unload idle models and wake them on demand.',
+    description: 'Download and run is one action, and it carries on if you close the tab. Install the engine with your approval, launch the model, and try a first reply right away. The agent restarts crashed engines; the gateway can unload idle models and wake them on demand.',
     output: 'Engine setup and launch together', repo: 'agent',
   },
   {
     id: 'routing', number: '04', name: 'One address, more options', short: 'Route', icon: Radio,
-    description: `Connect OpenAI-compatible tools or Claude Code to one address, using revocable client keys. Keep Ollama or LM Studio beside the engines Eugene manages, cloud services, and Claude Code or Codex CLI subscriptions. Work is shared across copies of a model${cacheAwareBalancingShipped ? ', each conversation goes back to the copy that already remembers it,' : ''} and moves to your next choice when one fails.`,
+    description: `Connect Claude Code, Codex, Open WebUI or any OpenAI-compatible tool to one address, using revocable client keys. Keep Ollama or LM Studio beside the engines Eugene manages, cloud accounts such as Gemini or OpenRouter, and Claude Code or Codex subscriptions. Tools are offered to every chat model unless its engine has shown it cannot. Work is shared across copies of a model${cacheAwareBalancingShipped ? ', each conversation goes back to the copy that already remembers it,' : ''} and moves to your next choice when one fails.`,
     output: 'OpenAI and Anthropic Messages APIs', repo: 'gateway',
   },
   {
@@ -35,11 +35,15 @@ const stages = [
 ];
 
 // What a casual visitor came to do, in their words. Each line is true of
-// the shipped alpha; the checks behind them are the acceptance records.
+// the shipped release; the checks behind them are the acceptance records.
 const uses = [
   {
     icon: MessageSquare, title: 'Chat privately on your PC',
     text: 'Download a model that fits, then talk to it in your browser. What you type stays on your computer.',
+  },
+  {
+    icon: FileText, title: 'Ask your own documents',
+    text: 'Workbench answers from your files and folders, and shows which file and page each answer came from.',
   },
   {
     icon: Smartphone, title: 'Use it from your phone',
@@ -47,11 +51,15 @@ const uses = [
   },
   {
     icon: Code, title: 'Power your coding tools',
-    text: 'Point Claude Code, Continue or Cline at a model on your own graphics card. Each app gets its own key, and you can turn any key off.',
+    text: 'Point Claude Code, Codex, Continue or Cline at a model on your own graphics card. Each app gets its own key, and you can turn any key off.',
   },
   {
     icon: Boxes, title: 'Keep what you already run',
-    text: 'Already use Ollama or LM Studio? Add them beside the models Eugene runs, and give every app the same address.',
+    text: 'Already use Ollama, LM Studio or a cloud account? Add them beside the models Eugene runs, and give every app the same address.',
+  },
+  {
+    icon: House, title: 'Work on your own machines',
+    text: 'Let Workbench use your other computers, wherever they are. They connect out, so there is no VPN and nothing to open.',
   },
 ];
 
@@ -103,7 +111,7 @@ const requirements = [
       <div class="section-heading" data-plain>
         <p class="eyebrow"><span class="section-index">01 /</span> What you can do</p>
         <h2 id="uses-title">Your own AI,<br />on hardware you already have.</h2>
-        <p>Four things people set it up for.</p>
+        <p>Six things people set it up for. <a href="/features">Everything it does</a>.</p>
       </div>
       <ul class="uses" role="list" data-plain>
         {uses.map((use) => (
@@ -126,15 +134,15 @@ const requirements = [
       </div>
       <div class="shots" data-plain>
         <figure class="shot shot-reply">
-          <img src="/screenshots/first-reply.webp" width="1200" height="575" loading="lazy" decoding="async" alt="The Try it card in the console. A model named qwen3-0.6b has answered the question “Suggest three names for a friendly home robot.”" />
+          <img src="/screenshots/first-reply.webp" width="1200" height="595" loading="lazy" decoding="async" alt="The Try it card on the console’s Home page. The model qwen3-0.6b, running on the processor, has answered “Suggest three names for a friendly home robot.” with a numbered list of three names." />
           <figcaption>Your first reply, right in the browser.</figcaption>
         </figure>
         <figure class="shot shot-phone">
-          <img src="/screenshots/phone-first-reply.webp" width="480" height="642" loading="lazy" decoding="async" alt="The same Try it card on a phone-sized screen, answering “What is a good name for a cat?” with “Whisker”." />
+          <img src="/screenshots/phone-first-reply.webp" width="480" height="740" loading="lazy" decoding="async" alt="The same Try it card on a phone-sized screen, answering “Give me one name for a cat, in one short sentence.” with “A cat named Whisker.”" />
           <figcaption>The same page on your phone.</figcaption>
         </figure>
         <figure class="shot shot-apps">
-          <img src="/screenshots/connect-your-apps.webp" width="1200" height="432" loading="lazy" decoding="async" alt="The Use it from your apps card: one address, a model name, a key, and setup buttons for Claude Code, Continue, Cline, Open WebUI, SillyTavern, OpenCode, any OpenAI SDK and curl." />
+          <img src="/screenshots/connect-your-apps.webp" width="1200" height="362" loading="lazy" decoding="async" alt="The Use it from your apps card: one address for Claude Code, Codex and other apps, checked as answering, the model to use, and the keys made for apps." />
           <figcaption>One address, a model name and a key for your apps, with setup steps for each.</figcaption>
         </figure>
       </div>
@@ -171,7 +179,7 @@ const requirements = [
         <article class="principle">
           <Layers size={27} stroke-width={1.5} aria-hidden="true" />
           <h3>Engine setup, handled</h3>
-          <p>Install and update llama.cpp from the browser, and restart it after a crash. Run a vLLM installation you already have. Eugene Plexus wraps upstream engines instead of replacing them.</p>
+          <p>Install, update and remove llama.cpp, MLX and the experimental Strata from the browser, and restart them after a crash. Run a vLLM installation you already have. Eugene Plexus wraps upstream engines instead of replacing them.</p>
           <span class="principle-note">The operations layer, not another engine.</span>
         </article>
         <article class="principle">
@@ -183,7 +191,7 @@ const requirements = [
         <article class="principle">
           <HardDrive size={27} stroke-width={1.5} aria-hidden="true" />
           <h3>Your files stay yours</h3>
-          <p>Find and download models into your own folders as plainly named files, or scan the models already there. Remove Eugene Plexus and your original model files stay where you put them.</p>
+          <p>Find and download models into your own folders as plainly named files, or scan the models already there. Delete one and Eugene lists every file first. Remove Eugene Plexus and your original model files stay where you put them.</p>
           <span class="principle-note">Your library, without the lock-in.</span>
         </article>
       </div>
@@ -224,7 +232,7 @@ const requirements = [
         <p class="eyebrow"><span class="section-index">06 /</span> Built in the open</p>
         <h2 id="open-source-title">Early days.<br />An open invitation.</h2>
         <p>Eugene Plexus is under active development. {release.version} is its latest release, with versioned installers and a matching container image. It is early software: it works, with rough edges and known limits.</p>
-        <p>Follow the <a href="https://github.com/eugene-plexus/specs/blob/main/docs/design/adoption-roadmap.md">current roadmap</a> and <a href="https://github.com/eugene-plexus/specs/tree/main/docs/acceptance">acceptance records</a> for what is built, what has been exercised, and what still needs work.</p>
+        <p>Follow the <a href="https://github.com/eugene-plexus/specs/blob/main/docs/design/audience-roadmap.md">current roadmap</a> and <a href="https://github.com/eugene-plexus/specs/tree/main/docs/acceptance">acceptance records</a> for what is built, what has been exercised, and what still needs work.</p>
         <a class="button button-primary" href="https://github.com/eugene-plexus">Find us on GitHub <ArrowUpRight size={18} aria-hidden="true" /></a>
       </div>
       <div>
@@ -252,11 +260,11 @@ const requirements = [
         </details>
         <details data-plain>
           <summary>Does anything I type leave my computer?<ChevronDown size={19} aria-hidden="true" /></summary>
-          <p>Not when you use a model on your own machine. Your messages go from your app to that machine and back. Eugene itself goes online to find and download models from Hugging Face, and to download or update the llama.cpp engine from GitHub. Every six hours it also asks GitHub whether a newer Eugene is out, which you can turn off. If you add a cloud service such as OpenAI, messages sent to it go to that service. A key marked local-only never falls back to one.</p>
+          <p>Not when you use a model on your own machine. Your messages go from your app to that machine and back. Eugene itself goes online to find and download models from Hugging Face or the hubs you add, and to download or update engines. Every six hours it also asks GitHub whether a newer Eugene is out, which you can turn off. If you add a cloud service such as OpenAI or Gemini, messages sent to it go to that service. Web search sends only the search terms. A key marked local-only never falls back to a cloud service. Workbench holds your notes back from one unless you send them for that chat.</p>
         </details>
         <details data-plain>
           <summary>How is this different from Ollama, LM Studio or ChatGPT?<ChevronDown size={19} aria-hidden="true" /></summary>
-          <p>ChatGPT runs in someone else's data center. Eugene runs models on hardware you own. Ollama and LM Studio also run models on your computer, and you can keep them. Eugene can use them beside the models it runs, with one address for all your apps. What it adds is the care around the engine: installing and updating it, suggesting a model that fits, and restarting it after a crash. You can also reach it from your other devices, and add more machines later.</p>
+          <p>ChatGPT runs in someone else's data center. Eugene runs models on hardware you own. Ollama and LM Studio also run models on your computer, and you can keep them. Eugene can use them beside the models it runs, with one address for all your apps. What it adds is the care around the engine: installing and updating it, saying what fits before you download, and restarting it after a crash. You can also reach it from your other devices, add more machines, and chat in Workbench with your own documents.</p>
         </details>
         <details data-plain>
           <summary>Do I need to use the command line?<ChevronDown size={19} aria-hidden="true" /></summary>
@@ -272,19 +280,19 @@ const requirements = [
         </details>
         <details>
           <summary>Which inference engines does it support?<ChevronDown size={19} aria-hidden="true" /></summary>
-          <p>The current integrations install and supervise llama.cpp and drive user-installed vLLM. It also runs MLX on Apple silicon, checked on GitHub's macOS runners but not yet on a physical Mac, and experimental Kev decision models. Existing OpenAI-compatible servers, including Ollama and LM Studio, can also be connected without Eugene Plexus managing their processes. Hardware verification remains uneven; see the <a href="/architecture#status">current boundaries</a>.</p>
+          <p>Eugene installs and supervises llama.cpp, and drives a vLLM you installed. It also runs MLX on Apple silicon, checked on GitHub's macOS runners but not yet on a physical Mac. <strong>Strata</strong>, experimental, runs very large Qwen3.8-Flash-Next models on one consumer card by keeping their experts in system memory; it runs text only, one request at a time. Existing OpenAI-compatible servers, including Ollama and LM Studio, can also be connected without Eugene managing their processes. Hardware verification remains uneven; see the <a href="/architecture#status">current boundaries</a>.</p>
         </details>
         <details>
           <summary>Can I use Claude Code and my other tools?<ChevronDown size={19} aria-hidden="true" /></summary>
-          <p>The gateway serves OpenAI-compatible chat, tool calling and embeddings, plus Anthropic Messages for text and tool calls. Since alpha.5 it also serves speech, transcription, images, video and plain completions, each only through a model that can do the job. Since alpha.6, models can search the web through a search account your install runs, SearXNG or Brave, on all three APIs. Since v0.1.0, each conversation goes back to the copy of a model that already holds it (<a href="/cache-aware-balancing">the research</a>). Client keys can be named and revoked from the console. Claude Code edit/check tasks and Open WebUI chat and images have been exercised with actual local models; full vendor API parity is not claimed. See <a href="/architecture#status">compatibility limits</a>.</p>
+          <p>Yes. The console's Home page writes the setup for Claude Code, Codex, Open WebUI and others, with a key for each app (<a href="/guides/connect-codex-and-claude-code">the guide</a>). Every chat model is taken to call tools unless its engine has shown it cannot, and a setting a model ignores is named rather than refused. The gateway serves OpenAI-compatible chat, embeddings, rerank and media, plus Anthropic Messages, with web search run by your install, and each conversation goes back to the copy of a model that already holds it (<a href="/cache-aware-balancing">the research</a>). Claude Code, Codex and Open WebUI have run with actual local models; full vendor API parity is not claimed. See <a href="/architecture#status">compatibility limits</a>.</p>
         </details>
         <details>
           <summary>Is there a chat app?<ChevronDown size={19} aria-hidden="true" /></summary>
-          <p>Yes. Since alpha.6, <strong>Workbench</strong> installs from <strong>Apps</strong> in the console, on any of your machines. Chat with the models your machines serve, attach files, and turn on web search. You sign in with Eugene, and each person you add under <strong>People</strong> gets their own chats. Read <a href="/first-search">the first chat a person had in it</a>.</p>
+          <p>Yes. <a href="/workbench"><strong>Workbench</strong></a> installs from <strong>Apps</strong> in the console, on any of your machines. It keeps notes you ask it to remember, answers from your documents and folders with their sources, and runs tools you approve. You sign in with Eugene, and each person you add under <strong>People</strong> gets their own chats. Read <a href="/first-search">the first chat a person had in it</a>.</p>
         </details>
         <details>
           <summary>Can I manage more than one machine?<ChevronDown size={19} aria-hidden="true" /></summary>
-          <p>Yes. Enroll nodes and manage them from one authenticated console, including remote settings and folder browsing. A Library folder can describe where other machines mount it. Each node can optionally keep a local copy of the models it runs, while leaving the original files alone. Use a trusted LAN or a mesh VPN such as Tailscale for access from other devices.</p>
+          <p>Yes. Join machines and manage them from one console, with every machine's update status in one place. A second machine can stand by to take over the control root. Each machine can keep a local copy of the models it runs, while leaving the original files alone. A person's own computer anywhere can be a <a href="/job-sites">Job Site</a> for Workbench. Use a trusted LAN or a mesh VPN such as Tailscale to reach the console from other devices.</p>
         </details>
         <details>
           <summary>How can I get involved?<ChevronDown size={19} aria-hidden="true" /></summary>

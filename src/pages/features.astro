@@ -1,0 +1,144 @@
+---
+import { ArrowRight, ArrowUpRight, House, MessageSquare } from '@lucide/astro';
+import Feature from '../components/Feature.astro';
+import Shot from '../components/Shot.astro';
+import SiteLayout from '../layouts/SiteLayout.astro';
+import release from '../data/alpha-release.json';
+
+const notes = `https://github.com/eugene-plexus/specs/blob/${release.specsCommit}/docs/releases/${release.version}.md`;
+const sections = [
+  ['library', 'Models that fit'],
+  ['search-models', 'Search models'],
+  ['tools', 'Tools on every model'],
+  ['providers', 'Providers and web search'],
+  ['strata', 'Strata'],
+  ['machines', 'Machines and updates'],
+];
+---
+
+<SiteLayout title="What Eugene does | Eugene Plexus" description={`Everything in Eugene Plexus ${release.version}: models that fit before you download, local search models, tools on every model, cloud providers and web search, Strata, Workbench, Job Sites, and machines.`}>
+  <div class="container features-page">
+    <header class="features-intro">
+      <p class="eyebrow">What it does · {release.version}</p>
+      <h1>Everything Eugene does, in one place.</h1>
+      <p class="lead" data-plain>Eugene runs AI models on your own machines and gives every app one address. Here is each part: what it does for you, what it looks like, and its limits.</p>
+      <nav class="jump" aria-label="On this page">
+        {sections.map(([id, name]) => <a href={`#${id}`}>{name}</a>)}
+      </nav>
+    </header>
+
+    <ul class="big-two" role="list">
+      <li>
+        <MessageSquare size={26} stroke-width={1.5} aria-hidden="true" />
+        <h2><a href="/workbench">Workbench <ArrowRight size={18} aria-hidden="true" /></a></h2>
+        <p data-plain>Eugene's chat app. It remembers what you ask it to, answers from your documents with their sources, and runs tools you approve.</p>
+      </li>
+      <li>
+        <House size={26} stroke-width={1.5} aria-hidden="true" />
+        <h2><a href="/job-sites">Job Sites <ArrowRight size={18} aria-hidden="true" /></a></h2>
+        <p data-plain>Workbench on your own computers, wherever they are. They connect out, so there is no VPN and nothing to open.</p>
+      </li>
+    </ul>
+
+    <Feature id="library" index="01" title="Models that fit, before you download" lead="Every model, and every search result, says whether it runs on your machine, with each engine's reason and how it fits." guides={['manage-models']}>
+      <Fragment slot="shots">
+        <Shot name="discover" alt="Discover filtered to Works here now. Each result is marked works here; an open model shows its suggested version, and a note lists each engine: llama.cpp runs it as it is and it fits in free graphics memory, while MLX, vLLM, Strata and Kev each say why they cannot." caption="Each engine’s reason and fit, before you download." />
+      </Fragment>
+      <ul>
+        <li>Discover opens on <strong>Works here now</strong>. The format filter adds <strong>Works with another engine</strong> and <strong>Everything</strong>, and results show a count.</li>
+        <li>Where to find models is a list: Hugging Face and compatible hubs, each with its own token, plus the engines' own lists.</li>
+        <li>Delete a model from its page. The confirmation lists every file, keeps files another model uses, and refuses while a machine runs it.</li>
+        <li>A model copied to a machine shows how many of its files are whole.</li>
+      </ul>
+      <Shot name="sources" alt="The Where to find models setting: an ordered list with the engines’ own lists first and the Hugging Face hub second, its address and an empty token field, with arrows to reorder and buttons to add a hub or an engine’s list." />
+      <Shot name="delete" alt="A model’s page in the Library with the Delete confirmation open: it names the one file it removes, with its full path and size, says it cannot be undone, and offers Delete and free 146 MB or Cancel." />
+    </Feature>
+
+    <Feature id="search-models" index="02" title="Search models, on your own machine" lead="Run the models that find passages by meaning and sort what a search found, for Workbench and Open WebUI." guides={['run-search-models']} limits={["Workbench's sorter: its default Sort time (3 s) suits a GPU, where a question takes about 0.6 s, not a typical CPU, where it takes about 7 s."]}>
+      <Fragment slot="shots">
+        <Shot name="runs-as" alt="A search model’s page in the Library. Beside the Run button it says Runs as: search model (found in the file), with a link to change how it runs; the model list shows a search model and a result sorter running." caption="The Library knows a search model from a chat model by the file itself." />
+      </Fragment>
+      <ul>
+        <li>The agent runs search (embedding) and result-sorting (rerank) models, and the console offers three to start with.</li>
+        <li>In the Library, <strong>Runs as</strong> says whether a file is a chat, search or result-sorting model, and lets you change it.</li>
+        <li>One address serves <code>/v1/embeddings</code> and the new <code>/v1/rerank</code>, which takes Jina, Cohere and TEI requests.</li>
+        <li>Open WebUI's document search runs through Eugene.</li>
+        <li>When embeddings ignore <code>dimensions</code> or <code>user</code>, a response header says so.</li>
+      </ul>
+    </Feature>
+
+    <Feature id="tools" index="03" title="Tools on every model" lead="Coding agents such as Codex and Claude Code work with more models. A chat model is offered tools unless its engine or provider has shown it cannot." guides={['connect-codex-and-claude-code']} limits={['A Claude Code turn reserves its whole answer allowance (32,000 tokens), so a llama.cpp server with a 64k-token pool runs one Claude Code turn at a time. The others wait; they do not fail.']}>
+      <Fragment slot="shots">
+        <Shot name="apps-codex" alt="The setup buttons under Use it from your apps, with Codex chosen: the block for ~/.codex/config.toml, naming Eugene as the model provider with the model’s context window, and the EUGENE_API_KEY variable to set where Codex starts." caption="The Home page writes Codex’s setup for you." />
+      </Fragment>
+      <ul>
+        <li>A setting a backend ignores is named in the <code>x-eugene-plexus-ignored-settings</code> header instead of refused.</li>
+        <li>That includes Gemini, most of OpenRouter's tool models, and Strata.</li>
+        <li>The Home page writes the setup for Codex (its config file, with the key in its own variable) and for Claude Code (the model's real window in tokens, and a reply limit that leaves room to compact).</li>
+        <li>Claude Code's session titles, memory recall and prompt hooks work, and a full context window makes it compact and carry on.</li>
+      </ul>
+    </Feature>
+
+    <Feature id="providers" index="04" title="Providers and web search" lead="Use the cloud accounts and subscriptions you already have beside your own models, through the same address." guides={['add-a-provider', 'add-web-search']} limits={["Brave's rate-limit headers are read as Brave documents them, but have not been seen from a live account."]}>
+      <Fragment slot="shots">
+        <Shot name="gemini" alt="The Add an app you already run page with Google Gemini API chosen, an empty API key field, and Add and Not now buttons." />
+      </Fragment>
+      <ul>
+        <li>Add a Google Gemini API account in Backends, with a key from Google AI Studio, beside OpenAI, OpenRouter, xAI and MiniMax accounts.</li>
+        <li>Use a Claude Code or Codex subscription as a backend. It answers as a model only, and runs no tools or shell commands on the machine hosting it.</li>
+        <li>Add LM Studio or Ollama with an address and an optional API key, so token-protected or proxied servers work.</li>
+        <li>Web search runs on your install's Brave, Google Search or SearXNG account; only the search terms reach the search service.</li>
+        <li>Set the order web search tries its accounts in, under <strong>Routing → Web search order</strong>, or keep the default.</li>
+      </ul>
+      <Shot name="search-order" alt="The Web search order section of the Routing page: a numbered list with a SearXNG account first and a Brave Search account second, each with Move up and Move down, and Save order and Use the default order buttons." />
+    </Feature>
+
+    <Feature id="strata" index="05" title="Strata" experimental lead="Run the very large Qwen3.8-Flash-Next models on one consumer graphics card, by keeping their experts in system memory." limits={['Strata runs text only, on one GPU, one request at a time, and its memory fit is unknown.']}>
+      <ul>
+        <li>Download and prepare from Discover in one action. <strong>Run</strong> suggests preparing when Strata suits the machine better.</li>
+        <li>Prepared models live in the Library, and each machine runs its own copy.</li>
+        <li>Tools and structured output work.</li>
+        <li>It prepared and ran a 68 GB model on an RTX 5090.</li>
+        <li>Coming from v0.1.0? Reinstall Strata before its first preparation: <strong>Backends → Strata</strong>, uninstall, then install. Prepared models are kept.</li>
+      </ul>
+    </Feature>
+
+    <Feature id="machines" index="06" title="Machines, updates and install" lead="See every machine's update status in one place, keep a second machine ready to take over, and remove Eugene even when it will not start." guides={['update-from-v0-1-0', 'add-a-warm-standby', 'container-https']} limits={['Switching over to the warm standby is not a button in the console yet.']}>
+      <Fragment slot="shots">
+        <Shot name="machines" alt="The Machines page for two machines, desk-pc and garage-nas, both reachable, with the models each serves; a Standby section to choose a standby machine; and a Versions section where each machine reads v0.2.0, Up to date on releases, with Check now." caption="Every machine’s status and version in one place." />
+      </Fragment>
+      <ul>
+        <li>Machines and Needs Attention show every machine's update status. An update re-checks the channel first, and installs nothing if the check fails or the target moved.</li>
+        <li>A warm standby for the control root.</li>
+        <li>Guided HTTPS setup, trusted proxies, and one HTTPS port for the container.</li>
+        <li>A replica whose model is still loading is skipped for another.</li>
+        <li>Uninstall works offline: an Installed Apps entry on Windows, a removal app on a Mac.</li>
+        <li>Metrics shows requests served and not served, with the percentage served.</li>
+      </ul>
+      <Shot name="metrics" alt="The Metrics page’s summary: 28 requests, 3 failed, median latency and first-token time, decode speed in tok/s, and a Request outcomes bar reading 89.3% served, 25 served and 3 not served." />
+    </Feature>
+
+    <p class="more">That is the headline list. <a href={notes}>The release notes</a> have every change and fix in {release.version}. <ArrowUpRight size={15} aria-hidden="true" /></p>
+  </div>
+</SiteLayout>
+
+<style>
+  .features-page { max-width: 1100px; padding-block: 4rem; }
+  .features-intro h1 { font-size: clamp(2rem, 5vw, 3.25rem); line-height: 1.12; letter-spacing: -.015em; margin-block: 1rem 1.25rem; }
+  .lead { max-width: 720px; font-size: 1.125rem; line-height: 1.7; color: var(--muted); }
+  .jump { display: flex; flex-wrap: wrap; gap: .5rem 1.25rem; margin-top: 1.75rem; font-size: .9375rem; }
+  .jump a { color: var(--accent-left); text-underline-offset: .2em; }
+  .big-two { list-style: none; padding: 0; margin: 2.5rem 0 1rem; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+  @media (max-width: 700px) { .big-two { grid-template-columns: minmax(0, 1fr); } }
+  .big-two li { position: relative; padding: 1.25rem 1.35rem; background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius); }
+  .big-two li:hover { border-color: var(--border-hover); }
+  .big-two li:focus-within { outline: 2px solid var(--accent-left); outline-offset: 2px; }
+  .big-two svg { color: var(--accent-left); }
+  .big-two h2 { font-size: 1.375rem; margin: .6rem 0 .4rem; }
+  .big-two h2 a { display: inline-flex; align-items: center; gap: .4rem; color: var(--foreground); text-decoration: none; }
+  .big-two h2 a:focus-visible { outline: none; }
+  .big-two h2 a::after { content: ""; position: absolute; inset: 0; border-radius: inherit; }
+  .big-two p { margin: 0; color: var(--muted); line-height: 1.6; }
+  .more { margin-top: 2rem; padding-top: 2rem; border-top: 1px solid var(--border); }
+  .more a { color: var(--accent-left); }
+</style>

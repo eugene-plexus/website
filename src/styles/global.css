@@ -424,7 +424,7 @@ p {
 /* What you can do: the use cases, in the visitor's words. */
 .uses {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 32px;
     margin-top: 55px;
     padding: 0;

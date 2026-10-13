@@ -1,0 +1,43 @@
+---
+import { Picture } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+/**
+ * A screenshot of the real product, from src/assets/screenshots/<name>.png
+ * (made by specs scripts/website-screenshots.py, then reviewed). Astro makes
+ * the WebP sizes. A missing file fails the production build, so a page never
+ * ships with a hole where a picture was promised.
+ */
+interface Props {
+    name: string;
+    alt: string;
+    caption?: string;
+    phone?: boolean;
+    eager?: boolean;
+}
+
+const shots = import.meta.glob<{ default: ImageMetadata }>('../assets/screenshots/*.png', { eager: true });
+const { name, alt, caption, phone = false, eager = false } = Astro.props;
+const image = shots[`../assets/screenshots/${name}.png`]?.default;
+// SCREENSHOTS_PENDING=name,name lets a test build go ahead without a picture
+// still being made; the Pages workflow never sets it.
+const pending = (process.env.SCREENSHOTS_PENDING ?? '').split(',').includes(name);
+if (!image && !import.meta.env.DEV && !pending) throw new Error(`Screenshot ${name}.png is missing from src/assets/screenshots`);
+const widths = phone ? [390, 780] : [480, 960, 1440, 2160];
+const sizes = phone ? '(max-width: 480px) 80vw, 390px' : '(max-width: 1200px) 100vw, 1100px';
+---
+
+<figure class:list={['shot-figure', { 'shot-phone': phone }]} data-shot={name}>
+  {image
+    ? <Picture src={image} alt={alt} widths={widths} sizes={sizes} formats={['webp']} loading={eager ? 'eager' : 'lazy'} decoding="async" />
+    : <div class="shot-missing">Screenshot {name} is not made yet.</div>}
+  {caption && <figcaption>{caption}</figcaption>}
+</figure>
+
+<style>
+  .shot-figure { margin: 1.5rem 0; }
+  .shot-figure :global(img) { display: block; width: 100%; height: auto; border: 1px solid var(--border); border-radius: var(--radius); background: var(--panel); }
+  .shot-phone { max-width: 320px; }
+  figcaption { margin-top: .6rem; color: var(--muted); font-size: .875rem; line-height: 1.5; }
+  .shot-missing { padding: 3rem 1rem; text-align: center; border: 1px dashed var(--border); border-radius: var(--radius); color: var(--muted); }
+</style>

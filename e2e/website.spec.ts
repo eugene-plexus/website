@@ -2,14 +2,15 @@ import AxeBuilder from '@axe-core/playwright';
 import { expect, test } from '@playwright/test';
 import release from '../src/data/alpha-release.json' with { type: 'json' };
 
-test('the homepage describes current capabilities with an explicit alpha boundary', async ({ page }) => {
+test('the homepage describes current capabilities with an explicit early-software boundary', async ({ page }) => {
     await page.goto('/');
     await expect(page.locator('.hero-statement')).toHaveText('Run AI models on your own computer.');
     await expect(page.locator('.hero-description')).toHaveText(/^Private and free\./);
     await expect(page.locator('.hero-technical')).toContainText('self-hosted control plane for local LLM inference');
     await expect(page.locator('.hero-technical')).toContainText('OpenAI and Anthropic Messages APIs');
     for (const selector of ['meta[name="description"]', 'meta[property="og:description"]']) {
-        await expect(page.locator(selector)).toHaveAttribute('content', /OpenAI and Anthropic Messages APIs.*First release available/);
+        await expect(page.locator(selector)).toHaveAttribute('content', /OpenAI and Anthropic Messages APIs.*Workbench/);
+        await expect(page.locator(selector)).not.toHaveAttribute('content', /First release available/);
     }
     await expect(page.locator('.principle h3')).toHaveText([
         'Engine setup, handled', 'Settings start with your machine', 'Your files stay yours',
@@ -20,11 +21,12 @@ test('the homepage describes current capabilities with an explicit alpha boundar
     await expect(page.locator('#open-source')).toContainText('It is early software: it works, with rough edges and known limits.');
     const engines = page.locator('details').filter({ hasText: 'Which inference engines does it support?' });
     await engines.locator('summary').click();
-    await expect(engines).toContainText('user-installed vLLM');
+    await expect(engines).toContainText('drives a vLLM you installed');
+    await expect(engines).toContainText('Strata, experimental');
     await expect(engines).toContainText('It also runs MLX on Apple silicon');
     await expect(engines).not.toContainText('experimental MLX');
     await expect(engines).not.toContainText('separate branch');
-    await expect(page.getByRole('link', { name: 'current roadmap' })).toHaveAttribute('href', /adoption-roadmap\.md$/);
+    await expect(page.getByRole('link', { name: 'current roadmap' })).toHaveAttribute('href', /audience-roadmap\.md$/);
     const clients = page.locator('details').filter({ hasText: 'Can I use Claude Code and my other tools?' });
     await clients.locator('summary').click();
     await expect(clients).toContainText('actual local models');
@@ -177,34 +179,42 @@ test('the architecture page explains the layers and stays inside the viewport', 
     for (const label of ['Your tools', 'Gateway', 'Inference drivers', 'Engines and backends', 'Your hardware', 'Agent', 'Library', 'Control root']) {
         await expect(page.locator('.layers').getByText(label, { exact: true }).first()).toBeVisible();
     }
-    await expect(page.locator('.component-card')).toHaveCount(6);
+    await expect(page.locator('.component-card')).toHaveCount(9);
     // Engines and hardware take Plexus's own layer roles, not Modern's green and grey.
     await expect(page.locator('.layer-engines')).toHaveCSS('border-left-color', PLEXUS['--accent-engine']);
     await expect(page.locator('.layer-hardware')).toHaveCSS('border-left-color', PLEXUS['--accent-hardware']);
     await expect(page.locator('.journey-step')).toHaveCount(5);
-    await expect(page.locator('#components-title')).toHaveText('Six building blocks, distinct jobs.');
+    await expect(page.locator('#components-title')).toHaveText('Nine building blocks, distinct jobs.');
     await expect(page.locator('#ui')).toContainText('Static files, not a separate server');
     await expect(page.locator('#principles')).toContainText('Originals stay yours; local copies are optional');
     await expect(page.locator('#principles')).not.toContainText('Never copied');
     await expect(page.locator('#request')).toContainText('Embeddings fail over only between replicas of the same model');
     await expect(page.locator('#request')).toContainText('not a second computation on another replica');
-    await expect(page.locator('#status')).toContainText('v0.1.0 is the first release');
+    await expect(page.locator('#status')).toContainText(`${release.version} is early software that works`);
+    await expect(page.locator('#status')).not.toContainText('v0.1.0 is the first release');
+    // Every known issue in the release notes is on the page.
+    await expect(page.locator('#known-issues li')).toHaveCount(6);
+    await expect(page.locator('#known-issues')).toContainText('Job Sites cannot yet copy between machines.');
+    await expect(page.locator('#known-issues')).toContainText('its memory fit is unknown');
+    await expect(page.locator('#status')).toContainText('Strata, experimental');
+    await expect(page.locator('#status')).toContainText('has not run on a physical Mac');
     await expect(page.locator('#status')).toContainText('actual local models');
     await expect(page.locator('#status')).toContainText('not full vendor API parity');
-    // alpha.3: per-node token keys replaced the install-wide signing key.
     await expect(page.locator('#status')).toContainText('this is not a production-readiness claim');
-    await expect(page.locator('#status')).toContainText('An alpha.6, alpha.5 or alpha.4 install updates from the console');
-    // alpha.6: web search, and apps that sign in with Eugene.
-    await expect(page.locator('#status')).toContainText('web search run by your install');
+    await expect(page.locator('#status')).toContainText('A v0.1.0 install updates from the console, the control root first');
+    await expect(page.locator('#status')).not.toContainText(/alpha\.[3-6] install/);
+    await expect(page.locator('#status')).toContainText('Web search is run by your install');
     await expect(page.locator('#status')).toContainText('Apps and sign-in');
-    await expect(page.locator('#status')).toContainText('an alpha.3 install upgrades in place');
-    // alpha.5: the new doors and provider accounts are named with their limit.
+    await expect(page.locator('#status')).toContainText('x-eugene-plexus-ignored-settings');
+    // Anthropic documents and structured output are carried since v0.2.0.
+    await expect(page.locator('#status')).not.toContainText('document blocks, hosted tools and MCP servers are rejected');
+    await expect(page.locator('#status')).toContainText('PDF or text documents');
     await expect(page.locator('#status')).toContainText('speech, transcription and translation');
     await expect(page.locator('#status')).toContainText('only to a model that says it can do the job');
     await expect(page.locator('#status')).toContainText('Updates and logs');
     await expect(page.locator('#status')).toContainText('its own Ed25519 token key');
     await expect(page.locator('#status')).not.toContainText('legacy signing');
-    await expect(page.locator('#status')).toContainText('Codex CLI');
+    await expect(page.locator('#status')).toContainText('Codex');
     await expect(page.locator('#status')).toContainText('Explicit app settings win');
     await expect(page.locator('#measurements')).toHaveCount(0);
     await expect(page.locator('main')).not.toContainText(/3\.2 ms|172 ms|2\.5 s|21 s vs 266 s/);
@@ -232,7 +242,7 @@ test('the architecture page explains the layers and stays inside the viewport', 
     await page.screenshot({ path: testInfo.outputPath('architecture.png'), fullPage: true });
     await page.locator('#status').screenshot({ path: testInfo.outputPath('boundaries.png') });
     await page.getByRole('link', { name: 'What it does' }).click();
-    await expect(page.getByRole('heading', { level: 1 })).toHaveText('Eugene Plexus.');
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText('Everything Eugene does, in one place.');
 });
 
 test('a casual visitor sees what it does, what it looks like and what it needs', async ({ page }) => {
@@ -276,8 +286,9 @@ test('a casual visitor sees what it does, what it looks like and what it needs',
         expect(rim.behindFill, `${mark} rim sits outside the silhouette`).toBe('stroke');
     }
     await expect(page.locator('#uses .use h3')).toHaveText([
-        'Chat privately on your PC', 'Use it from your phone', 'Power your coding tools', 'Keep what you already run',
+        'Chat privately on your PC', 'Ask your own documents', 'Use it from your phone', 'Power your coding tools', 'Keep what you already run', 'Work on your own machines',
     ]);
+    await expect(page.locator('#uses').getByRole('link', { name: 'Everything it does' })).toHaveAttribute('href', '/features');
     const shots = page.locator('#see figure img');
     await expect(shots).toHaveCount(3);
     for (const image of await shots.all()) {

@@ -33,13 +33,27 @@ const poses = {
   welcome: {
     title: 'Eugene waves hello',
     description: 'The familiar glasses, swept hair and smile, with an apricot overshirt, blue trousers and an open hand raised in welcome.',
+    // He waves twice from the shoulder, the hand flicking at the wrist, then
+    // rests and blinks. Pivots are drawing points: the shoulder (205 188), the
+    // wrist (253 133) and the neck (160 160).
+    motion: `
+      .arm { transform-origin: 205px 188px; animation: arm 6s ease-in-out infinite; }
+      .hand { transform-origin: 253px 133px; animation: hand 6s ease-in-out infinite; }
+      .head { transform-origin: 160px 160px; animation: head 6s ease-in-out infinite; }
+      @keyframes arm { 0%, 34%, 100% { transform: rotate(0deg); } 7%, 21% { transform: rotate(-7deg); } 14%, 28% { transform: rotate(4deg); } }
+      @keyframes hand { 0%, 34%, 100% { transform: rotate(0deg); } 7%, 21% { transform: rotate(-9deg); } 14%, 28% { transform: rotate(7deg); } }
+      @keyframes head { 0%, 40%, 100% { transform: rotate(0deg); } 12%, 28% { transform: rotate(-2deg); } }`,
     artwork: `${body}
       ${sleeve('M118 174 Q100 175 92 203 L84 233 L105 241 L126 198')}
       ${hand('M84 230 Q75 235 79 245 L88 256 Q94 262 99 256 L107 244 L105 235')}
+      <g class="arm">
       ${sleeve('M199 174 Q218 171 230 156 L243 128 L263 138 L249 176 Q233 198 211 205')}
+      <g class="hand">
       ${hand('M244 137 L239 120 L231 109 Q227 103 232 100 Q236 98 241 105 L246 112 L240 88 Q239 82 244 81 Q249 80 251 87 L257 106 L255 78 Q255 72 260 72 Q265 72 265 79 L266 104 L270 84 Q272 78 277 80 Q281 81 279 88 L276 111 L282 100 Q285 95 289 99 Q292 102 288 110 L277 133 Q273 142 261 143 Z')}
       <g fill="none" stroke="#7fb0cf" stroke-width="3" stroke-linecap="round"><path d="M283 62 L290 54 M299 82 L309 78"/></g>
-      ${headAt(-4)}`,
+      </g>
+      </g>
+      <g class="head">${headAt(-4)}</g>`,
   },
   guide: {
     title: 'Eugene shows the next step',
@@ -93,12 +107,23 @@ const poses = {
 };
 
 mkdirSync(new URL('public/mascots/', root), { recursive: true });
-for (const [pose, { title, description, artwork }] of Object.entries(poses)) {
+// Motion is CSS inside each file, so it plays in an <img>. Moving parts sit in
+// top-level groups and pivot about drawing points (view-box), the eyes blink
+// about their own centre (fill-box), and reduced motion shows the still pose.
+// The reduced-motion rule needs !important: the part rules are more specific.
+const motionStyle = (motion) => `<style>
+      .arm, .hand, .head { transform-box: view-box; }
+      #left-eye, #right-eye { transform-box: fill-box; transform-origin: center; animation: blink 6s infinite; }
+      @keyframes blink { 0%, 55%, 59%, 100% { transform: scaleY(1); } 57% { transform: scaleY(.12); } }${motion}
+      @media (prefers-reduced-motion: reduce) { * { animation: none !important; } }
+    </style>`;
+
+for (const [pose, { title, description, artwork, motion }] of Object.entries(poses)) {
   const svg = `<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" width="320" height="320" viewBox="0 0 320 320" role="img" aria-labelledby="title description">
   <title id="title">${title}</title>
   <desc id="description">${description}</desc>
-  <defs>${defs}</defs>
+  <defs>${defs}</defs>${motion ? `\n  ${motionStyle(motion)}` : ''}
   ${artwork}
 </svg>
 `;

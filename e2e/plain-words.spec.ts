@@ -49,7 +49,7 @@ function offences(texts: string[]): string[] {
     return found;
 }
 
-for (const path of ['/', '/install']) {
+for (const path of ['/', '/install', '/features', '/workbench', '/job-sites', '/guides']) {
     test(`casual copy on ${path} uses plain words`, async ({ page }) => {
         await page.goto(path);
         const texts = await plainCopy(page);

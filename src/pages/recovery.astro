@@ -8,7 +8,7 @@ const revision = release.specsCommit;
 const source = `https://github.com/eugene-plexus/specs/blob/${revision}`;
 ---
 
-<SiteLayout title="Backup and recovery | Eugene Plexus" description="Prepare a backup before updating Eugene Plexus and recover from a failed update. Includes updating from alpha.6, alpha.5, alpha.4 and alpha.3, the fresh install from alpha.2, alpha.1 upgrade precautions and encrypted checkpoints.">
+<SiteLayout title="Backup and recovery | Eugene Plexus" description={`Make a checkpoint before updating Eugene Plexus, and recover from a failed update on Windows or in a container. Includes moving from v0.1.0 to ${release.version}, and from an alpha.`}>
   <article class="container recovery-page">
     <header>
       <p class="eyebrow">Keep your installation recoverable</p>
@@ -18,13 +18,15 @@ const source = `https://github.com/eugene-plexus/specs/blob/${revision}`;
 
     <aside class="version-notice" aria-labelledby="version-title">
       <h2 id="version-title">Start with your installed version</h2>
-      <p><strong>Moving from v0.1.0 to {release.version}:</strong> make a checkpoint, then update the control root first and every other machine after it. A checkpoint made on v0.1.0 restores v0.1.0. What v0.1.0 saved is converted at the first start, and the old files are kept beside it.</p>
-      <p><strong>Moving from v0.1.0-alpha.6, alpha.5 or alpha.4 to v0.1.0:</strong> make a checkpoint, then run v0.1.0's install command on each machine (see <a href="/install#update">Update</a>); the console would skip v0.1.0. A checkpoint restores the version it was made on: one made on alpha.6 restores alpha.6. <strong>An update from the console does not make a checkpoint for you</strong>; make one first.</p>
-      <p><strong>Moving from v0.1.0-alpha.3:</strong> an update in place: run v0.1.0's install command, after making a checkpoint. A checkpoint made on alpha.3 restores alpha.3.</p>
-      <p><strong>Moving from v0.1.0-alpha.2:</strong> a fresh install, not an update, because alpha.3 changed how machines prove who they are and nothing converts the old keys. A checkpoint made on alpha.2 restores alpha.2; keep it if you may go back. Follow <a href="https://github.com/eugene-plexus/specs/blob/main/docs/releases/v0.1.0-alpha.3.md#moving-from-alpha2">Moving from alpha.2</a> in the alpha.3 release notes.</p>
-      <p><strong>Upgrading from v0.1.0-alpha.1:</strong> the encrypted checkpoint helper below requires a newer agent and will refuse alpha.1. Before your first upgrade, stop the installation and its child processes, then keep a protected, complete copy of its installation and state, including Python and the virtual environment. Keep model files and any external engine environments separately. Restoring this older copy requires its original absolute paths.</p>
-      <p><strong>The published release ({release.version}) and A7-capable development builds:</strong> follow the checkpoint procedure below. After upgrading from alpha.1, create and rehearse a checkpoint before relying on it for a later update.</p>
-      <p><strong>Apps installed from the console, such as Workbench:</strong> on a Linux system install, a checkpoint does not include an app's data, so Workbench's chats are not in it, and nobody has checked it with an app installed on Windows. See <a href="https://github.com/eugene-plexus/specs/issues/11">specs #11</a>.</p>
+      <p><strong>Moving from v0.1.0 to {release.version}:</strong> make a checkpoint first; <strong>an update from the console does not make a checkpoint for you</strong>. Then update the control root, and every other machine after it (<a href="/guides/update-from-v0-1-0">the update guide</a>). What v0.1.0 saved is converted at the first start, and each converted file keeps a <code>.v0.1.bak</code> copy beside it. A checkpoint made on v0.1.0 restores v0.1.0.</p>
+      <p><strong>The published release ({release.version}):</strong> follow the checkpoint procedure below. A checkpoint includes installed apps' own data, such as Workbench's chats.</p>
+      <details>
+        <summary>Coming from an alpha</summary>
+        <p><strong>Moving from v0.1.0-alpha.6, alpha.5 or alpha.4 to v0.1.0:</strong> make a checkpoint, then run v0.1.0's install command on each machine (see <a href="/install#update">Update</a>); the console would skip v0.1.0. A checkpoint restores the version it was made on: one made on alpha.6 restores alpha.6.</p>
+        <p><strong>Moving from v0.1.0-alpha.3:</strong> an update in place: run v0.1.0's install command, after making a checkpoint. A checkpoint made on alpha.3 restores alpha.3.</p>
+        <p><strong>Moving from v0.1.0-alpha.2:</strong> a fresh install, not an update, because alpha.3 changed how machines prove who they are and nothing converts the old keys. A checkpoint made on alpha.2 restores alpha.2; keep it if you may go back. Follow <a href="https://github.com/eugene-plexus/specs/blob/main/docs/releases/v0.1.0-alpha.3.md#moving-from-alpha2">Moving from alpha.2</a> in the alpha.3 release notes.</p>
+        <p><strong>Upgrading from v0.1.0-alpha.1:</strong> the encrypted checkpoint helper below requires a newer agent and will refuse alpha.1. Before your first upgrade, stop the installation and its child processes, then keep a protected, complete copy of its installation and state, including Python and the virtual environment. Keep model files and any external engine environments separately. Restoring this older copy requires its original absolute paths. After upgrading, create and rehearse a checkpoint before relying on it for a later update.</p>
+      </details>
       <p>The <a href="/install">public installation commands</a> install {release.version}. Installing older software over newer state is not a rollback.</p>
     </aside>
 
@@ -38,7 +40,7 @@ const source = `https://github.com/eugene-plexus/specs/blob/${revision}`;
     <div class="guide"><RecoveryGuide /></div>
 
     <footer class="guide-source">
-      <p>This procedure was reviewed on September 29, 2026, for alpha.5. v0.1.0 adds one thing: a checkpoint keeps installed apps' own data, such as Workbench's chats. <a href={`${source}/docs/recovery.md`}>View its source revision</a> and <a href={`${source}/docs/acceptance/a7-recovery-run.md`}>the Windows and container recovery checks</a>. These checks used isolated installations and real CPU inference; they do not establish recovery on every hardware or storage setup.</p>
+      <p>This is the procedure as it stands in {release.version} (<a href={`${source}/docs/recovery.md`}>its source</a>). <a href={`${source}/docs/acceptance/a7-recovery-run.md`}>The Windows and container recovery checks</a> ran on alpha.5 with isolated installations and real CPU inference; checkpoints have kept installed apps' own data since v0.1.0. The checks do not establish recovery on every hardware or storage setup.</p>
       <p class="with-face"><Face size={36} /><span>Need help? <a href="https://github.com/eugene-plexus/specs/issues/new">Report a problem</a> with your version, operating system, failed step and error text. Keep backup files, passphrases, API keys and private logs out of public reports.</span></p>
     </footer>
   </article>
@@ -54,6 +56,8 @@ const source = `https://github.com/eugene-plexus/specs/blob/${revision}`;
   .recovery-page :global(a) { color: var(--accent-left); text-underline-offset: .2em; }
   .version-notice { margin-block: 2rem; padding: 1rem 1.25rem; background: var(--panel-soft); border-left: 3px solid var(--accent-left); }
   .version-notice h2 { margin-top: 0; }
+  .version-notice details { margin-block: 1rem; }
+  .version-notice summary { cursor: pointer; font-weight: 600; }
   .recovery-nav { display: flex; flex-wrap: wrap; gap: .75rem 1.25rem; margin-block: 2rem; }
   .guide { border-top: 1px solid var(--border); padding-top: 1rem; }
   .guide :global(code) { font-family: var(--font-mono); font-size: .875em; overflow-wrap: anywhere; }

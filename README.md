@@ -6,7 +6,7 @@ The public project website for **Eugene Plexus**, a self-hosted control plane fo
 - Production domain: <https://eugeneplexus.com>
 - Stack: Astro, TypeScript, self-hosted Inter and JetBrains Mono, Lucide icons.
 - Hosting: GitHub Pages. The build produces static files in `dist/`; no server, database, or platform service is required to serve them.
-- Status: v0.1.0-alpha.6 for early testing, 2026-10-01. No stable release yet. Deployment is manual.
+- Status: v0.2.0, released 2026-10-13: early software, with known limits. Deployment is manual.
 
 ## Development
 
@@ -55,7 +55,9 @@ payload. Do not replace immutable existing installer assets to enable this copy.
 | [src/data/first-search-chat.json](src/data/first-search-chat.json) and [src/content/first-search/](src/content/first-search/) | That chat as Workbench exported it (ids, owner and model file name removed), and each answer as Markdown. Never edit either: `e2e/first-search.spec.ts` checks they agree word for word |
 | [src/pages/404.astro](src/pages/404.astro)                     | GitHub Pages 404 page                                                    |
 | [src/pages/licenses.txt.ts](src/pages/licenses.txt.ts)         | Build-time generation of bundled font and icon license notices           |
-| [public/sitemap.xml](public/sitemap.xml)                       | Public page index; update when adding pages                              |
+| [src/pages/sitemap.xml.ts](src/pages/sitemap.xml.ts)           | Sitemap, generated from `public-pages.json`                              |
+| [src/pages/guides/](src/pages/guides/) and [src/content/guides/](src/content/guides/) | `/guides` and one page per guide. A guide is a Markdown file plus its line (with a `group`) in `public-pages.json`; either without the other fails the build |
+| [src/data/docs-revision.json](src/data/docs-revision.json)     | The specs commit whose linked docs (support matrix, uninstall, application workflows, container guides) describe the release; installers stay on the release's own commit |
 | [src/pages/llms.txt.ts](src/pages/llms.txt.ts)                   | AI/text index with release-pinned documentation and API links |
 | [src/data/public-pages.json](src/data/public-pages.json)         | Public guides included in the AI index and Markdown export |
 | [integrations/markdown-guides.mjs](integrations/markdown-guides.mjs) | Build-time HTML-to-Markdown conversion of the public guides |
@@ -71,18 +73,18 @@ Never hand-edit or copy installers into `public/`. Publish and verify the GitHub
 prerelease assets before deploying the site. A new release needs its own manifest
 and versioned paths; retain old manifests/routes when adding later versions so
 existing commands remain available. Engine/model downloads and Python dependencies
-are upstream-selected; only Eugene source revisions are fixed by this manifest.
+are upstream-selected; the manifest fixes Eugene's source revisions and hashes the Python dependencies.
 
 The recovery page includes the full procedure without a runtime dependency on
 GitHub or a working Eugene installation. `src/content/recovery.md` is a snapshot
-of specs `docs/recovery.md` at `ee3acf1466a160bb2c0abe6b69dc66dd2de0f6b2` (v0.1.0-alpha.6), with
+of specs `docs/recovery.md` at `1fd8ab559f7f0ee83d0057735de56990911fe6ea` (v0.2.0), with
 its first heading supplied by the page and its helper link made absolute to that
 revision. Update the snapshot and the page's source revision together after
 reviewing future procedure changes. Alpha.2 includes the recovery guard; retain
 the separate alpha.1 cold-copy instructions for its first upgrade.
 `src/data/archived-releases.json` preserves earlier manifests and installer URLs.
 
-The [direction document](https://github.com/eugene-plexus/specs/blob/main/docs/design/local-inference-control-plane.md) defines the positioning; the [release roadmap](https://github.com/eugene-plexus/specs/blob/main/docs/design/release-roadmap.md) owns the work order. Older README and milestone summaries can lag behind completed work. Use dated implementation and acceptance records for current claims. The training direction is retired. Do not restore a training pipeline or promote planned features as available. Keep the pre-release notice until a public platform release actually exists.
+The [direction document](https://github.com/eugene-plexus/specs/blob/main/docs/design/local-inference-control-plane.md) defines the positioning; the [audience roadmap](https://github.com/eugene-plexus/specs/blob/main/docs/design/audience-roadmap.md) owns the work order. Older README and milestone summaries can lag behind completed work. Use dated implementation and acceptance records for current claims. The training direction is retired. Do not restore a training pipeline or promote planned features as available. Keep "early software, with known limits" and every experimental label until a release record says otherwise.
 
 ### Copy Evidence
 
@@ -102,6 +104,22 @@ The 2026-09-19 refresh keeps the existing Modern design and updates the homepage
 | Profile benchmarks and remaining usability work | [Roadmap R6](https://github.com/eugene-plexus/specs/blob/main/docs/design/release-roadmap.md); profile context-depth benchmarks shipped, usability work remains; no release forecast |
 | Timing evidence and its limits | [Control-plane measurement record](https://github.com/eugene-plexus/specs/blob/main/docs/acceptance/control-plane-measurements.md); historical observations, not current-version or competitor benchmarks |
 
+The 2026-10-13 overhaul for v0.2.0 (specs `docs/design/a10-website-overhaul.md`) adds `/features`, `/workbench`, `/job-sites` and `/guides`:
+
+| Claim | Source and boundary |
+| --- | --- |
+| Every v0.2.0 feature named on the site | [v0.2.0 release notes](https://github.com/eugene-plexus/specs/blob/1fd8ab559f7f0ee83d0057735de56990911fe6ea/docs/releases/v0.2.0.md); nothing from the roadmap |
+| The six known issues | The notes' Known issues, each on its feature's section and all on `/architecture#status` |
+| Memory, documents, saved documents, folders, the sorter | MR1, MR2, MR4, MR5, MR7, MR6b records: a real Workbench and llama.cpp on the processor with a small model; the owner's live run is owed, and the pages say so |
+| Search models, `/v1/rerank`, Open WebUI document search | MR3 and MR6 records |
+| Per-engine eligibility and fit, hub sources, Delete | LS1, LS2, LS4, LS6 and LS8 records: header-only fixtures and stand-in hubs |
+| Strata ran a 68 GB model on an RTX 5090 | LS5 record, 18 of 19; experimental, with the notes' four limits |
+| Job Sites | Slice 1, 2 and 2b records, J14a and J14b; limits from the support matrix |
+| Warm standby; switching over is not in the console | Warm standby record; warm-standby design §3.5 |
+| Anthropic documents and structured output carried; server tools refused in Claude Code's retry wording | gateway `7b9a4c4` `anthropic.py`, and specs `docs/api-compatibility.md` corrected on main |
+| v0.1.0 to v0.2.0 update on a Linux system install | [v0.2.0 release run](https://github.com/eugene-plexus/specs/blob/main/docs/acceptance/v0.2.0-release-run.md) |
+| Labels in the guides | Read from ui `a483c9e` and Workbench `d5aad5f` on 2026-10-13 |
+
 On 2026-09-20, the standalone numbers section was removed. The records above remain technical evidence, linked from Current boundaries, rather than public-facing benchmarks. Prominent metrics must answer a prospective user's question with a relevant baseline; internal improvements and isolated hardware timings are not enough. Site publication remains the manual Pages workflow; a website refresh is not a platform release.
 
 The website is independent of the running platform. It makes no API calls to an installation, loads its fonts and icons locally, and has no analytics or contact-form backend. A future server-side feature would require a separate service because GitHub Pages does not run application backends.
@@ -115,14 +133,14 @@ It links to Markdown copies of the five public pages and to release-pinned upstr
 documentation and OpenAPI contracts. Development roadmap links are explicitly
 separate from released behavior. Release versions come from `alpha-release.json`.
 
-The `markdown-guides` Astro integration generates `/index.md`, `/install/index.md`,
-`/architecture/index.md`, `/recovery/index.md`, and `/principles/index.md` from each
-built page's `<main>` content. Edit the original pages, not generated Markdown.
+The `markdown-guides` Astro integration generates an `index.md` beside every page
+in `public-pages.json` (for example `/install/index.md`) from each built page's
+`<main>` content. Edit the original pages, not generated Markdown.
 Navigation, controls, and decorative icons are omitted; commands, tables, closed FAQ
 answers, warnings, and image descriptions are retained. Links become absolute URLs
 and each export identifies its human-readable source page. The build fails if a
-configured page cannot be read or has no main heading. Add future guides to both
-`public-pages.json` and the sitemap.
+configured page cannot be read or has no main heading. A page in
+`public-pages.json` is in the sitemap and `/llms.txt` too.
 
 Markdown exports are production build artifacts: use `npm run build` and
 `npm run preview` to inspect them, rather than the Astro development server.

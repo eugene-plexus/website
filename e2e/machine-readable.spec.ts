@@ -1,6 +1,8 @@
 import { expect, test } from '@playwright/test';
 import { pageMarkdown } from '../integrations/markdown-guides.mjs';
 import release from '../src/data/alpha-release.json' with { type: 'json' };
+import docs from '../src/data/docs-revision.json' with { type: 'json' };
+import pages from '../src/data/public-pages.json' with { type: 'json' };
 
 // These are content/HTTP checks; the existing suite checks layout at every width.
 test.beforeEach(({}, testInfo) => {
@@ -14,12 +16,16 @@ test('the AI index leads to readable, current guides for every public page', asy
     expect(index).toMatch(/^# Eugene Plexus\n/);
     expect(index).toContain(`Published release: ${release.version}`);
     expect(index).toContain(`Published release: ${release.version}, early software, with known limits.`);
-    expect(index).toContain(`${release.specsCommit}/docs/support-matrix.md`);
+    expect(index).toContain(`${docs.commit}/docs/support-matrix.md`);
+    expect(index).toContain('audience-roadmap.md');
+    expect(index).not.toContain('adoption-roadmap.md');
     expect(index).toContain(`${release.specsCommit}/openapi/gateway.yaml`);
     expect(index).toContain('roadmap describes development plans');
 
     const sitemap = await (await request.get('/sitemap.xml')).text();
     const urls = Array.from(sitemap.matchAll(/<loc>(.*?)<\/loc>/g), match => new URL(match[1]));
+    // The sitemap is generated from the same list as the index: every public page, once.
+    expect(urls.map(url => url.pathname)).toEqual(pages.map(page => page.path));
     for (const url of urls) {
         const markdownUrl = `${url.pathname.replace(/\/$/, '')}/index.md`;
         expect(index).toContain(`https://eugeneplexus.com${markdownUrl}`);

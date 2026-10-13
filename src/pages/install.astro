@@ -4,6 +4,7 @@ import Face from '../components/Face.astro';
 import Mascot from '../components/Mascot.astro';
 import InstallCommand from '../components/InstallCommand.astro';
 import release from '../data/alpha-release.json';
+import docs from '../data/docs-revision.json';
 const base = `https://eugeneplexus.com/releases/${release.version}`;
 const windows = `irm ${base}/install.ps1 | iex`;
 const posix = `curl -fsSL ${base}/install.sh | sh`;
@@ -12,7 +13,9 @@ const uninstallPosix = `curl -fsSL ${base}/install.sh | sh -s -- --uninstall`;
 // Set only when the published installer assets include the offline utilities.
 const offlineRemoval = Boolean((release as { offlineRemoval?: boolean }).offlineRemoval);
 const notes = `https://github.com/eugene-plexus/specs/releases/tag/${release.version}`;
-const containerGuide = `https://github.com/eugene-plexus/specs/blob/${release.specsCommit}/docs/deployment/container.md`;
+// Guides the site links are read at the commit that brought them up to the release.
+const guides = `https://github.com/eugene-plexus/specs/blob/${docs.commit}/docs`;
+const containerGuide = `${guides}/deployment/container.md`;
 const compose = `name: eugene-plexus
 
 services:
@@ -87,7 +90,7 @@ const choices = [
       <details>
         <summary>More detail before you install</summary>
         <ul>
-          <li>Windows x64 and Linux x64/WSL have been exercised; other hardware has less verification. See the <a href={`https://github.com/eugene-plexus/specs/blob/${release.specsCommit}/docs/support-matrix.md`}>tested configurations</a>.</li>
+          <li>Windows x64 and Linux x64/WSL have been exercised; other hardware has less verification. See the <a href={`${guides}/support-matrix.md`}>tested configurations</a>.</li>
           <li>Linux needs <code>curl</code> and a systemd user session.</li>
           <li>For Docker / NAS, use an Intel or AMD 64-bit Linux host with Docker Engine and Compose v2, plus a separate Windows or Linux machine to run models. The published container is Linux amd64; ARM NAS hardware is not covered.</li>
           <li>Start with a local model folder. The Windows service runs as the system, so your mapped network drives and saved file-server logins are not inherited. Network storage can be added later under Settings → Model storage on each machine.</li>
@@ -109,7 +112,7 @@ const choices = [
       </ol>
       <p class="expect-help" data-plain><Face size={28} /><span>Nothing opens, or you see a red error? Check <a href="#help">If something goes wrong</a>.</span></p>
       <p>The default install lives in <code>C:\ProgramData\EugenePlexus</code> and runs as a Windows service, so it starts with the computer. If PowerShell was already running as administrator, the last line says <code>Eugene Plexus is running</code> instead.</p>
-      <p>If you already have an older per-user installation, the installer will explain the migration before making changes. Read that message and keep your passphrase available; this first-time guide does not automatically migrate an existing setup.</p>
+      <p>If an older per-user install is on this computer, the installer explains the move before it changes anything. Keep your passphrase at hand.</p>
     </section>
 
     <section id="linux" aria-labelledby="linux-title">
@@ -129,7 +132,7 @@ const choices = [
 
     <section id="docker" aria-labelledby="docker-title">
       <h2 id="docker-title">1. Install with Docker / NAS</h2>
-      <p>This runs the console, control root, gateway and model library on your NAS or Linux server. Since alpha.3, the container can also run models itself, on its processor or on a passed-through NVIDIA card, which you turn on. <strong>The container's GPU path has not been checked on physical hardware yet</strong>; the tested way to run models on a GPU is to join a Windows or Linux worker, below.</p>
+      <p>This runs the console, control root, gateway and model library on your NAS or Linux server. The container can also run models itself, on its processor or on a passed-through NVIDIA card, which you turn on. <strong>The container's GPU path has not been checked on physical hardware yet</strong>; the tested way to run models on a GPU is to join a Windows or Linux worker, below.</p>
       <p>Use this example for a <strong>new install</strong>. If Eugene already runs on your NAS, follow <a href="#update">Update</a> and keep its existing storage and ports.</p>
 
       <h3>Prepare persistent storage</h3>
@@ -164,6 +167,7 @@ const choices = [
       <p>On Windows, approve the administrator prompt. On Linux, run as your normal user. Check that Machines reports the worker as reachable. The worker must reach the NAS ports above, and the NAS must reach the worker's agent, normally port <code>8079</code>.</p>
       <p>Share the host model folder over SMB or NFS and make it readable on the worker. Under <strong>Settings → Model storage on each machine</strong>, map <code>/models</code> on that worker to its path to the same files. A Windows service needs its own file-server login there too; a mapped desktop drive is not enough.</p>
       <p>In Library, select the worker as the launch target, choose or download a model, and start it there. When it is ready, try Playground using <strong>Through this agent</strong>. For a direct connection or another app, use <code>http://NAS-IP:8280/v1</code> and an application key from <strong>Use it from your apps</strong> on the Home page. The container's internal port <code>8080</code> is not the published API port in this example.</p>
+      <p><strong>Workbench on the NAS:</strong> install it under <strong>Apps</strong> on the container's machine. To reach it and the console through one HTTPS port with their own names, follow <a href="/guides/container-https">Serve the container on one HTTPS port</a>; the three ports above keep working.</p>
       <p><strong>After a container restart:</strong> sign in to the NAS console to unlock the control root; if your browser is already signed in, sign out and back in. A healthy container can still be locked. See <a href={`${containerGuide}#unattended-unlock`}>unattended unlock</a> for optional startup with a mounted passphrase file.</p>
     </section>
 
@@ -182,13 +186,14 @@ const choices = [
         <li><strong>On the Home page, choose Download and run.</strong> Eugene proposes a model for this machine. Check the download size and approve the engine installation when asked. If a model is already on disk, choose Run.</li>
         <li><strong>Wait for the model to be ready, then send a message.</strong> Downloads and loading appear in Tasks. The first download can be several gigabytes.</li>
       </ol>
-      <p>To connect another app, use <strong>Use it from your apps</strong> on the Home page. Make a client key, then copy the address, model name and key into your app. Keep the key private. There are <a href={`https://github.com/eugene-plexus/specs/blob/${release.specsCommit}/docs/application-workflows.md`}>step-by-step recipes for Open WebUI and Claude Code</a>.</p>
+      <p>To connect another app, use <strong>Use it from your apps</strong> on the Home page. Make a client key, then copy the address, model name and key into your app. Keep the key private. The console writes the setup for each app; see <a href="/guides/connect-codex-and-claude-code">Connect Codex or Claude Code</a>.</p>
+      <p>Want a chat app of your own? <a href="/guides/install-workbench">Install Workbench</a> from <strong>Apps</strong>.</p>
       <p>To try your phone, turn on the switch in <strong>Reach it from other devices</strong> on the Home page, and use the address it shows. Keep both devices on a trusted LAN or VPN; <code>127.0.0.1</code> always means the device you are currently using. Finish setup before enabling access from other devices.</p>
     </section>
 
     <section id="update" aria-labelledby="update-title">
       <h2 id="update-title">Update or repair an install</h2>
-      <p><strong>From v0.1.0, update from the console: the control root first, then every other machine.</strong> A machine left on v0.1 will not work with a v0.2 root. <strong>Machines → Versions</strong> shows what each machine runs and whether a newer version is out, and updates any machine from whichever console you have open. Eugene checks GitHub for a newer version a minute after it starts and every six hours, and installs only when you press Update. <strong>Settings → Updates</strong> turns the check off or changes the channel.</p>
+      <p><strong>From v0.1.0, update from the console: the control root first, then every other machine.</strong> A machine left on v0.1 will not work with a v0.2 root. <a href="/guides/update-from-v0-1-0">The update guide</a> has the steps, and what to do after. <strong>Machines → Versions</strong> shows what each machine runs and whether a newer version is out, and updates any machine from whichever console you have open. Eugene checks GitHub for a newer version a minute after it starts and every six hours, and installs only when you press Update. <strong>Settings → Updates</strong> turns the check off or changes the channel.</p>
       <p><strong>From an alpha, move to v0.1.0 first:</strong> run v0.1.0's install command on each machine (<code>irm https://eugeneplexus.com/releases/v0.1.0/install.ps1 | iex</code> on Windows, <code>curl -fsSL https://eugeneplexus.com/releases/v0.1.0/install.sh | sh</code> on Linux), then update. An alpha's console would skip v0.1.0. Alpha.2 or earlier needs a fresh install; see the <a href="https://github.com/eugene-plexus/specs/blob/main/docs/releases/v0.1.0-alpha.3.md#moving-from-alpha2">alpha.3 release notes</a>.</p>
       <p><a href="/recovery">Read the backup and recovery guide before updating.</a> Create and rehearse a checkpoint once your install is set up.</p>
       <p>These versioned commands stay on <strong>{release.version}</strong>; they do not silently follow development changes. Do not run an older installer over a newer installation.</p>
@@ -210,7 +215,7 @@ const choices = [
       <InstallCommand id="windows-remove" command={uninstallWindows} label="Windows removal command" />
       <p>On Linux or Mac, use your normal terminal account:</p>
       <InstallCommand id="posix-remove" command={uninstallPosix} label="Linux and Mac removal command" />
-      {offlineRemoval ? <p>On Windows and Mac, these commands remove the software and startup registration while keeping settings, app data and downloads. The retained folder includes an offline cleanup utility. Linux system removal preserves its installation folder. Custom installations need their original prefix.</p> : <p>These published commands remove startup registration and move the <strong>entire installation folder</strong> to a folder ending in <code>.removed-&lt;timestamp&gt;</code>. Python, installed packages, settings, app data and logs remain there. Downloaded engines and managed model copies are also kept. To reclaim space, review the locations printed by the command and delete only files you no longer want. Any original models inside the installation’s <code>models</code> folder move with it: keep or move those models before deleting the retained folder. Custom installations need their original prefix.</p>}
+      {offlineRemoval ? <p>On Windows, on a Mac and in a Linux per-user install, these commands remove the software and startup registration while keeping settings, app data and downloads. The retained folder includes an offline cleanup utility. Linux system removal preserves its installation folder. Custom installations need their original prefix.</p> : <p>These published commands remove startup registration and move the <strong>entire installation folder</strong> to a folder ending in <code>.removed-&lt;timestamp&gt;</code>. Python, installed packages, settings, app data and logs remain there. Downloaded engines and managed model copies are also kept. To reclaim space, review the locations printed by the command and delete only files you no longer want. Any original models inside the installation’s <code>models</code> folder move with it: keep or move those models before deleting the retained folder. Custom installations need their original prefix.</p>}
       <p>A cleanup warning means an item still needs attention. Read the final report before treating removal as complete. Shared operating-system dependencies, such as the Microsoft Visual C++ runtime, are kept.</p>
       <p>For Docker, run <code>docker compose down</code> from the project folder to stop and remove the container while retaining the state volume and model files. Do not add <code>--volumes</code> if you want to keep the install's identity and configuration.</p>
     </section>
@@ -222,7 +227,7 @@ const choices = [
         <dt>The first message says the model is still loading</dt>
         <dd>The Home page waits for model readiness before enabling Send. If another client connects while the model is loading, wait for Tasks to show it is ready before sending again. A “still coming up” response does not mean the model has crashed.</dd>
         <dt>The page does not open</dt>
-        <dd>Use the address printed by the installer, on the same computer. Read the final error and log location in the terminal. On Linux, check <code>systemctl --user status eugene-plexus-agent</code>; on Windows, look for <code>EugenePlexusAgent</code> in Services.</dd>
+        <dd>Use the address printed by the installer, on the same computer. Read the final error and log location in the terminal. On Linux, check <code>systemctl status eugene-plexus-agent</code>, adding <code>--user</code> for a per-user install; on Windows, look for <code>EugenePlexusAgent</code> in Services.</dd>
         <dt>The model will not start or is too slow</dt>
         <dd>Read the problem shown on the Home page and open Tasks for details. Try a smaller model or a shorter context. A memory-fit estimate is not a speed guarantee.</dd>
         <dt>A network folder is missing</dt>

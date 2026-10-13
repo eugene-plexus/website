@@ -28,10 +28,17 @@ test('a visitor can find, read and copy the versioned installer', async ({ page,
     } else {
         // The release's installers embed the offline utility, so the page says the retained folder holds it.
         await expect(page.locator('#remove')).toContainText('The retained folder includes an offline cleanup utility');
+        await expect(page.locator('#remove')).toContainText('in a Linux per-user install');
         await expect(page.locator('#remove')).not.toContainText('entire installation folder');
         await expect(page.locator('#remove')).not.toContainText('Published release files have not been changed');
     }
     await expect(page.locator('#update')).toContainText('they do not silently follow development changes');
+    // v0.2.0: the default Linux install is a system service; per-user installs get the offline remover too.
+    await expect(page.locator('#help')).toContainText('systemctl status eugene-plexus-agent');
+    await expect(page.locator('#help')).toContainText('adding --user for a per-user install');
+    await expect(page.locator('#update').getByRole('link', { name: 'The update guide' })).toHaveAttribute('href', '/guides/update-from-v0-1-0');
+    await expect(page.locator('#docker').getByRole('link', { name: 'Serve the container on one HTTPS port' })).toHaveAttribute('href', '/guides/container-https');
+    await expect(page.locator('#docker')).not.toContainText('Since alpha');
     await expect(page.locator('#mac')).toContainText('physical Mac verification remains outstanding');
     for (const hash of await page.locator('.install-nav a').evaluateAll(links => links.map(link => (link as HTMLAnchorElement).hash.slice(1)))) {
         await expect(page.locator(`[id="${hash}"]`)).toHaveCount(1);
@@ -104,6 +111,8 @@ test('recovery distinguishes the first alpha upgrade from checkpoint-capable rel
         await expect(page.locator('.version-notice')).toContainText('Moving from v0.1.0-alpha.3');
         // An alpha goes to v0.1.0 by v0.1.0's own command: the console would skip
         // v0.1.0, and "the install command" now installs the current release.
+        // The alpha paths sit behind a disclosure; it opens without JavaScript too.
+        await page.locator('.version-notice summary').filter({ hasText: 'Coming from an alpha' }).click();
         const fromAlpha6 = page.locator('.version-notice p').filter({ hasText: 'Moving from v0.1.0-alpha.6, alpha.5 or alpha.4 to v0.1.0' });
         await expect(fromAlpha6).toContainText("make a checkpoint, then run v0.1.0's install command on each machine (see Update); the console would skip v0.1.0.");
         await expect(fromAlpha6.getByRole('link', { name: 'Update', exact: true })).toHaveAttribute('href', '/install#update');
@@ -117,6 +126,10 @@ test('recovery distinguishes the first alpha upgrade from checkpoint-capable rel
         await expect(page.locator('.version-notice')).toContainText('will refuse alpha.1');
         await expect(page.locator('.version-notice')).toContainText(`The published release (${release.version})`);
         await expect(page.locator('.version-notice')).toContainText('follow the checkpoint procedure below');
+        // The closed specs#11 claim contradicted the guide's own table; the footer dates the checks, not a review.
+        await expect(page.locator('.version-notice')).not.toContainText('specs #11');
+        await expect(page.locator('.version-notice')).toContainText('.v0.1.bak');
+        await expect(page.locator('.guide-source')).not.toContainText('reviewed on September 29');
         await expect(page.getByRole('heading', { name: 'Windows worker', exact: true })).toBeVisible();
         await expect(page.getByRole('link', { name: 'scripts/recovery.py', exact: true })).toHaveAttribute('href', `https://github.com/eugene-plexus/specs/blob/${release.specsCommit}/scripts/recovery.py`);
         expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)).toBe(true);

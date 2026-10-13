@@ -1,0 +1,94 @@
+---
+import { ArrowRight, ArrowUpRight } from '@lucide/astro';
+import Feature from '../components/Feature.astro';
+import Shot from '../components/Shot.astro';
+import SiteLayout from '../layouts/SiteLayout.astro';
+import release from '../data/alpha-release.json';
+import docs from '../data/docs-revision.json';
+
+const matrix = `https://github.com/eugene-plexus/specs/blob/${docs.commit}/docs/support-matrix.md`;
+---
+
+<SiteLayout title="Workbench | Eugene Plexus" description="Workbench is Eugene Plexus's chat app: memory you control, answers from your documents and folders with their sources, and tools you approve call by call. On your own machines.">
+  <div class="container product-page">
+    <header class="product-intro">
+      <p class="eyebrow">Workbench · {release.version}</p>
+      <h1>Your chats, your documents, your machines.</h1>
+      <p class="lead" data-plain>Workbench is Eugene's own chat app. It remembers what you ask it to, answers from your documents with their sources, and runs tools you approve.</p>
+      <p class="actions">
+        <a class="button button-primary" href="/guides/install-workbench">Install Workbench <ArrowRight size={17} aria-hidden="true" /></a>
+        <a class="text-link" href="/guides/workbench-documents-and-tools">Add documents and tools <ArrowRight size={17} aria-hidden="true" /></a>
+      </p>
+    </header>
+
+    <Feature id="memory" index="01" title="Memory you control" lead={'Say "Remember that…" and Workbench keeps a note. The Memory page shows every note, exports them, and deletes for real.'}>
+      <Fragment slot="shots">
+        <Shot name="workbench-memory" alt="Workbench’s Memory page: three notes, such as The garden’s plots are 4 by 8 feet, each marked Fact or Preference with Edit, Pin and Delete, a count of tokens and notes in use, and an Add a note box." />
+      </Fragment>
+      <ul>
+        <li>Each chat shows exactly what it sent the model.</li>
+        <li>A cloud model gets no notes unless you send them for that chat.</li>
+        <li>Each person's notes are their own.</li>
+      </ul>
+    </Feature>
+
+    <Feature id="documents" index="02" title="Answers from your documents" lead="Attach a PDF, a Word file, Markdown, text, CSV, HTML or code, and any model answers from it. The answer names the files." guides={['workbench-documents-and-tools']}>
+      <Fragment slot="shots">
+        <Shot name="workbench-document" alt="A Workbench chat with a four-page PDF attached and the question how often the compost bins are turned. The answer, Every Monday evening, names the file, and Sources lists the pages sent to the model and their size in tokens." />
+      </Fragment>
+    </Feature>
+
+    <Feature id="saved-documents" index="03" title="Saved documents and folders" lead="Keep documents, or grant a folder that stays in step, and Workbench searches them by words and by meaning, citing passages by file and page." guides={['workbench-documents-and-tools', 'run-search-models']} limits={['The sorter’s default Sort time (3 s) suits a GPU, where a question takes about 0.6 s, not a typical CPU, where it takes about 7 s. Its gain was measured on questions written for those documents.']}>
+      <Fragment slot="shots">
+        <Shot name="workbench-citation" alt="A Workbench answer from saved documents: the volunteer workday is the first Saturday of each month at 9 am, citing source 1. Sources lists three passages from two documents by file and pages, with the cited passage open and its matching words marked." />
+      </Fragment>
+      <ul>
+        <li>When a fast local result sorter runs, it puts the best passages first.</li>
+        <li>New, edited, deleted and moved files in a granted folder reach the next answer.</li>
+        <li>Searching by meaning uses a search model on your own machines.</li>
+      </ul>
+    </Feature>
+
+    <Feature id="tools" index="04" title="Tools, approved call by call" lead="Add shared or local MCP servers and folder tools. Each call waits for your approval in the chat." guides={['workbench-documents-and-tools']}>
+      <Fragment slot="shots">
+        <Shot name="workbench-approval" alt="A Workbench chat in which the model asked to call a tool named list_files on a documents folder server. The call shows Waiting for approval, its arguments, and Approve call and Decline buttons." />
+      </Fragment>
+      <ul>
+        <li>Shared MCP servers for everyone, local servers the owner adds, and folders the owner grants to a named person.</li>
+        <li>Each server's command or address, and each folder's path, has a Copy button.</li>
+        <li>MCP sign-in (OAuth), resources and prompts are not supported yet.</li>
+        <li>Want tools on another of your computers? Make it a <a href="/job-sites">Job Site</a>.</li>
+      </ul>
+    </Feature>
+
+    <Feature id="more" index="05" title="And everything around the chat" lead="Answer versions, web search with its sources, screens for images, speech, transcription and video, and a chat that reads well on a phone.">
+      <Fragment slot="shots">
+        <Shot name="workbench-phone" alt="Workbench on a phone-width screen: the answer about the volunteer workday, its three sources with the first marked Cited, and the message box with Attach, the model picker and Send." phone />
+      </Fragment>
+      <ul>
+        <li>Answer versions: <strong>Try again</strong> writes a new version of an answer, and every version is kept.</li>
+        <li>Web search shows each source's site, plus Google's Search Suggestions, unmodified, when Google searched.</li>
+        <li>Search chat names, drafts per chat, dropped files and pasted images, and a full Markdown export.</li>
+        <li>Thinking, then Writing the answer, with the backend's own live token count and speed when it reports them.</li>
+        <li>While a model works, Eugene works at the bench in short scenes, and holds still for reduced motion.</li>
+        <li>You sign in with Eugene, and each person added under People gets their own chats.</li>
+      </ul>
+    </Feature>
+
+    <details class="checked">
+      <summary>How we checked</summary>
+      <p>Memory, documents, saved documents, folders and the sorter each ran with a real Workbench and llama.cpp on the processor, with a small model; a run on the owner's own install is still owed. Tools ran on GitHub's Windows and Ubuntu runners with real service accounts and a scripted model. <a href={matrix}>The support matrix</a> has each record. <ArrowUpRight size={14} aria-hidden="true" /></p>
+    </details>
+  </div>
+</SiteLayout>
+
+<style>
+  .product-page { max-width: 1100px; padding-block: 4rem; }
+  .product-intro h1 { font-size: clamp(2rem, 5vw, 3.25rem); line-height: 1.12; letter-spacing: -.015em; margin-block: 1rem 1.25rem; }
+  .lead { max-width: 720px; font-size: 1.125rem; line-height: 1.7; color: var(--muted); }
+  .actions { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem 1.75rem; margin-block: 1.75rem 2.5rem; }
+  .checked { margin-top: 2rem; padding: 1rem 1.1rem; background: var(--panel-soft); border-radius: var(--radius); }
+  .checked summary { cursor: pointer; font-weight: 600; }
+  .checked p { line-height: 1.7; }
+  .checked a, .product-page :global(.feature-details-body a) { color: var(--accent-left); }
+</style>

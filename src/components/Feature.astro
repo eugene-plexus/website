@@ -1,0 +1,75 @@
+---
+import { ArrowRight, FlaskConical } from '@lucide/astro';
+import pages from '../data/public-pages.json';
+
+/**
+ * One feature: what it does for the reader in a line or two, its pictures,
+ * the details one click away, its guides, and its known limits in plain view.
+ * Slots: `shots` for screenshots, the default slot for the details.
+ */
+interface Props {
+    id: string;
+    title: string;
+    lead: string;
+    guides?: string[];
+    limits?: string[];
+    experimental?: boolean;
+    index?: string;
+}
+
+const { id, title, lead, guides = [], limits = [], experimental = false, index } = Astro.props;
+const linked = guides.map((slug) => {
+    const page = pages.find((entry) => entry.path === `/guides/${slug}`);
+    if (!page) throw new Error(`Feature ${id} links a guide that does not exist: ${slug}`);
+    return page;
+});
+const hasDetails = Astro.slots.has('default');
+---
+
+<section class="feature" id={id} aria-labelledby={`${id}-title`}>
+  <div class="feature-head">
+    {index && <p class="eyebrow"><span class="section-index">{index} /</span> {title}</p>}
+    <h2 id={`${id}-title`}>{title}{experimental && <span class="badge"><FlaskConical size={14} aria-hidden="true" /> Experimental</span>}</h2>
+    <p class="feature-lead" data-plain>{lead}</p>
+  </div>
+  <slot name="shots" />
+  {hasDetails && (
+    <details class="feature-details">
+      <summary>Details</summary>
+      <div class="feature-details-body"><slot /></div>
+    </details>
+  )}
+  {limits.length > 0 && (
+    <div class="feature-limits">
+      <p class="limits-label">Known limits</p>
+      <ul>{limits.map((limit) => <li>{limit}</li>)}</ul>
+    </div>
+  )}
+  {linked.length > 0 && (
+    <p class="feature-guides">
+      {linked.map((page) => <a href={page.path}>{page.title} <ArrowRight size={15} aria-hidden="true" /></a>)}
+    </p>
+  )}
+</section>
+
+<style>
+  .feature { padding-block: 3.5rem; border-top: 1px solid var(--border); scroll-margin-top: 5rem; }
+  .feature h2 { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem .75rem; font-size: clamp(1.6rem, 3.4vw, 2.25rem); line-height: 1.2; margin-block: .75rem 1rem; }
+  .feature-lead { max-width: 720px; font-size: 1.0625rem; line-height: 1.7; color: var(--muted); margin: 0; }
+  .badge { display: inline-flex; align-items: center; gap: .3rem; padding: .15rem .6rem; border: 1px solid var(--accent-right); border-radius: 999px; color: var(--accent-right); font-size: .8125rem; font-weight: 600; letter-spacing: 0; }
+  .feature-details { margin-top: 1.25rem; padding: 1rem 1.1rem; background: var(--panel-soft); border-radius: var(--radius); }
+  .feature-details summary { cursor: pointer; font-weight: 600; }
+  .feature-details-body :global(ul) { margin: .75rem 0 0; padding-left: 1.25rem; }
+  .feature-details-body :global(li) { line-height: 1.7; }
+  .feature-details-body :global(li + li) { margin-top: .4rem; }
+  .feature-details-body :global(p) { line-height: 1.7; }
+  .feature-details-body :global(code) { font-family: var(--font-mono); font-size: .875em; overflow-wrap: anywhere; }
+  .feature-details-body :global(a) { color: var(--accent-left); text-decoration: underline; text-underline-offset: .2em; }
+  .feature-limits { margin-top: 1rem; padding: .85rem 1.1rem; border-left: 3px solid var(--accent-right); background: var(--panel); }
+  .limits-label { margin: 0 0 .35rem; font-weight: 650; font-size: .9375rem; }
+  .feature-limits ul { margin: 0; padding-left: 1.2rem; }
+  .feature-limits li { line-height: 1.65; font-size: .9375rem; }
+  .feature-guides { display: flex; flex-wrap: wrap; gap: .5rem 1.5rem; margin-top: 1.25rem; }
+  .feature-guides a { display: inline-flex; align-items: center; gap: .35rem; color: var(--accent-left); font-weight: 600; text-decoration: none; }
+  .feature-guides a:hover { text-decoration: underline; }
+</style>
