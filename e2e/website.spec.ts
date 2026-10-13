@@ -108,6 +108,16 @@ test('Plexus theme, local assets, accessible content, and responsive layout', as
     expect(layout.pageWidth).toBeLessThanOrEqual(layout.viewportWidth);
     expect(layout.pipelineTop).toBeLessThan(layout.viewportHeight);
     expect(layout.overflowing).toEqual([]);
+    // The links sit all beside the wordmark or all below it, never split around it.
+    const navRows = await page.evaluate(() => {
+        const mark = document.querySelector('.wordmark')!.getBoundingClientRect();
+        return [...new Set(Array.from(document.querySelectorAll('.main-nav a')).map((link) => {
+            const box = link.getBoundingClientRect();
+            const middle = (box.top + box.bottom) / 2;
+            return middle > mark.top && middle < mark.bottom ? 'beside' : box.top >= mark.bottom - 1 ? 'below' : 'above';
+        }))];
+    });
+    expect(['beside', 'below']).toContain(navRows.join());
     const resources = await page.evaluate(() => performance.getEntriesByType('resource').map((entry) => new URL(entry.name).origin));
     expect(resources.every((origin) => origin === new URL(page.url()).origin)).toBe(true);
     const accessibility = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa']).analyze();
@@ -295,6 +305,8 @@ test('a casual visitor sees what it does, what it looks like and what it needs',
         await image.scrollIntoViewIfNeeded();
         await expect(image).toHaveAttribute('alt', /\S{10,}/);
         expect(await image.evaluate((img: HTMLImageElement) => img.complete && img.naturalWidth > 0)).toBe(true);
+        // A click opens the picture itself, at 100%.
+        expect(await image.evaluate((img: HTMLImageElement) => img.closest('a.shot-open')?.getAttribute('href'))).toBe(await image.getAttribute('src'));
     }
     await expect(page.locator('#requirements dt')).toHaveText(['Computer', 'Memory', 'Disk space', 'Graphics card']);
     await expect(page.locator('#requirements').getByRole('link', { name: 'Everything you need' })).toHaveAttribute('href', '/install#before');

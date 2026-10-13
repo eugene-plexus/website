@@ -268,7 +268,7 @@ const choices = [
   }
   h1 { font-size: clamp(2rem, 5vw, 3.5rem); line-height: 1.12; letter-spacing: -.015em; margin-block: 1rem 1.5rem; }
   h2 { font-size: clamp(1.5rem, 3vw, 2rem); line-height: 1.25; margin-bottom: 1.25rem; }
-  h3 { font-size: 1.125rem; margin-top: 2rem; }
+  h3 { font-size: 1.25rem; margin-top: 2rem; }
   p, li, dd { line-height: 1.8; }
   p { margin-block: 1rem; }
   a { color: var(--accent-left); text-underline-offset: .2em; }
@@ -281,14 +281,14 @@ const choices = [
   .choice { position: relative; display: flex; flex-direction: column; gap: .35rem; padding: 1rem 1.1rem; background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius); }
   .choice:hover { border-color: var(--border-hover); }
   .choice:focus-within { outline: 2px solid var(--accent-left); outline-offset: 2px; }
-  .choice a { color: var(--foreground); font-size: 1.05rem; font-weight: 650; text-decoration: none; }
+  .choice a { color: var(--foreground); font-size: 1.1875rem; font-weight: 650; text-decoration: none; }
   .choice a:focus-visible { outline: none; }
   /* The whole card is the link's target, not only its name. */
   .choice a::after { content: ""; position: absolute; inset: 0; border-radius: inherit; }
-  .choice-note { color: var(--muted); font-size: .875rem; line-height: 1.5; }
-  .choice-detected { align-self: flex-start; padding: .1rem .55rem; color: var(--on-accent-left); background: var(--accent-left); border-radius: 999px; font-size: .75rem; font-weight: 600; }
+  .choice-note { color: var(--muted); font-size: 1rem; line-height: 1.5; }
+  .choice-detected { align-self: flex-start; padding: .1rem .55rem; color: var(--on-accent-left); background: var(--accent-left); border-radius: 999px; font-size: .875rem; font-weight: 600; }
   .choice[data-detected="true"] { border-color: var(--accent-left); box-shadow: inset 0 0 0 1px var(--accent-left); }
-  .section-links { display: flex; flex-wrap: wrap; gap: .5rem 1.25rem; margin-block: 1.25rem 0; font-size: .9375rem; }
+  .section-links { display: flex; flex-wrap: wrap; gap: .5rem 1.25rem; margin-block: 1.25rem 0; font-size: 1.0625rem; }
   .expect-help { display: flex; align-items: center; gap: .75rem; color: var(--muted); }
   .with-face { display: flex; align-items: center; gap: .75rem; }
   @media (max-width: 760px) { .chooser { grid-template-columns: repeat(2, minmax(0, 1fr)); } }

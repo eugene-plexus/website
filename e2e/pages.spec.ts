@@ -33,6 +33,18 @@ async function sound(page: Page, failed: string[]) {
         expect((await image.getAttribute('alt'))?.trim().length ?? 0, 'every screenshot is described').toBeGreaterThanOrEqual(40);
         expect(await image.evaluate((img: HTMLImageElement) => img.complete && img.naturalWidth > 0)).toBe(true);
     }
+    // Clicking a screenshot opens its original, at least as wide as any size the page shows.
+    for (const image of await page.locator('main [data-shot] img').all()) {
+        const href = await image.evaluate((img) => img.closest('a.shot-open')?.getAttribute('href') ?? null);
+        expect(href, 'every screenshot opens its original').not.toBeNull();
+        const response = await page.request.get(href!);
+        expect(response.ok()).toBe(true);
+        expect(response.headers()['content-type']).toMatch(/^image\//);
+        const shown = await image.evaluate((img: HTMLImageElement) => Math.max(img.naturalWidth, ...Array.from(img.parentElement!.querySelectorAll('source'))
+            .flatMap((source) => source.srcset.split(',').map((entry) => Number.parseInt(entry.trim().split(/\s+/)[1] ?? '0', 10) || 0))));
+        const original = await page.evaluate(async (url) => { const img = new Image(); img.src = url; await img.decode(); return img.naturalWidth; }, href!);
+        expect(original, `${href} is the largest copy`).toBeGreaterThanOrEqual(shown);
+    }
     const accessibility = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa']).analyze();
     expect(accessibility.violations).toEqual([]);
     expect(failed).toEqual([]);
@@ -87,6 +99,19 @@ test('Job Sites says how it stays yours and what it cannot do yet', async ({ pag
     await expect(page.getByRole('link', { name: 'Set up a Job Site' })).toHaveAttribute('href', '/guides/set-up-a-job-site');
     await expect(page.locator('main')).not.toContainText(/\bsecure\b/i);
     await sound(page, failed);
+});
+
+test('no text on any page is smaller than 14px', async ({ page }) => {
+    for (const { path } of pages) {
+        await page.goto(path);
+        await page.locator('main details').evaluateAll((all) => all.forEach((details) => { (details as HTMLDetailsElement).open = true; }));
+        const small = await page.evaluate(() => Array.from(document.body.querySelectorAll('*'))
+            .filter((element) => Array.from(element.childNodes).some((node) => node.nodeType === Node.TEXT_NODE && node.textContent!.trim()))
+            .filter((element) => element.getClientRects().length > 0 && !element.closest('svg, [hidden], .sr-only'))
+            .map((element) => ({ text: element.textContent!.trim().slice(0, 40), size: Number.parseFloat(getComputedStyle(element).fontSize) }))
+            .filter((found) => found.size < 14));
+        expect(small, path).toEqual([]);
+    }
 });
 
 test('the guides index lists every guide, and each guide renders and links soundly', async ({ page, request }) => {

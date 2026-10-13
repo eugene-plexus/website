@@ -41,7 +41,7 @@ const groups = [...new Set(all.map((guide) => guide.group))];
   .guides-intro a { color: var(--accent-left); text-decoration: underline; text-underline-offset: .2em; }
   @media (max-width: 640px) { .guides-intro { grid-template-columns: minmax(0, 1fr); } .guides-intro :global(.mascot) { grid-row: 1; width: 104px; } }
   h1 { font-size: clamp(2rem, 5vw, 3.25rem); line-height: 1.12; letter-spacing: -.015em; margin-block: 1rem 1.25rem; }
-  h2 { font-size: 1.25rem; margin-block: 2.5rem 1rem; padding-top: 2rem; border-top: 1px solid var(--border); }
+  h2 { font-size: 1.375rem; margin-block: 2.5rem 1rem; padding-top: 2rem; border-top: 1px solid var(--border); }
   .guide-list { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .75rem; }
   @media (max-width: 640px) { .guide-list { grid-template-columns: minmax(0, 1fr); } }
   .guide-card { position: relative; padding: 1rem 1.1rem; background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius); }
@@ -50,5 +50,5 @@ const groups = [...new Set(all.map((guide) => guide.group))];
   .guide-card a { display: inline-flex; align-items: center; gap: .4rem; color: var(--foreground); font-weight: 650; text-decoration: none; }
   .guide-card a:focus-visible { outline: none; }
   .guide-card a::after { content: ""; position: absolute; inset: 0; border-radius: inherit; }
-  .guide-card p { margin: .4rem 0 0; color: var(--muted); font-size: .9375rem; line-height: 1.55; }
+  .guide-card p { margin: .4rem 0 0; color: var(--muted); font-size: 1.0625rem; line-height: 1.55; }
 </style>
