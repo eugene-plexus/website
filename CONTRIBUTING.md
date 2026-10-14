@@ -17,7 +17,7 @@ Review the generated phone and desktop screenshots in `test-results/` when chang
 
 ## Design And Copy
 
-- Use the light Modern theme. Preserve the application's colors, typography, and 6px corners without importing its code.
+- Use the dark Plexus theme. Keep its color values aligned with the console and Workbench, preserving IBM Plex typography and 4px corners without importing application code.
 - Keep styles responsive and controls accessible. Preserve the supplied logo unless its owner requests a change.
 - Describe the current inference control plane, not retired product directions. Verify claims against the current specs and component documentation.
 - Distinguish implemented, planned, and released capabilities. Do not invent a download, benchmark, testimonial, or release.

@@ -4,7 +4,7 @@ The public project website for **Eugene Plexus**, a self-hosted control plane fo
 
 - Repository: <https://github.com/eugene-plexus/website>
 - Production domain: <https://eugeneplexus.com>
-- Stack: Astro, TypeScript, self-hosted Inter and JetBrains Mono, Lucide icons.
+- Stack: Astro, TypeScript, self-hosted IBM Plex Sans and IBM Plex Mono, Lucide icons.
 - Hosting: GitHub Pages. The build produces static files in `dist/`; no server, database, or platform service is required to serve them.
 - Status: v0.2.1, released 2026-10-14: early software, with known limits. Deployment is manual.
 
@@ -67,7 +67,7 @@ payload. Do not replace immutable existing installer assets to enable this copy.
 | [astro.config.mjs](astro.config.mjs)                           | Static output and production origin                                      |
 | [.github/workflows/pages.yml](.github/workflows/pages.yml)     | CI checks and manual deployment                                          |
 
-The design follows the application's **light Modern theme**: near-white surfaces, blue and magenta accents, Inter, and 6px corners. Tokens are maintained here, not imported from the application repo. There is no theme chooser or dark variant.
+The design follows the application's **dark Plexus theme**: graphite surfaces, blue and apricot accents, IBM Plex type, and 4px corners. Tokens are maintained here, not imported from the application repo; keep shared colors aligned with `ui/src/app/globals.css` and Workbench's `web/src/styles.css`. There is no theme chooser. The 2026-10-14 palette update gently increases accent saturation while preserving the dark surfaces and text hierarchy.
 
 The alpha's versioned installer URLs are generated at build time from the specs
 commit recorded in `alpha-release.json`, with size and SHA-256 verification.

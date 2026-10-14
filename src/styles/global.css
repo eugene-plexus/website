@@ -12,13 +12,13 @@
     --panel-hover: #2b3037;
     --border: #3a4048;
     --border-hover: #5c646e;
-    --accent-left: #7fb0cf;
-    --accent-right: #cf9a72;
+    --accent-left: #70b8e0;
+    --accent-right: #e2a16d;
     --on-accent-left: #0c1216;
     --on-accent-right: #1a1009;
     --muted: #b3b9bf;
     /* The architecture page's two layer roles beyond left and right. */
-    --accent-engine: #7fb094;
+    --accent-engine: #72be95;
     --accent-hardware: #b8bec4;
     --radius: 4px;
     --font-ui: 'IBM Plex Sans Variable', system-ui, -apple-system, sans-serif;
@@ -499,7 +499,7 @@ p {
     border-radius: var(--radius);
 }
 
-/* Every screenshot opens its original file, at 100%, in a click. */
+/* Every screenshot opens its original in the shared viewer. */
 .shot-open {
     display: block;
     cursor: zoom-in;

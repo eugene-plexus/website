@@ -30,7 +30,7 @@ const sizes = phone ? '(max-width: 480px) 80vw, 390px' : '(max-width: 1200px) 10
 ---
 
 <figure class:list={['shot-figure', { 'shot-phone': phone }]} data-shot={name}>
-  {/* The picture itself opens the original, at 100%. */}
+  {/* The viewer uses the original; the URL also works without JavaScript. */}
   {image
     ? <a class="shot-open" href={image.src}><Picture src={image} alt={alt} widths={widths} sizes={sizes} formats={['webp']} loading={eager ? 'eager' : 'lazy'} decoding="async" /></a>
     : <div class="shot-missing">Screenshot {name} is not made yet.</div>}

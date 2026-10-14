@@ -42,9 +42,9 @@ test('the homepage describes current capabilities with an explicit early-softwar
 const PLEXUS = {
     '--background': 'rgb(20, 22, 25)', '--foreground': 'rgb(230, 232, 234)', '--panel': 'rgb(27, 30, 34)',
     '--panel-soft': 'rgb(35, 39, 44)', '--panel-hover': 'rgb(43, 48, 55)', '--border': 'rgb(58, 64, 72)',
-    '--border-hover': 'rgb(92, 100, 110)', '--accent-left': 'rgb(127, 176, 207)', '--accent-right': 'rgb(207, 154, 114)',
+    '--border-hover': 'rgb(92, 100, 110)', '--accent-left': 'rgb(112, 184, 224)', '--accent-right': 'rgb(226, 161, 109)',
     '--on-accent-left': 'rgb(12, 18, 22)', '--on-accent-right': 'rgb(26, 16, 9)', '--muted': 'rgb(179, 185, 191)',
-    '--accent-engine': 'rgb(127, 176, 148)', '--accent-hardware': 'rgb(184, 190, 196)',
+    '--accent-engine': 'rgb(114, 190, 149)', '--accent-hardware': 'rgb(184, 190, 196)',
 };
 
 test('Plexus theme, local assets, accessible content, and responsive layout', async ({ page }, testInfo) => {
@@ -305,7 +305,7 @@ test('a casual visitor sees what it does, what it looks like and what it needs',
         await image.scrollIntoViewIfNeeded();
         await expect(image).toHaveAttribute('alt', /\S{10,}/);
         expect(await image.evaluate((img: HTMLImageElement) => img.complete && img.naturalWidth > 0)).toBe(true);
-        // A click opens the picture itself, at 100%.
+        // The viewer and the no-JavaScript fallback use the original file.
         expect(await image.evaluate((img: HTMLImageElement) => img.closest('a.shot-open')?.getAttribute('href'))).toBe(await image.getAttribute('src'));
     }
     await expect(page.locator('#requirements dt')).toHaveText(['Computer', 'Memory', 'Disk space', 'Graphics card']);
