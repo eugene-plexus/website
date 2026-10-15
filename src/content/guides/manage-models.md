@@ -21,4 +21,4 @@ Eugene checks each model against this machine's graphics memory (VRAM) and RAM b
 
 ## Strata (experimental)
 
-In Discover, choose **Works with another engine**, open a model from Strata's list, and press **Download and prepare for Strata**. On a model's page, Run may suggest **Prepare for Strata, then run (recommended)** when Strata suits this machine better. Strata runs text only, on one GPU, one request at a time, and its memory fit is unknown.
+In Discover, choose **Works with another engine**, open a model from Strata's list, and press **Download and prepare for Strata**. On a model's page, Run may suggest **Prepare for Strata, then run (recommended)** when Strata suits this machine better. Strata runs text only, on one GPU, and its memory fit is unknown. It handles one request at a time by default; optional batching uses the running server's reported capacity. Supported reasoning models accept effort controls, including turning thinking off.

@@ -84,7 +84,7 @@ const glossary = [
       <p class="eyebrow"><span class="section-index">Architecture</span></p>
       <h1 id="arch-title">How Eugene Plexus is built</h1>
       <p class="arch-lead">Eugene Plexus installs and manages engines, helps choose model settings for your hardware, and connects compatible tools to local and cloud backends. One machine or a homelab, the same layers do the work. It is not an inference engine. Its own chat app, Workbench, is an optional app you install from the console.</p>
-      <p class="arch-lead">{release.version} snapshot: <time datetime="2026-10-14">October 14, 2026</time>. <a href="/install">Install it</a>. <a href="#status">Current boundaries</a>.</p>
+      <p class="arch-lead">{release.version} snapshot: <time datetime="2026-10-15">October 15, 2026</time>. <a href="/install">Install it</a>. <a href="#status">Current boundaries</a>.</p>
     </div>
   </section>
 
@@ -309,7 +309,7 @@ const glossary = [
       <div>
         <p class="eyebrow"><span class="section-index">06 /</span> Current boundaries</p>
         <h2 id="status-title">The current release and its limits</h2>
-        <p class="glossary-intro">As of October 13, 2026. {release.version} is early software that works, but has the limits below. A v0.1.0 install updates from the console, the control root first; an alpha moves to v0.1.0 first. Versioned installers and a matching container image are available; this is not a production-readiness claim. <a href="/install">Installation guide</a>.</p>
+        <p class="glossary-intro">As of October 15, 2026. {release.version} is early software that works, but has the limits below. A v0.1.0 install updates from the console, the control root first; an alpha moves to v0.1.0 first. Versioned installers and a matching container image are available; this is not a production-readiness claim. <a href="/install">Installation guide</a>.</p>
         <p class="glossary-intro">The <a href={`${guides}/support-matrix.md`}>support matrix</a> says what has been measured, simulated or is still pending, and the <a href="https://github.com/eugene-plexus/specs/tree/main/docs/acceptance">acceptance records</a> hold each test's setup and results.</p>
         <p class="glossary-intro">For timings, see the <a href={`${records}/control-plane-measurements.md`}>control-plane measurement record</a>, with hardware, baselines and limits for each observation.</p>
         <a class="text-link" href="https://github.com/eugene-plexus/specs/blob/main/docs/design/audience-roadmap.md">Follow the roadmap <ArrowUpRight size={17} aria-hidden="true" /></a>
@@ -321,7 +321,7 @@ const glossary = [
             <ul class="issues">
               <li>A Claude Code turn reserves its whole answer allowance (32,000 tokens), so a llama.cpp server with a 64k-token pool runs one Claude Code turn at a time. The others wait; they do not fail.</li>
               <li>With many llama.cpp servers on one machine, a reply can stall while llama.cpp saves and restores its prompt cache: 3 turns in 3,808 in our tests.</li>
-              <li>Strata runs text only, on one GPU, one request at a time, and its memory fit is unknown.</li>
+              <li>Strata runs text only, on one GPU, and its memory fit is unknown. It handles one request at a time by default, with optional batching.</li>
               <li>Workbench's sorter: its default Sort time (3 s) suits a GPU, where a question takes about 0.6 s, not a typical CPU, where it takes about 7 s. Its gain was measured on questions written for those documents.</li>
               <li>Job Sites cannot yet copy between machines.</li>
               <li>Brave's rate-limit headers are read as Brave documents them, but have not been seen from a live account.</li>
@@ -358,7 +358,7 @@ const glossary = [
         </div>
         <div class="glossary-row">
           <dt>Updates and logs</dt>
-          <dd>Machines and Needs Attention show every machine's update status, and any console updates any machine. An update re-checks the channel first and installs nothing if the check fails or the target moved. Updates from v0.1.0 to v0.2.0 and from v0.2.0 to {release.version} passed every check on Linux system installs (<a href={`${records}/v0.2.0-release-run.md`}>v0.2.0 run</a>, <a href={`${records}/v0.2.1-release-run.md`}>v0.2.1 run</a>); a Windows machine updating itself has been observed once, not measured. Every machine's log is readable and followed live, with keys and tokens hidden.</dd>
+          <dd>Machines and Needs Attention show every machine's update status, and any console updates any machine. Update all coordinates the root first, then workers and their installed catalogue apps, including Workbench; containers use their host's update controls. Progress survives a console restart. An update re-checks the channel first and installs nothing if the check fails or the target moved. Linux system updates and packaged installs have separate <a href={`${records}/v0.2.2-release-run.md`}>release checks</a>. Update all passed a two-node process test with simulated installers and app updates; a Windows machine updating itself has been observed once, not measured. Every machine's log is readable and followed live, with keys and tokens hidden.</dd>
         </div>
         <div class="glossary-row">
           <dt>Windows startup</dt>
