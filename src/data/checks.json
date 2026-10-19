@@ -15,8 +15,8 @@
   "claude-code-mcp": {
     "label": "Claude Code connected to Workbench",
     "automated": true,
-    "handTested": false,
-    "evidence": null
+    "handTested": true,
+    "evidence": "https://github.com/eugene-plexus/specs/blob/db1665b04e5afec66c7eca0fa86633aae1d604ec/docs/acceptance/mr9b-connections-run.md#a-real-claude-code-2026-10-19"
   },
   "codex-mcp": {
     "label": "Codex connected to Workbench",
