@@ -1,8 +1,8 @@
 {
   "version": "v0.3.0",
-  "specsCommit": "277c6e2f219b5f0f0b1add40bead4508fe327536",
+  "specsCommit": "ad0a2390caabc687dd6d1edc1d6fd532fcba6e5d",
   "components": {
-    "agent": "b948461cfbaa4e98815ed44990017657397159f2",
+    "agent": "2d01b3baf6570932c25dfc9611c47421379aa616",
     "control": "77a15f0f1b74e83aa8c569bf88ccfc9a688bbe62",
     "gateway": "bac6c512cd56ed9f5886bcd2bad2164024b81d30",
     "library": "27f79fd93c8606e88c62aa0ba9ae907abca1c329",
@@ -13,19 +13,19 @@
   "siteHost": "097a89c6372156b78291431677a7754f53dd89c5",
   "files": {
     "install.sh": {
-      "sha256": "cec874e5b7e77dbe2b122607fe2da3c5bd32cff390349164006349bd20958133",
+      "sha256": "95d94a152a17ab1758696e29f48798269c14b29be9b4b3cdcccdd8f5afd15ef1",
       "size": 253833,
-      "source": "https://raw.githubusercontent.com/eugene-plexus/specs/277c6e2f219b5f0f0b1add40bead4508fe327536/scripts/install.sh"
+      "source": "https://raw.githubusercontent.com/eugene-plexus/specs/ad0a2390caabc687dd6d1edc1d6fd532fcba6e5d/scripts/install.sh"
     },
     "install.ps1": {
-      "sha256": "fce03cc7e325fe9ae1694eba95d50ebd1a598fc9aae1b6c97f54e73a6e143a79",
+      "sha256": "a930e220653d4287af1a97de7f1f40cae0400f8cd6d3deda2db6ac22aaa244e9",
       "size": 282344,
-      "source": "https://raw.githubusercontent.com/eugene-plexus/specs/277c6e2f219b5f0f0b1add40bead4508fe327536/scripts/install.ps1"
+      "source": "https://raw.githubusercontent.com/eugene-plexus/specs/ad0a2390caabc687dd6d1edc1d6fd532fcba6e5d/scripts/install.ps1"
     },
     "requirements.lock": {
       "sha256": "266568e25707278b36f6ef0f1439dffd94b2a9f44e7a50bf5cf3c6b633ef5498",
       "size": 113908,
-      "source": "https://raw.githubusercontent.com/eugene-plexus/specs/277c6e2f219b5f0f0b1add40bead4508fe327536/release/requirements.lock"
+      "source": "https://raw.githubusercontent.com/eugene-plexus/specs/ad0a2390caabc687dd6d1edc1d6fd532fcba6e5d/release/requirements.lock"
     }
   },
   "container": "ghcr.io/eugene-plexus/control-plane:v0.3.0",
@@ -34,7 +34,7 @@
     "python": "3.12",
     "uvMinimum": "0.12.18",
     "components": {
-      "agent": "b948461cfbaa4e98815ed44990017657397159f2",
+      "agent": "2d01b3baf6570932c25dfc9611c47421379aa616",
       "control": "77a15f0f1b74e83aa8c569bf88ccfc9a688bbe62",
       "gateway": "bac6c512cd56ed9f5886bcd2bad2164024b81d30",
       "library": "27f79fd93c8606e88c62aa0ba9ae907abca1c329",

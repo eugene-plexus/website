@@ -1,4 +1,4 @@
 {
-  "commit": "3ff464e3ef4ff23e0cf2525916c5325dc28db903",
+  "commit": "ad0a2390caabc687dd6d1edc1d6fd532fcba6e5d",
   "note": "The specs commit whose linked docs (support matrix, uninstall, application workflows, container guides) describe the published release. Installers stay on alpha-release.json's specsCommit."
 }
