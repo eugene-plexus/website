@@ -4,8 +4,9 @@ import Feature from '../components/Feature.astro';
 import Shot from '../components/Shot.astro';
 import SiteLayout from '../layouts/SiteLayout.astro';
 import release from '../data/alpha-release.json';
+import docs from '../data/docs-revision.json';
 
-const notes = `https://github.com/eugene-plexus/specs/blob/${release.specsCommit}/docs/releases/${release.version}.md`;
+const notes = `https://github.com/eugene-plexus/specs/blob/${docs.commit}/docs/releases/${release.version}.md`;
 const sections = [
   ['library', 'Models that fit'],
   ['search-models', 'Search models'],

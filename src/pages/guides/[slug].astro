@@ -20,6 +20,22 @@ const report = `https://github.com/eugene-plexus/specs/issues/new?title=${encode
       <p class="eyebrow"><a href="/guides">Guides</a> · {release.version}</p>
       <h1>{guide.title}</h1>
       <p class="guide-lead">{guide.description}</p>
+      {guide.checks.length > 0 && (
+        <ul class="guide-checks" role="list" aria-label="How much of this guide has been tested">
+          {guide.checks.map((check) => (
+            <li>
+              {check.handTested
+                ? <a class="check check-tested" data-check={check.id} href={check.evidence!}>Tried by a person: {check.label}</a>
+                : check.automated
+                  ? <span class="check check-automated" data-check={check.id}>Passes automated tests · not yet tried by a person: {check.label}</span>
+                  : <span class="check check-untested" data-check={check.id}>Not yet tried: {check.label}</span>}
+            </li>
+          ))}
+        </ul>
+      )}
+      {guide.checks.some((check) => check.automated && !check.handTested) && (
+        <p class="check-note">“Passes automated tests” means it is built and checked by our test suite against stand-ins for the outside service. Nobody has yet tried it by hand with the real one, so tell us how it goes.</p>
+      )}
     </header>
     <div class="guide-body"><Content /></div>
     <footer class="guide-footer">
@@ -34,6 +50,13 @@ const report = `https://github.com/eugene-plexus/specs/issues/new?title=${encode
   .guide-page .eyebrow a { color: inherit; }
   h1 { font-size: clamp(2rem, 5vw, 3rem); line-height: 1.15; letter-spacing: -.015em; margin-block: 1rem; }
   .guide-lead { color: var(--muted); font-size: 1.1875rem; line-height: 1.7; }
+  .guide-checks { display: flex; flex-wrap: wrap; gap: .5rem; margin: 1.25rem 0 0; padding: 0; list-style: none; }
+  .check { display: inline-block; padding: .25rem .625rem; border: 1px solid; border-radius: 999px; font-size: .875rem; line-height: 1.4; }
+  .check-automated { color: var(--accent-left); border-color: var(--accent-left); }
+  .check-untested { color: var(--accent-right); border-color: var(--accent-right); }
+  .check-note { color: var(--muted); font-size: .875rem; line-height: 1.6; margin-top: .75rem; }
+  .check-tested { color: var(--accent-engine); border-color: var(--accent-engine); text-decoration: none; }
+  .check-tested:hover { text-decoration: underline; }
   .guide-body { border-top: 1px solid var(--border); margin-top: 2rem; padding-top: .5rem; }
   .guide-body :global(h2) { font-size: clamp(1.375rem, 3vw, 1.75rem); line-height: 1.3; margin-block: 2.25rem 1rem; scroll-margin-top: 6rem; }
   .guide-body :global(p), .guide-body :global(li) { line-height: 1.8; }

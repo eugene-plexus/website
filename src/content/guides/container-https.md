@@ -7,13 +7,11 @@ Optional. The three ports from the [Docker / NAS install](/install#docker) keep 
 5. Press **Prepare setup**, read **Your prepared setup**, then **Apply…** and **Apply and restart**.
 6. Sign in to the console within 15 minutes, as the page says. Otherwise Eugene goes back to how it was, and says why.
 
-The console stays on its own port unless you choose **Through this setup too**. Keep the control root's port published while other machines are joined.
+Under **Where do you open the console?**, **Through this setup too** (recommended) moves the console to its HTTPS name and off its own port. Keep the control root's port published while other machines are joined.
 
 <details>
 <summary>Recipes and certificates</summary>
 
 The [container access guide](https://github.com/eugene-plexus/specs/blob/08899f2ca2116ce67dd3051ea17a4c0fecbfc3ec/docs/deployment/container-access.md) compares the options and has recipes for Nginx Proxy Manager, Caddy and Traefik. With local certificates, install only the generated `root.crt` on each device that connects, and keep the rest of `/data/entrypoint` private.
-
-Let's Encrypt has been tested only against a stand-in certificate authority (Pebble), and the Traefik recipe has not been run yet.
 
 </details>

@@ -2,6 +2,7 @@ import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type Page } from '@playwright/test';
 import release from '../src/data/alpha-release.json' with { type: 'json' };
 import pages from '../src/data/public-pages.json' with { type: 'json' };
+import checks from '../src/data/checks.json' with { type: 'json' };
 
 const guides = pages.filter((page) => page.path.startsWith('/guides/'));
 
@@ -130,6 +131,16 @@ test('the guides index lists every guide, and each guide renders and links sound
         await expect(page.getByRole('heading', { level: 1 })).toHaveText(guide.title);
         await expect(page).toHaveTitle(`${guide.title} | Eugene Plexus`);
         await expect(page.locator('meta[name="description"]')).toHaveAttribute('content', guide.description);
+        // One badge per listed check, untested or linked to its record.
+        const ids: string[] = 'checks' in guide && Array.isArray(guide.checks) ? guide.checks : [];
+        await expect(page.locator('.guide-checks [data-check]')).toHaveCount(ids.length);
+        for (const id of ids) {
+            const entry = (checks as unknown as Record<string, { automated: boolean; handTested: boolean; evidence: string | null }>)[id];
+            const badge = page.locator(`.guide-checks [data-check="${id}"]`);
+            if (entry.handTested) await expect(badge).toHaveAttribute('href', entry.evidence!);
+            else if (entry.automated) await expect(badge).toHaveText(/^Passes automated tests · not yet tried by a person: /);
+            else await expect(badge).toHaveText(/^Not yet tried: /);
+        }
         const text = await page.locator('main').textContent() ?? '';
         expect(text, `${guide.path} shows raw Markdown`).not.toMatch(/\*\*|\]\(|<\/?details>|<summary>/);
         // Every link inside the site resolves.

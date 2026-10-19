@@ -1,0 +1,81 @@
+{
+  "_note": "Paths a guide describes, and how far each has been tried. `automated`: automated tests exercise it (against stand-ins for outside services). `handTested`: a person has tried it for real; then `evidence` is the record's address. A guide lists ids under `checks` in public-pages.json, and its page shows one badge each. When a hand test is logged, set handTested to true and fill in evidence.",
+  "google-sign-in-live": {
+    "label": "sign-in with a live Google account",
+    "automated": true,
+    "handTested": false,
+    "evidence": null
+  },
+  "microsoft-sign-in-live": {
+    "label": "sign-in with a live Microsoft account",
+    "automated": true,
+    "handTested": false,
+    "evidence": null
+  },
+  "claude-code-mcp": {
+    "label": "Claude Code connected to Workbench",
+    "automated": true,
+    "handTested": false,
+    "evidence": null
+  },
+  "codex-mcp": {
+    "label": "Codex connected to Workbench",
+    "automated": true,
+    "handTested": false,
+    "evidence": null
+  },
+  "open-webui-mcp": {
+    "label": "Open WebUI connected to Workbench",
+    "automated": true,
+    "handTested": false,
+    "evidence": null
+  },
+  "lets-encrypt-live": {
+    "label": "Let's Encrypt with a real certificate authority",
+    "automated": true,
+    "handTested": false,
+    "evidence": null
+  },
+  "traefik-recipe": {
+    "label": "the Traefik recipe",
+    "automated": false,
+    "handTested": false,
+    "evidence": null
+  },
+  "container-upgrade": {
+    "label": "updating a v0.2.3 container to v0.3.0 with its data",
+    "automated": false,
+    "handTested": false,
+    "evidence": null
+  },
+  "windows-update-button": {
+    "label": "the Windows update button from v0.2.3",
+    "automated": false,
+    "handTested": false,
+    "evidence": null
+  },
+  "generic-oidc-live": {
+    "label": "sign-in with a live OpenID Connect provider such as Keycloak",
+    "automated": true,
+    "handTested": false,
+    "evidence": null
+  },
+  "two-host-live": {
+    "label": "two hostnames with a real domain and proxy",
+    "automated": true,
+    "handTested": false,
+    "evidence": null
+  },
+  "phone-reach-live": {
+    "label": "opening the console and Workbench from a phone",
+    "automated": false,
+    "handTested": false,
+    "evidence": null
+  },
+  "workbench-rollback": {
+    "label": "going back to v0.2.3 by restoring Workbench's copy",
+    "automated": false,
+    "handTested": false,
+    "evidence": null
+  }
+}

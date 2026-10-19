@@ -1,5 +1,5 @@
 ---
-import { ArrowRight, BookSearch, Boxes, CircleArrowUp, Cloud, FileSearch, Globe, Hammer, HardHat, Lock, NotebookPen, ScanSearch, Server, SquareTerminal, Wrench } from '@lucide/astro';
+import { ArchiveRestore, ArrowRight, BookSearch, Boxes, CircleArrowUp, Cloud, FileSearch, FolderInput, Globe, Hammer, HardHat, KeyRound, Lock, MessagesSquare, MonitorUp, Network, NotebookPen, Plug, ScanSearch, Server, Smartphone, SquareTerminal, Users, Wrench, Zap } from '@lucide/astro';
 import Mascot from '../../components/Mascot.astro';
 import SiteLayout from '../../layouts/SiteLayout.astro';
 import release from '../../data/alpha-release.json';
@@ -23,6 +23,16 @@ const icons: Record<string, typeof ArrowRight> = {
   'set-up-a-job-site': HardHat,
   'add-a-warm-standby': Server,
   'container-https': Lock,
+  'update-to-v0-3-0': ArchiveRestore,
+  'bring-your-own-models': FolderInput,
+  'speed-up-with-speculative-decoding': Zap,
+  'connect-apps-to-workbench': Plug,
+  'connect-open-webui': MessagesSquare,
+  'add-a-machine': MonitorUp,
+  'use-it-from-your-phone': Smartphone,
+  'serve-the-model-api-on-your-own-name': Network,
+  'sign-in-with-google-or-microsoft': KeyRound,
+  'add-people-and-administrators': Users,
 };
 for (const guide of all) if (!icons[guide.slug]) throw new Error(`Guide ${guide.slug} needs an icon in src/pages/guides/index.astro`);
 const groups = [...new Set(all.map((guide) => guide.group))];

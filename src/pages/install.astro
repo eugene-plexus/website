@@ -159,7 +159,7 @@ const choices = [
 
       <h3 id="join">Join the computer that will run models</h3>
       <ol>
-        <li>In the NAS console, open <strong>Machines → Add a node</strong>. Leave the optional node name blank, set <strong>Control root URL the other machine can reach</strong> to <code>http://NAS-IP:8283</code>, and choose <strong>Mint a join token</strong>.</li>
+        <li>In the NAS console, open <strong>Machines → Add a node</strong>. Leave the optional node name blank, set <strong>Control root URL the other machine can reach</strong> to <code>http://NAS-IP:8283</code>, and choose <strong>Make a join token</strong>.</li>
         <li>Copy the command the page prints for the worker's system and run it there; it installs this release and joins in one step. If you prefer the commands below, replace <code>NAS-IP</code> and <code>JOIN-TOKEN</code> with the address and the token value after <code>-Token</code> or <code>--token</code>. Tokens expire and work once, so mint a new one for each worker.</li>
         <li>If Eugene is already on the worker, from any version or half-finished attempt, the join moves it aside first. Nothing is deleted, and if the join fails the machine is put back as it was, with a message that says why.</li>
       </ol>
