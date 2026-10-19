@@ -21,8 +21,8 @@
   "codex-mcp": {
     "label": "Codex connected to Workbench",
     "automated": true,
-    "handTested": false,
-    "evidence": null
+    "handTested": true,
+    "evidence": "https://github.com/eugene-plexus/specs/blob/ccda4d0b3b683d7684c1f876c805522d729b66a1/docs/acceptance/mr9b-connections-run.md#a-real-codex-2026-10-19"
   },
   "open-webui-mcp": {
     "label": "Open WebUI connected to Workbench",
