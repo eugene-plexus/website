@@ -1,48 +1,50 @@
 {
-  "version": "v0.3.0",
-  "specsCommit": "ad0a2390caabc687dd6d1edc1d6fd532fcba6e5d",
+  "version": "v0.4.0",
+  "specsCommit": "df46228a2a2e71641b8048456b3834a8e9fb9d3c",
   "components": {
-    "agent": "2d01b3baf6570932c25dfc9611c47421379aa616",
-    "control": "77a15f0f1b74e83aa8c569bf88ccfc9a688bbe62",
-    "gateway": "bac6c512cd56ed9f5886bcd2bad2164024b81d30",
-    "library": "27f79fd93c8606e88c62aa0ba9ae907abca1c329",
-    "tool-driver": "3034479687dee4d20a9e8d88f1e0b7796a1eb949",
-    "ui": "d32fc86e1983b4a0b65247c5048cd86e07fd5c88",
-    "inference-driver": "9ef3e7db0d06b832dafaf43bf7e89171ec14ecf5"
+    "agent": "1f2a8ff67c52af8c283ec1543a7fb8165d26c572",
+    "control": "ec5bcda5f723773d9d1e8aad2088e18e601cda14",
+    "gateway": "4cbf56cc90d49740bb9e3b624db400f97edc1bd8",
+    "library": "1b015632de2dddde6139719916b77128a9019869",
+    "store": "845e6803a2af6825eb1ae3fd550076cf9f3d1d0c",
+    "tool-driver": "a9c8b03439b60d2ba24275bf9f17da02c245190e",
+    "ui": "c458aa225a8d938857af00b313becb398f335d46",
+    "inference-driver": "7fb4c875ef86ae65b601249818212b2934d8b506"
   },
-  "siteHost": "097a89c6372156b78291431677a7754f53dd89c5",
+  "siteHost": "a7442935379284401c170cbd257bf3ccdc56f134",
   "files": {
     "install.sh": {
-      "sha256": "95d94a152a17ab1758696e29f48798269c14b29be9b4b3cdcccdd8f5afd15ef1",
-      "size": 253833,
-      "source": "https://raw.githubusercontent.com/eugene-plexus/specs/ad0a2390caabc687dd6d1edc1d6fd532fcba6e5d/scripts/install.sh"
+      "sha256": "aacd7806c91c0de893ef0a23da967dfb0e9663507c7e220d4f2437d752220aab",
+      "size": 307883,
+      "source": "https://raw.githubusercontent.com/eugene-plexus/specs/df46228a2a2e71641b8048456b3834a8e9fb9d3c/scripts/install.sh"
     },
     "install.ps1": {
-      "sha256": "a930e220653d4287af1a97de7f1f40cae0400f8cd6d3deda2db6ac22aaa244e9",
-      "size": 282344,
-      "source": "https://raw.githubusercontent.com/eugene-plexus/specs/ad0a2390caabc687dd6d1edc1d6fd532fcba6e5d/scripts/install.ps1"
+      "sha256": "90fe9cea32af12c6b544488d60c8e011142624681849e07c7751c663884c5673",
+      "size": 284302,
+      "source": "https://raw.githubusercontent.com/eugene-plexus/specs/df46228a2a2e71641b8048456b3834a8e9fb9d3c/scripts/install.ps1"
     },
     "requirements.lock": {
-      "sha256": "266568e25707278b36f6ef0f1439dffd94b2a9f44e7a50bf5cf3c6b633ef5498",
-      "size": 113908,
-      "source": "https://raw.githubusercontent.com/eugene-plexus/specs/ad0a2390caabc687dd6d1edc1d6fd532fcba6e5d/release/requirements.lock"
+      "sha256": "51eff13a14bc6dc31446aa03bd2e3683f887fa3c34f083dfbf86e1a1eee44def",
+      "size": 115534,
+      "source": "https://raw.githubusercontent.com/eugene-plexus/specs/df46228a2a2e71641b8048456b3834a8e9fb9d3c/release/requirements.lock"
     }
   },
-  "container": "ghcr.io/eugene-plexus/control-plane:v0.3.0",
+  "container": "ghcr.io/eugene-plexus/control-plane:v0.4.0",
   "releaseInputs": {
     "format": 1,
     "python": "3.12",
     "uvMinimum": "0.12.18",
     "components": {
-      "agent": "2d01b3baf6570932c25dfc9611c47421379aa616",
-      "control": "77a15f0f1b74e83aa8c569bf88ccfc9a688bbe62",
-      "gateway": "bac6c512cd56ed9f5886bcd2bad2164024b81d30",
-      "library": "27f79fd93c8606e88c62aa0ba9ae907abca1c329",
-      "tool-driver": "3034479687dee4d20a9e8d88f1e0b7796a1eb949",
-      "ui": "d32fc86e1983b4a0b65247c5048cd86e07fd5c88",
-      "inference-driver": "9ef3e7db0d06b832dafaf43bf7e89171ec14ecf5"
+      "agent": "1f2a8ff67c52af8c283ec1543a7fb8165d26c572",
+      "control": "ec5bcda5f723773d9d1e8aad2088e18e601cda14",
+      "gateway": "4cbf56cc90d49740bb9e3b624db400f97edc1bd8",
+      "library": "1b015632de2dddde6139719916b77128a9019869",
+      "store": "845e6803a2af6825eb1ae3fd550076cf9f3d1d0c",
+      "tool-driver": "a9c8b03439b60d2ba24275bf9f17da02c245190e",
+      "ui": "c458aa225a8d938857af00b313becb398f335d46",
+      "inference-driver": "7fb4c875ef86ae65b601249818212b2934d8b506"
     },
-    "dependenciesSha256": "266568e25707278b36f6ef0f1439dffd94b2a9f44e7a50bf5cf3c6b633ef5498"
+    "dependenciesSha256": "51eff13a14bc6dc31446aa03bd2e3683f887fa3c34f083dfbf86e1a1eee44def"
   },
   "scope": "Eugene source pins and hashed Python runtime/build dependencies; interpreter patch, bootstrap uv, engines and models are not locked",
   "offlineRemoval": true
