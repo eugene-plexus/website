@@ -1,47 +1,47 @@
 {
-  "version": "v0.4.0",
-  "specsCommit": "df46228a2a2e71641b8048456b3834a8e9fb9d3c",
+  "version": "v0.5.0",
+  "specsCommit": "9f01d64899e49bbcd3447817d6814513b65be06d",
   "components": {
-    "agent": "1f2a8ff67c52af8c283ec1543a7fb8165d26c572",
-    "control": "ec5bcda5f723773d9d1e8aad2088e18e601cda14",
-    "gateway": "4cbf56cc90d49740bb9e3b624db400f97edc1bd8",
+    "agent": "e00c4ecabe1fd78232d5b510a0b7328af304bf73",
+    "control": "c25e467304e5daaa4d7213ab74b94478fde35f24",
+    "gateway": "02b30ac0a699dbe7e8e6c65902666a0de1275132",
     "library": "1b015632de2dddde6139719916b77128a9019869",
-    "store": "845e6803a2af6825eb1ae3fd550076cf9f3d1d0c",
+    "store": "92d59cb4f703c9564b0f41203d2d36f95feb9460",
     "tool-driver": "a9c8b03439b60d2ba24275bf9f17da02c245190e",
-    "ui": "c458aa225a8d938857af00b313becb398f335d46",
+    "ui": "fd7149b2df87ed70b8834b0b701c11a6d351c17e",
     "inference-driver": "7fb4c875ef86ae65b601249818212b2934d8b506"
   },
   "siteHost": "a7442935379284401c170cbd257bf3ccdc56f134",
   "files": {
     "install.sh": {
-      "sha256": "aacd7806c91c0de893ef0a23da967dfb0e9663507c7e220d4f2437d752220aab",
-      "size": 307883,
-      "source": "https://raw.githubusercontent.com/eugene-plexus/specs/df46228a2a2e71641b8048456b3834a8e9fb9d3c/scripts/install.sh"
+      "sha256": "1ce2f17f41fb94b94d293794c575f97119756d725e317b93b94e937be2b89446",
+      "size": 400514,
+      "source": "https://raw.githubusercontent.com/eugene-plexus/specs/9f01d64899e49bbcd3447817d6814513b65be06d/scripts/install.sh"
     },
     "install.ps1": {
-      "sha256": "90fe9cea32af12c6b544488d60c8e011142624681849e07c7751c663884c5673",
-      "size": 284302,
-      "source": "https://raw.githubusercontent.com/eugene-plexus/specs/df46228a2a2e71641b8048456b3834a8e9fb9d3c/scripts/install.ps1"
+      "sha256": "aa24ec24a07fa8ecb362995e56fec889b114b0b3404f36b4a769d5736a2cfb58",
+      "size": 285317,
+      "source": "https://raw.githubusercontent.com/eugene-plexus/specs/9f01d64899e49bbcd3447817d6814513b65be06d/scripts/install.ps1"
     },
     "requirements.lock": {
       "sha256": "51eff13a14bc6dc31446aa03bd2e3683f887fa3c34f083dfbf86e1a1eee44def",
       "size": 115534,
-      "source": "https://raw.githubusercontent.com/eugene-plexus/specs/df46228a2a2e71641b8048456b3834a8e9fb9d3c/release/requirements.lock"
+      "source": "https://raw.githubusercontent.com/eugene-plexus/specs/9f01d64899e49bbcd3447817d6814513b65be06d/release/requirements.lock"
     }
   },
-  "container": "ghcr.io/eugene-plexus/control-plane:v0.4.0",
+  "container": "ghcr.io/eugene-plexus/control-plane:v0.5.0",
   "releaseInputs": {
     "format": 1,
     "python": "3.12",
     "uvMinimum": "0.12.18",
     "components": {
-      "agent": "1f2a8ff67c52af8c283ec1543a7fb8165d26c572",
-      "control": "ec5bcda5f723773d9d1e8aad2088e18e601cda14",
-      "gateway": "4cbf56cc90d49740bb9e3b624db400f97edc1bd8",
+      "agent": "e00c4ecabe1fd78232d5b510a0b7328af304bf73",
+      "control": "c25e467304e5daaa4d7213ab74b94478fde35f24",
+      "gateway": "02b30ac0a699dbe7e8e6c65902666a0de1275132",
       "library": "1b015632de2dddde6139719916b77128a9019869",
-      "store": "845e6803a2af6825eb1ae3fd550076cf9f3d1d0c",
+      "store": "92d59cb4f703c9564b0f41203d2d36f95feb9460",
       "tool-driver": "a9c8b03439b60d2ba24275bf9f17da02c245190e",
-      "ui": "c458aa225a8d938857af00b313becb398f335d46",
+      "ui": "fd7149b2df87ed70b8834b0b701c11a6d351c17e",
       "inference-driver": "7fb4c875ef86ae65b601249818212b2934d8b506"
     },
     "dependenciesSha256": "51eff13a14bc6dc31446aa03bd2e3683f887fa3c34f083dfbf86e1a1eee44def"
